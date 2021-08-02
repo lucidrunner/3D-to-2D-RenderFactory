@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab63dc755fcc4174957eb1ef00576671, type: 3}
+  m_Name: FactorySettings
+  m_EditorClassIdentifier: 
+  editorPalette: 0
+  buttonPalette: 0
+  overseerPrefab: {fileID: 722932076010524099, guid: 7d4058f0a37f04f49a7da7c247bb0d9c,
+    type: 3}

@@ -1,0 +1,456 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+
+namespace Factory_Editor
+{
+    public static class InspectorUtility
+    {
+        #region Textures
+        
+        public static class FactoryEditorTextures
+        {
+            public static Texture2D BoxBackground
+            {
+                get
+                {
+                    if (boxBackground == null)
+                        boxBackground = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/GUI Textures/foldout_border_lightgray.png");
+    
+                    return boxBackground;
+                }
+            }
+            
+            public static Texture2D FoldoutBodyBackground
+            {
+                get
+                {
+                    if(foldoutBodyBackground == null)
+                        foldoutBodyBackground = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/GUI Textures/foldout_border_lightgray.png");
+                    
+                    return foldoutBodyBackground;
+                }
+            }
+
+            public static Texture2D BoxHeaderBackground
+            {
+                get
+                {
+                    if (boxheaderBackground == null)
+                        boxheaderBackground = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/GUI Textures/border_lightgray_alt2.png");
+
+                    return boxheaderBackground;
+                }
+            }
+
+            private static Texture2D boxheaderBackground;
+
+            public static Texture2D ClosedBoxBackground
+            {
+                get
+                {
+                    if (closedBoxBackground == null)
+                        closedBoxBackground = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/GUI Textures/border_lightgray_alt.png");
+
+                    return closedBoxBackground;
+                }
+            }
+
+            private static Texture2D closedBoxBackground;
+
+            private static Texture2D foldoutBodyBackground;
+    
+            private static Texture2D boxBackground;
+        }
+
+        #endregion
+
+        #region Styles
+
+        public static class FactoryStyles
+        {
+            
+            public static readonly GUIStyle FoldoutHeader = new GUIStyle(EditorStyles.foldoutHeader)
+                    {
+                        margin =  new RectOffset(33, 9, 5, 0),
+                        fontSize = 13,
+                    };
+            
+            public static readonly GUIStyle SubFoldoutHeader = new GUIStyle(EditorStyles.foldoutHeader)
+            {
+                margin =  new RectOffset(18, 9, 5, 0),
+                fontSize = 13
+            };
+
+            
+            public static readonly GUIStyle FoldoutBody = new GUIStyle(GUI.skin.textArea)
+                    {
+                        margin =  new RectOffset(7, 6, 0, 5),
+                        padding = new RectOffset(5,5,5,5),
+                        normal = {background = FactoryEditorTextures.FoldoutBodyBackground}
+                    };
+            
+            public static readonly GUIStyle SubFoldoutBody = new GUIStyle(GUI.skin.textArea)
+            {
+                margin =  new RectOffset(4, 6, 0, 5),
+                padding = new RectOffset(5,5,5,5),
+                normal = {background = FactoryEditorTextures.FoldoutBodyBackground}
+            };
+
+
+            public static readonly GUIStyle BoxGroup = new GUIStyle(GUI.skin.box)
+                    {
+                        padding = new RectOffset(5,5,5,5),
+                        margin =  new RectOffset(19,5,0,5),
+                        normal = {background = FactoryEditorTextures.BoxBackground}
+                    };
+            
+            public static readonly GUIStyle ClosedBoxGroup = new GUIStyle(GUI.skin.box)
+            {
+                padding = new RectOffset(5,5,5,5),
+                margin =  new RectOffset(19,5,0,5),
+                normal = {background = FactoryEditorTextures.ClosedBoxBackground}
+            };
+
+
+            public static readonly GUIStyle BoxGroupHeader = new GUIStyle(GUI.skin.box)
+            {
+                margin =  new RectOffset(0,0,5,0),
+                padding = new RectOffset(5,5,5,5),
+                normal = {background = FactoryEditorTextures.BoxHeaderBackground}
+
+            };
+            
+            public static readonly GUIStyle SubBoxGroup = new GUIStyle(GUI.skin.box)
+                    {
+                        padding = new RectOffset(5,5,5,5),
+                        margin = new RectOffset(0,0,0,0),
+                        normal =  {background = FactoryEditorTextures.BoxBackground}
+                    };
+            
+            public static readonly GUIStyle ClosedSubBoxGroup = new GUIStyle(GUI.skin.box)
+            {
+                padding = new RectOffset(5,5,5,5),
+                margin = new RectOffset(0,0,0,0),
+                normal =  {background = FactoryEditorTextures.ClosedBoxBackground}
+            };
+
+
+            public static readonly GUIStyle AlignedButton = new GUIStyle(GUI.skin.button)
+            {
+                margin = new RectOffset(5, 0 ,0 ,0)
+            };
+        }
+
+        
+
+        #endregion
+
+
+        #region Foldout
+
+        public static bool BeginFoldoutGroup(string aFoldoutLabel, bool aFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
+        {
+            return DrawFoldoutGroup(aFoldoutLabel, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, aFoldoutState, FactoryStyles.FoldoutHeader, FactoryStyles.FoldoutBody);
+        }
+        
+        
+        public static bool BeginSubFoldoutGroup(string aFoldoutLabel, Color? aHeaderHighlight, Color? aGroupHighlight, bool aFoldoutState)
+        {
+            return DrawFoldoutGroup(aFoldoutLabel, aHeaderHighlight, aGroupHighlight, aFoldoutState, FactoryStyles.SubFoldoutHeader, FactoryStyles.SubFoldoutBody);
+        }
+
+        private static bool DrawFoldoutGroup(string aFoldoutLabel, Color? aHeaderHighlight, Color? aGroupHighlight, bool aFoldoutState, GUIStyle aHeaderStyle, GUIStyle aBodyStyle)
+        {
+            var _prevColor = GUI.backgroundColor;
+            if(aHeaderHighlight.HasValue)
+            {
+                GUI.backgroundColor = aHeaderHighlight.Value;
+            }
+
+            
+            
+            aFoldoutState = EditorGUILayout.BeginFoldoutHeaderGroup(aFoldoutState, aFoldoutLabel, aHeaderStyle);
+
+            GUI.backgroundColor = _prevColor;
+
+            if (aGroupHighlight.HasValue && aFoldoutState)
+            {
+                GUI.backgroundColor = aGroupHighlight.Value;
+            }
+
+            if (aFoldoutState)
+            {
+                var _foldoutBodyStyle = new GUIStyle(aBodyStyle)
+                {
+                    normal = {background = FactoryEditorTextures.FoldoutBodyBackground}
+                };
+                
+
+                EditorGUILayout.BeginVertical(_foldoutBodyStyle);
+            }
+
+            GUI.backgroundColor = _prevColor;
+                
+            return aFoldoutState;
+        }
+        
+        public static void EndFoldoutGroup(bool aFoldoutState)
+        {
+            if(aFoldoutState)
+            {
+                EditorGUILayout.EndVertical();
+            }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
+        }
+
+        #endregion
+
+        #region BoxGroup
+
+        public static void BeginBoxGroup(string aBoxTitle, Color? aTitleBar, Color? aGroupHighlight)
+        {
+            var _prevColor = GUI.backgroundColor;
+            
+            if(aBoxTitle != null)
+            {
+                if(aTitleBar.HasValue)
+                    GUI.backgroundColor = aTitleBar.Value;
+                EditorGUILayout.BeginVertical(FactoryStyles.BoxGroupHeader);
+                GUILayout.Label(aBoxTitle, "BoldLabel");
+                EditorGUILayout.EndVertical();
+            }
+            
+            
+            GUI.backgroundColor = _prevColor;
+
+            if (aGroupHighlight.HasValue)
+                GUI.backgroundColor = aGroupHighlight.Value;
+
+           
+            EditorGUILayout.BeginVertical(aBoxTitle != null ? FactoryStyles.BoxGroup : FactoryStyles.ClosedBoxGroup);
+
+            GUI.backgroundColor = _prevColor;
+        }
+
+        public static void EndBoxGroup()
+        {
+            EditorGUILayout.EndVertical();
+        }
+
+        #endregion
+
+        #region SubBoxGroup
+
+        public static void BeginSubBoxGroup(string aListObjectTitle, Color? aTitleHighlight, Color? aContentHighlight)
+        {
+            var _prevColor = GUI.backgroundColor;
+
+            if(aListObjectTitle != null)
+            {
+                if(aTitleHighlight.HasValue)
+                    GUI.backgroundColor = aTitleHighlight.Value;
+                EditorGUILayout.BeginVertical(FactoryStyles.BoxGroupHeader);
+                GUILayout.Label(aListObjectTitle, new GUIStyle("BoldLabel"));
+                EditorGUILayout.EndVertical();
+            }
+            GUI.backgroundColor = _prevColor;
+            
+            if(aContentHighlight.HasValue)
+            {
+                GUI.backgroundColor = aContentHighlight.Value;
+            }
+
+            EditorGUILayout.BeginVertical(aListObjectTitle != null ? FactoryStyles.SubBoxGroup : FactoryStyles.ClosedSubBoxGroup);
+            
+            GUI.backgroundColor = _prevColor;
+        }
+
+        public static void EndSubBoxGroup()
+        {
+            EditorGUILayout.EndVertical();
+        }
+
+        #endregion
+
+        #region Other
+
+        public static void GuiLine( int aHeight = 1, Color? aLineColor = null, int aSpaceBefore = 3, int aSpaceAfter = 3, float aWidthModifier = 1f )
+        {
+
+            Color _prevColor = GUI.backgroundColor;
+            
+            EditorGUILayout.Space(aSpaceBefore);
+            
+            Rect rect = EditorGUILayout.GetControlRect(false, aHeight );
+
+            rect.width = rect.width * aWidthModifier;
+
+            rect.height = aHeight;
+
+            if (aLineColor.HasValue)
+            {
+                GUI.backgroundColor = aLineColor.Value;
+            }
+            
+            EditorGUI.DrawRect(rect, new Color ( 0.5f,0.5f,0.5f, 1 ) );
+            EditorGUILayout.Space(aSpaceAfter);
+
+            GUI.backgroundColor = _prevColor;
+        }
+
+        #endregion
+
+        //echologin on unity forums https://forum.unity.com/threads/horizontal-line-in-editor-window.520812/
+        public static void ToggleStates(bool aNewState, SerializedProperty[] aSerializedBoolProperties)
+        {
+            foreach (var _serializedProperty in aSerializedBoolProperties)
+            {
+                _serializedProperty.boolValue = aNewState;
+            }
+        }
+
+        public static int DrawListPopup(string aPopupLabel, string[] aPopupOptions, int aCurrentIndex, string aToolTip = null)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(new GUIContent(aPopupLabel, aToolTip));
+            aCurrentIndex = EditorGUILayout.Popup(aCurrentIndex, aPopupOptions);
+            EditorGUILayout.EndHorizontal();
+
+            return aCurrentIndex;
+        }
+
+        public static void DrawToggleTransform(SerializedProperty aToggleTransformProp, bool aIncludeLabel = true, Color? aHeaderColor = null, Color? aBodyColor = null)
+        {
+            //Then get the individual rows of that follow transform 
+            var _positionRow = aToggleTransformProp.FindPropertyRelative("positionRow");
+            var _rotationRow = aToggleTransformProp.FindPropertyRelative("rotationRow");
+
+            var _drawScale = aToggleTransformProp.FindPropertyRelative("enableScaleRow");
+
+            var _name = aToggleTransformProp.FindPropertyRelative("groupName");
+        
+            BeginSubBoxGroup(aIncludeLabel ? _name.stringValue : null, aHeaderColor ?? EditorColors.Header, aBodyColor ?? EditorColors.Body);
+        
+            //Now we draw the buttons
+            EditorGUILayout.BeginHorizontal();
+            DrawToggleRow(_positionRow);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            DrawToggleRow(_rotationRow);
+            EditorGUILayout.EndHorizontal();
+            if (_drawScale.boolValue)
+            {
+                var _scaleRow = aToggleTransformProp.FindPropertyRelative("scaleRow");
+                EditorGUILayout.BeginHorizontal();
+                DrawToggleRow(_scaleRow);
+                EditorGUILayout.EndHorizontal();
+            }
+            EndSubBoxGroup();
+        }
+
+        private static void DrawToggleRow(SerializedProperty aToggleRow)
+        {
+            Color _prevColor = GUI.backgroundColor;
+            EditorColors.OverrideButtonColors();
+            SerializedProperty[] _positionLabels = {aToggleRow.FindPropertyRelative("label1"), aToggleRow.FindPropertyRelative("label2"), aToggleRow.FindPropertyRelative("label3")};
+            SerializedProperty[] _positionStates = {aToggleRow.FindPropertyRelative("conditionalOne"), aToggleRow.FindPropertyRelative("conditionalTwo"), aToggleRow.FindPropertyRelative("conditionalThree")};
+            bool _currentOverall = _positionStates.All(aProperty => aProperty.boolValue);
+
+
+            GUI.backgroundColor = _currentOverall ? EditorColors.ToggleOn : EditorColors.ToggleOff;
+            if (GUILayout.Button(aToggleRow.displayName.Replace(" Row", ""), GUILayout.MaxWidth(Screen.width / 3f)))
+            {
+                _currentOverall = !_currentOverall;
+                ToggleStates(_currentOverall, _positionStates);
+            }
+
+            for (var _index = 0; _index < _positionStates.Length; _index++)
+            {
+                var _label = _positionLabels[_index];
+                var _state = _positionStates[_index];
+
+                GUI.backgroundColor = _state.boolValue ? EditorColors.ToggleOn : EditorColors.ToggleOff;
+                if (GUILayout.Button(_label.stringValue))
+                {
+                    _state.boolValue = !_state.boolValue;
+                }
+            }
+            
+            EditorColors.ResetButtonColors();
+            GUI.backgroundColor = _prevColor;
+        }
+
+        public static bool DrawToggleButton(bool aBoolProperty, GUIContent aButtonContent, ButtonSize aButtonSize = ButtonSize.Standard)
+        {
+            var _color = aBoolProperty ? EditorColors.ToggleOn : EditorColors.ToggleOff;
+            if (DrawButton(aButtonContent, _color, aButtonSize))
+            {
+                aBoolProperty = !aBoolProperty;
+            }
+            return aBoolProperty;
+        }
+
+
+        //Allows us to pass the params without having to explicitly set the size
+        public static bool DrawButton(GUIContent aGUIContent, Color aColor, params GUILayoutOption[] aOptions)
+        {
+            EditorColors.OverrideButtonColors();
+            bool _result = DrawButton(aGUIContent, aColor, ButtonSize.Standard, aOptions);
+            EditorColors.ResetButtonColors();
+            return _result;
+        }
+
+        public static bool DrawButton(GUIContent aGUIContent, Color aColor, ButtonSize aButtonSize = ButtonSize.Standard, params GUILayoutOption[] aOptions)
+        {
+            var _prevColor = GUI.backgroundColor;
+            EditorColors.OverrideButtonColors();
+            float _height = 20f;
+            switch (aButtonSize)
+            {
+                case ButtonSize.Large:
+                    _height *= 1.5f;
+                    break;
+                case ButtonSize.Huge:
+                    _height *= 2.2f;
+                    break;
+                case ButtonSize.Massive:
+                    _height *= 3.5f;
+                    break;
+            }
+
+            var _options = new List<GUILayoutOption>() {GUILayout.Height(_height)};
+            _options.AddRange(aOptions);
+            bool _result = false;
+            GUI.backgroundColor = aColor;
+            if (GUILayout.Button(aGUIContent, _options.ToArray()))
+            {
+                GUI.backgroundColor = _prevColor;
+                _result = true;
+            }
+            GUI.backgroundColor = _prevColor;
+            EditorColors.ResetButtonColors();
+            return _result;
+        }
+
+        public enum ButtonSize
+        {
+            Standard,
+            Large,
+            Huge,
+            Massive
+        }
+
+        public static void RepaintAll()
+        {
+            var _editors = Resources.FindObjectsOfTypeAll<Editor>();
+            foreach (var _editor in _editors)
+            {
+                _editor.Repaint();
+            }
+        }
+    }
+
+}

@@ -1,0 +1,206 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &722932076010524099
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9011041566697672126}
+  - component: {fileID: 4574763099720530228}
+  - component: {fileID: 162653128868120419}
+  - component: {fileID: 4304970910946931596}
+  - component: {fileID: 5989363189485262727}
+  - component: {fileID: 5835175069882982944}
+  - component: {fileID: 2349552665651356136}
+  m_Layer: 0
+  m_Name: Overseer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9011041566697672126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722932076010524099}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4574763099720530228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722932076010524099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d448b6872e003a4eab6b6d80a3b4a8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  automaticallyPlaceModelOnSetup: 1
+  spaceBetweenModels: {x: 5, y: 5}
+  modelsPerRow: 10
+  defaultRowOffset: 15
+--- !u!114 &162653128868120419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722932076010524099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cdae75a03c6f5a498b52e219fd12b97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animatedRenderFactoryPrefab: {fileID: 3116235369508680070, guid: 7147cd38eaecd2f4eaed06cad477c5a8,
+    type: 3}
+  staticRenderFactoryPrefab: {fileID: 295820851253904594, guid: 783adfef4213c4545b6e3a5efd4d7a79,
+    type: 3}
+  cameraRigPrefab: {fileID: 7354537019826345240, guid: fea891618397dab4ca1ce36273a42c9d,
+    type: 3}
+  isometricCameraRigPrefab: {fileID: 7321608828935796547, guid: 251ea7fb1a5dcee48ad3fed371fd3d12,
+    type: 3}
+  sideViewCameraPrefab: {fileID: 7931101196611804193, guid: 5059eface8d6d2a4994cbd5b11d1baea,
+    type: 3}
+  isometricViewCameraPrefab: {fileID: 4756883577343055904, guid: a26bba46574e3d44bb9c62fffce0b730,
+    type: 3}
+  renderParentObjectPrefab: {fileID: 7855543995812570240, guid: e4a7422abfb0c854e9efae6b92ba346b,
+    type: 3}
+--- !u!114 &4304970910946931596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722932076010524099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f6baba4e50abb8409873c283b41ec6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settingsMode: 0
+  animationFramesPerSecond: 16
+  automaticDepthCalculation: 1
+  enableBoundsCalculator: 1
+  boundsCalculatorSizeModifier: 1
+  scaleCalculatorStepPercentage: 4
+  scaleCalculatorMaxPadding: 5
+  scaleCalculatorMaxSteps: 10000
+  includeRenderIgnore: 1
+  scaleCalculatorIgnoreMeshes: []
+  useEdgeCalculator: 1
+  omnidirectionalEdgeCalculator: 1
+  bypassStandardCalculator: 1
+  edgeCalculatorStepSize: 2
+  bottomOffset: 3
+  renderBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  renderingLayer: 0
+  setToLayerWhenNotRendering: 0
+  baseTextureSize: 256
+  setSizeToNearestMultiple: 1
+  overwriteExistingFrames: 1
+  baselineScale: 1
+  renderingFormat: 5
+  renderTextureFormat: 0
+  renderTextureDepth: 2
+  renderTextureReadWrite: 2
+  renderIgnoreList: []
+  useAnimationName: 0
+  includeRigTag: 1
+  includeStaticTag: 0
+  includeFormatIdentifier: 0
+  renderNameFormat:
+  - Model Name
+  - Rig Tag
+  - Camera Index
+  - Animation Index
+  - Frame Index
+  isometricDefaultAngle: 32
+  isometricBaseline: 1
+  preferBasePlateDeviation: 0
+  isometricStepSize: 0.0001
+  isometricMaxSteps: 100000
+  recordingsPerFrame: 1
+  applyBaselineDeviation: 1
+  preferEulerAngles: 0
+  rootMotionTolerance: 6
+  defaultInsertClampCutoff: 25
+  clampingDecimalTolerance: 3
+--- !u!114 &5989363189485262727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722932076010524099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54cdbdafdc22439ea5cb00e2257337c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outputBaseFolder: 
+  createTimeStampedFolders: 1
+  createAnimationSubfolders: 0
+  staticFolderName: Static
+  rootMotionDataFolderName: Root Motion
+  isometric: ISO
+  sideRotational: SR
+--- !u!114 &5835175069882982944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722932076010524099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba6231edacd41239dd81a286fff75f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loggedLevels:
+  - label: Debug
+    state: 1
+    toolTip: 
+  - label: Status
+    state: 1
+    toolTip: 
+  - label: Priority
+    state: 1
+    toolTip: 
+  - label: Error
+    state: 1
+    toolTip: 
+  - label: Fatal Error
+    state: 1
+    toolTip: 
+  - label: Linkage Error
+    state: 1
+    toolTip: 
+  minimumTimeStampedLevel: 2
+  timeStampFormat: HH:mm:ss.fff
+  includeOriginClass: 0
+  includeSenderLabel: 0
+--- !u!114 &2349552665651356136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722932076010524099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be886009447ea424ba9a28957026e3b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

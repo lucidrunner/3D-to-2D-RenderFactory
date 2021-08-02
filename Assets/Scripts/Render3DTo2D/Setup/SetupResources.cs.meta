@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 1cdae75a03c6f5a498b52e219fd12b97
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - animatedRenderFactoryPrefab: {fileID: 3116235369508680070, guid: 7147cd38eaecd2f4eaed06cad477c5a8,
+      type: 3}
+  - staticRenderFactoryPrefab: {fileID: 295820851253904594, guid: 783adfef4213c4545b6e3a5efd4d7a79,
+      type: 3}
+  - cameraRigPrefab: {fileID: 7354537019826345240, guid: fea891618397dab4ca1ce36273a42c9d,
+      type: 3}
+  - isometricCameraRigPrefab: {fileID: 7321608828935796547, guid: 251ea7fb1a5dcee48ad3fed371fd3d12,
+      type: 3}
+  - sideViewCameraPrefab: {fileID: 7931101196611804193, guid: 5059eface8d6d2a4994cbd5b11d1baea,
+      type: 3}
+  - isometricViewCameraPrefab: {fileID: 4756883577343055904, guid: a26bba46574e3d44bb9c62fffce0b730,
+      type: 3}
+  - renderParentObjectPrefab: {fileID: 7855543995812570240, guid: e4a7422abfb0c854e9efae6b92ba346b,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

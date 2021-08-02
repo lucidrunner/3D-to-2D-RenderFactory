@@ -1,0 +1,46 @@
+﻿using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+namespace Factory_Editor
+{
+    static class FactorySettingsRegister
+    {
+        class Styles
+        {
+            public static GUIContent editorPalette = new GUIContent("Editor Palette");
+            public static GUIContent buttonPalette = new GUIContent("Button Palette");
+            public static GUIContent overseerPrefab = new GUIContent("Overseer Prefab");
+        }
+
+        [SettingsProvider]
+        public static SettingsProvider CreateFactorySettingsProvider()
+        {
+            var _provider = new SettingsProvider("Preferences/RenderFactory", SettingsScope.User)
+            {
+                label = "Render Factory",
+                guiHandler = (searchContext) =>
+                {
+                    var _settings = FactorySettings.GetSerializedSettings();
+                    _settings.UpdateIfRequiredOrScript();
+                    GUILayout.Space(5f);
+                    GUILayout.Label("Factory Colors", new GUIStyle(EditorStyles.boldLabel));
+                    InspectorUtility.GuiLine(aSpaceBefore: -5, aSpaceAfter:1);
+                    EditorGUI.BeginChangeCheck();
+                    EditorGUILayout.PropertyField(_settings.FindProperty("editorPalette"), Styles.editorPalette);
+                    EditorGUILayout.PropertyField(_settings.FindProperty("buttonPalette"), Styles.buttonPalette);
+                    var _changed = EditorGUI.EndChangeCheck();
+                    GUILayout.Space(5f);
+                    GUILayout.Label("Prefabs", new GUIStyle(EditorStyles.boldLabel));
+                    InspectorUtility.GuiLine(aSpaceBefore: -5, aSpaceAfter:1);
+                    EditorGUILayout.PropertyField(_settings.FindProperty("overseerPrefab"), Styles.overseerPrefab);
+                    _settings.ApplyModifiedProperties();
+
+                    InspectorUtility.RepaintAll();
+                },
+                keywords = new HashSet<string>(new[] {Styles.editorPalette.text, Styles.buttonPalette.text, Styles.overseerPrefab.text})
+            };
+            return _provider;
+        }
+    }
+}

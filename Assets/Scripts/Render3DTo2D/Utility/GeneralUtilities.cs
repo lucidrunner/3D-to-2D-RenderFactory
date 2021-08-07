@@ -20,6 +20,20 @@ namespace Render3DTo2D.Utility
                 _toReturn.z = aOrigin.z;
             return _toReturn;
         }
+        
+        public static Vector3 ClampRelativeVector(Vector3 aVector)
+        {
+            //This doesn't take for account if we have a rotation that's above 360 to begin with btw (but that should have been clamped when creating the stored transform)
+            //It also won't work with larger than +- 180 changes in a single frame (we should probably allow people to record non-delta for those purposes)
+            if (aVector.x > 180)
+                aVector.x -= 360;
+            if (aVector.y > 180)
+                aVector.y -= 360;
+            if (aVector.z > 180)
+                aVector.z -= 360;
+
+            return aVector;
+        }
 
         public static bool CompareSenderToModelRoot(object aSender, Transform aTransform)
         {

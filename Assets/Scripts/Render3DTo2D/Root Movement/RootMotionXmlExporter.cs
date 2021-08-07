@@ -88,7 +88,13 @@ namespace Render3DTo2D.Root_Movement
             {
                 if (aFactorySettings.PreferEulerAngles)
                 {
-                    XmlMethods.WriteVector3(aXMLWriter, XmlTags.ROTATION_EULER, aFrameRecording.DeltaRotationEuler, aFactorySettings.RootMotionTolerance);
+                    //TODO Placeholder for future setting
+                    bool _performRelativeClamp = true;
+                    //Current band-aid since we mess up the vectors during the conditional copy
+                    if(_performRelativeClamp)
+                        XmlMethods.WriteVector3(aXMLWriter, XmlTags.ROTATION_EULER, GeneralUtilities.ClampRelativeVector(aFrameRecording.DeltaRotationEuler), aFactorySettings.RootMotionTolerance);
+                    else
+                        XmlMethods.WriteVector3(aXMLWriter, XmlTags.ROTATION_EULER, aFrameRecording.DeltaRotationEuler, aFactorySettings.RootMotionTolerance);
                 }
                 else
                 {

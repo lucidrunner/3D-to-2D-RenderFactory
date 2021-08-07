@@ -38,7 +38,7 @@ namespace Render3DTo2D.Root_Movement
                 if (FrameRecordings.Count > 0)
                 {
                     _deltaTransform -= lastTransform;
-                    _deltaTransform.RotationEuler = ClampRotationAsRelative(_deltaTransform.RotationEuler);
+                    _deltaTransform.RotationEuler = GeneralUtilities.ClampRelativeVector(_deltaTransform.RotationEuler);
                 }
                 else
                 {
@@ -51,18 +51,6 @@ namespace Render3DTo2D.Root_Movement
                 FrameRecordings.Add(new FrameRecording(AnimationSetting, _deltaTransform, aFrameArgs));
             }
 
-            private Vector3 ClampRotationAsRelative(Vector3 aRotation)
-            {
-                //This doesn't take for account if we have a rotation that's above 360 to begin with btw (but that should have been clamped
-                if (aRotation.x > 180)
-                    aRotation.x -= 360;
-                if (aRotation.y > 180)
-                    aRotation.y -= 360;
-                if (aRotation.z > 180)
-                    aRotation.z -= 360;
-
-                return aRotation;
-            }
 
             internal class FrameRecording
             {

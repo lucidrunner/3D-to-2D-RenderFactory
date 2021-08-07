@@ -2020,7 +2020,7 @@ MonoBehaviour:
   isometricMaxSteps: 100000
   recordingsPerFrame: 1
   applyBaselineDeviation: 1
-  preferEulerAngles: 0
+  preferEulerAngles: 1
   rootMotionTolerance: 6
 --- !u!114 &478147467
 MonoBehaviour:

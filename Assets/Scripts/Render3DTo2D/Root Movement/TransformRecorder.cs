@@ -37,8 +37,7 @@ namespace Render3DTo2D.Root_Movement
                 StoredTransform _deltaTransform = new StoredTransform(aTransform);
                 if (FrameRecordings.Count > 0)
                 {
-                    _deltaTransform -= lastTransform;
-                    _deltaTransform.RotationEuler = GeneralUtilities.ClampRelativeVector(_deltaTransform.RotationEuler);
+                    _deltaTransform.SetDelta(lastTransform);
                 }
                 else
                 {
@@ -48,7 +47,7 @@ namespace Render3DTo2D.Root_Movement
                 }
                 lastTransform = new StoredTransform(aTransform);    
                 
-                FrameRecordings.Add(new FrameRecording(AnimationSetting, _deltaTransform, aFrameArgs));
+                FrameRecordings.Add(new FrameRecording(_deltaTransform, aFrameArgs));
             }
 
 
@@ -57,26 +56,26 @@ namespace Render3DTo2D.Root_Movement
                 public int AnimationIndex { get; }
                 public int FrameIndex { get; }
                 public float FrameStepTime { get; }
+
+                public StoredTransform FrameTransform;
+                
                 public Vector3 DeltaPosition { get; }
                 public Quaternion DeltaRotation { get; }
                 public Vector3 DeltaRotationEuler { get; }
                 public Vector3 DeltaScale { get; }
 
-                public bool HasChanged => DeltaPosition != Vector3.zero || DeltaRotationEuler != Vector3.zero || DeltaScale != Vector3.zero;
+                public bool HasChanged => FrameTransform?.HasDeltaChange ?? false;
 
 
-                public FrameRecording(RootMotionSetting aAnimationSetting, StoredTransform aTransform,
+                public FrameRecording(StoredTransform aTransform,
                     FrameArgs aFrameArgs)
                 {
                     FrameIndex = aFrameArgs.CurrentFrame;
                     AnimationIndex = aFrameArgs.CurrentAnimationIndex;
                     FrameStepTime = aFrameArgs.LastStepTime;
-                    //Since the model is in the hierarchy we need to record local positions for everything
-                    DeltaPosition = GeneralUtilities.ConditionalVectorCopy(aTransform.Position, (aAnimationSetting.Export.PositionXToggled, aAnimationSetting.Export.PositionYToggled, aAnimationSetting.Export.PositionZToggled));
-                    DeltaRotationEuler = GeneralUtilities.ConditionalVectorCopy(aTransform.Rotation.eulerAngles, (aAnimationSetting.Export.RotationXToggled, aAnimationSetting.Export.RotationYToggled, aAnimationSetting.Export.RotationZToggled));
-                    DeltaScale = GeneralUtilities.ConditionalVectorCopy(aTransform.Scale, (aAnimationSetting.Export.ScaleXToggled, aAnimationSetting.Export.ScaleYToggled, aAnimationSetting.Export.ScaleZToggled));
+
+                    FrameTransform = aTransform;
                     
-                    DeltaRotation = Quaternion.Euler(DeltaRotationEuler);
                 }
             }
         }

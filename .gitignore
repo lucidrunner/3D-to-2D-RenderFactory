@@ -73,3 +73,6 @@ crashlytics-build.properties
 
 #RenderFactory generated scale data
 /[Aa]ssets/ScaleData
+
+#Not Tracked scenes for experimental stuff
+/[Aa]ssets/Scenes/Not Tracked

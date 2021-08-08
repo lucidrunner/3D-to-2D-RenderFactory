@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Render3DTo2D.Model_Settings;
+﻿using System.Text;
 using RootChecker;
 using UnityEditor;
 using UnityEngine;

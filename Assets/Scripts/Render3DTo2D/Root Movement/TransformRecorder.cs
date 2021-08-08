@@ -56,13 +56,8 @@ namespace Render3DTo2D.Root_Movement
                 public int AnimationIndex { get; }
                 public int FrameIndex { get; }
                 public float FrameStepTime { get; }
-
-                public StoredTransform FrameTransform;
                 
-                public Vector3 DeltaPosition { get; }
-                public Quaternion DeltaRotation { get; }
-                public Vector3 DeltaRotationEuler { get; }
-                public Vector3 DeltaScale { get; }
+                public StoredTransform FrameTransform { get; }
 
                 public bool HasChanged => FrameTransform?.HasDeltaChange ?? false;
 
@@ -75,7 +70,6 @@ namespace Render3DTo2D.Root_Movement
                     FrameStepTime = aFrameArgs.LastStepTime;
 
                     FrameTransform = aTransform;
-                    
                 }
             }
         }

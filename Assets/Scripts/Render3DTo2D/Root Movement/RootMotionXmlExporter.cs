@@ -56,14 +56,15 @@ namespace Render3DTo2D.Root_Movement
             for (int _index = 0; _index < aAnimationRecording.FrameRecordings.Count; _index++)
             {
                 var _frameRecording = aAnimationRecording.FrameRecordings[_index];
-                WriteFrameRecording(aXMLWriter, _frameRecording, RenderingSettings.GetFor(aFactoryTransform));
+                WriteFrameRecording(aXMLWriter, _frameRecording, RenderingSettings.GetFor(aFactoryTransform), aAnimationRecording.AnimationSetting);
             }
 
             //Finish the animation recording element
             aXMLWriter.WriteEndElement();
         }
 
-        private static void WriteFrameRecording(XmlWriter aXMLWriter, TransformRecorder.AnimationRecording.FrameRecording aFrameRecording, RenderingSettings aFactorySettings)
+        private static void WriteFrameRecording(XmlWriter aXMLWriter, TransformRecorder.AnimationRecording.FrameRecording aFrameRecording, RenderingSettings aFactorySettings,
+            RootMotionSetting aRootMotionSetting)
         {
             //Write the frame tag
             aXMLWriter.WriteStartElement(XmlTags.FRAME_RECORDING);
@@ -78,36 +79,43 @@ namespace Render3DTo2D.Root_Movement
                 return;
             }
 
-            //Write the position, rotation & scale if they've changed
-            if (aFrameRecording.DeltaPosition != Vector3.zero)
-            {
-                XmlMethods.WriteVector3(aXMLWriter, XmlTags.POSITION, aFactorySettings.ApplyBaselineDeviation ? GeneralUtilities.DeviateVector(aFrameRecording.DeltaPosition, aFactorySettings.BaselineScale, GlobalRenderingSettings.Instance.BaselineScale) : aFrameRecording.DeltaPosition, aFactorySettings.RootMotionTolerance);
-            }
-
-            if (aFrameRecording.DeltaRotationEuler != Vector3.zero)
-            {
-                if (aFactorySettings.PreferEulerAngles)
-                {
-                    //TODO Placeholder for future setting
-                    bool _performRelativeClamp = true;
-                    //Current band-aid since we mess up the vectors during the conditional copy
-                    if(_performRelativeClamp)
-                        XmlMethods.WriteVector3(aXMLWriter, XmlTags.ROTATION_EULER, GeneralUtilities.ClampRelativeVector(aFrameRecording.DeltaRotationEuler), aFactorySettings.RootMotionTolerance);
-                    else
-                        XmlMethods.WriteVector3(aXMLWriter, XmlTags.ROTATION_EULER, aFrameRecording.DeltaRotationEuler, aFactorySettings.RootMotionTolerance);
-                }
-                else
-                {
-                    XmlMethods.WriteQuaternion(aXMLWriter, XmlTags.ROTATION, aFrameRecording.DeltaRotation, aFactorySettings.RootMotionTolerance);
-                }
-            }
-            
-            if (aFrameRecording.DeltaScale != Vector3.zero)
-            {
-                XmlMethods.WriteVector3(aXMLWriter, XmlTags.SCALE, aFrameRecording.DeltaScale, aFactorySettings.RootMotionTolerance);
-            }
+            WriteFrameDelta(aXMLWriter, aFrameRecording, aRootMotionSetting, aFactorySettings);
 
             aXMLWriter.WriteEndElement();
+        }
+
+        private static void WriteFrameDelta(XmlWriter aXMLWriter, TransformRecorder.AnimationRecording.FrameRecording aFrameRecording, RootMotionSetting aRootMotionSetting, RenderingSettings aRenderingSettings)
+        {
+            if (aRootMotionSetting == null)
+                return;
+
+            var _transform = aFrameRecording.FrameTransform;
+            
+            //Basically, construct a vector for pos / rot / scale where each is either 0 or the delta depending on if it's toggled in the setting. Then only write those that have a magnitude.
+            //POSITION
+            var _posDelta = new Vector3(aRootMotionSetting.Export.PositionXToggled ? _transform.PositionDeltaX : 0, aRootMotionSetting.Export.PositionYToggled ? _transform.PositionDeltaY : 0,
+                aRootMotionSetting.Export.PositionZToggled ? _transform.PositionDeltaZ : 0);
+            if (_posDelta != Vector3.zero)
+            {
+                XmlMethods.WriteVector3(aXMLWriter, XmlTags.POSITION, aRenderingSettings.ApplyBaselineDeviation ? GeneralUtilities.DeviateVector(_posDelta, aRenderingSettings.BaselineScale, GlobalRenderingSettings.Instance.BaselineScale) : _posDelta, aRenderingSettings.RootMotionTolerance);
+            }
+            
+            //ROTATION
+            var _rotDelta = new Vector3(aRootMotionSetting.Export.RotationXToggled ? _transform.RotationDeltaX : 0, aRootMotionSetting.Export.RotationYToggled ? _transform.RotationDeltaY : 0,
+                aRootMotionSetting.Export.RotationZToggled ? _transform.RotationDeltaZ : 0);
+            if (_rotDelta != Vector3.zero)
+            {
+                XmlMethods.WriteVector3(aXMLWriter, XmlTags.ROTATION_EULER, _rotDelta, aRenderingSettings.RootMotionTolerance);
+            }
+            
+            //SCALE
+            var _scaleDelta = new Vector3(aRootMotionSetting.Export.ScaleXToggled ? _transform.ScaleDeltaX : 0, aRootMotionSetting.Export.ScaleYToggled ? _transform.ScaleDeltaY : 0,
+                aRootMotionSetting.Export.ScaleZToggled ? _transform.ScaleDeltaZ : 0);
+            if (_scaleDelta != Vector3.zero)
+            {
+                XmlMethods.WriteVector3(aXMLWriter, XmlTags.SCALE, _scaleDelta, aRenderingSettings.RootMotionTolerance);
+            }
+            
         }
 
         private static XmlWriter WriteDocumentStart(RenderFactoryEvents.ExportTransformArgs aExportTransformArgs, Transform aFactoryTransform)

@@ -1982,28 +1982,30 @@ MonoBehaviour:
       type: 3}
     frameCount: 14
     animationSettings: {fileID: 478147464}
-    isLooping: 0
+    isLooping: 1
     ignoreLastFrame: 1
-    clampedMode: 0
+    clampedMode: 2
     insertRemoveLastFrame: 1
     stretchStartFrameIndex: 0
     showClamping: 1
     maxStretchFrames: 11
-    stretchFramesInfoMessage: 
+    stretchFramesInfoMessage: Starting at index 0 gives 14 frames to be rendered
+      with a stretched step time of 0.06667, which is 106.67% of the standard speed.
     clampedFramesInfoMessage: 
   - animationName: standing walk back
     animationClip: {fileID: 8416742220952646391, guid: c55c3c0070f39a5489ef43b3c99bffb7,
       type: 3}
     frameCount: 24
     animationSettings: {fileID: 478147464}
-    isLooping: 0
+    isLooping: 1
     ignoreLastFrame: 1
-    clampedMode: 0
+    clampedMode: 2
     insertRemoveLastFrame: 1
     stretchStartFrameIndex: 0
     showClamping: 1
     maxStretchFrames: 21
-    stretchFramesInfoMessage: 
+    stretchFramesInfoMessage: Starting at index 0 gives 24 frames to be rendered
+      with a stretched step time of 0.06377, which is 102.03% of the standard speed.
     clampedFramesInfoMessage: 
 --- !u!114 &478147465
 MonoBehaviour:

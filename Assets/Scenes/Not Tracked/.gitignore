@@ -1,0 +1,3 @@
+# Gitignore file for excluding everything in a directory
+*
+!.gitignore

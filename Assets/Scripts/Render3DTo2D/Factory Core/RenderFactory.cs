@@ -212,11 +212,14 @@ namespace Render3DTo2D.Factory_Core
             FLogger.LogMessage(this, FLogger.Severity.Priority, $"Rendering Finished", RootFinder.FindHighestRoot(transform).gameObject.name);
                 
             bool? _applyRootMotion = RootMotionSettings.GetFor(transform)?.EnableRootMotionExport;
+            string _rootMotionFilePath = null;
             if (_applyRootMotion.HasValue && _applyRootMotion.Value == true)
             {
                 //Export the Root Data to an XML file
                 string _outputPath = FactoryFolderCreator.CreateTransformExportFolderForFactory(transform);
-                RenderFactoryEvents.InvokeExportTransform(transform, new RenderFactoryEvents.ExportTransformArgs(_outputPath, renderTimeStamp));
+                var _exportArgs = new RenderFactoryEvents.ExportTransformArgs(_outputPath, renderTimeStamp);
+                RenderFactoryEvents.InvokeExportTransform(transform, _exportArgs);
+                _rootMotionFilePath = _exportArgs.FullFilePath;
             }
                 
             Busy = false;
@@ -225,9 +228,9 @@ namespace Render3DTo2D.Factory_Core
 
             //Export the animation data to XML if we're a non-static factory
             if (GetComponent<StaticRenderManager>() == null)
-                factoryRigManager.ExportToXML(stopMotionAnimator);
+                factoryRigManager.ExportToXML(stopMotionAnimator, _rootMotionFilePath);
             else
-                factoryRigManager.ExportToXML();
+                factoryRigManager.ExportToXML(_rootMotionFilePath);
 
             //Finally, reset the camera sizes 
             factoryScaleManager.ResetCameraSizes();

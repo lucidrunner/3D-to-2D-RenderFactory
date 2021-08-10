@@ -126,10 +126,17 @@ namespace Render3DTo2D.Factory_Core
             public string OutputPath { get; }
             public DateTimeOffset TimeStamp { get; }
             
+            public string FullFilePath { get; private set; }
+            
             public ExportTransformArgs(string aOutputPath, DateTimeOffset aRenderTimeStamp)
             {
                 OutputPath = aOutputPath;
                 TimeStamp = aRenderTimeStamp;
+            }
+
+            public void SetFilePath(string aFilePath)
+            {
+                FullFilePath = aFilePath;
             }
         }
         #endregion

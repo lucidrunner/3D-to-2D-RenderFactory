@@ -40,6 +40,7 @@
         public static string FRAME_INDEX = "FrameIndex";
         public static string FRAME_STEPLENGTH = "StepElapsedTime";
         public static string SUBSTEPS = "RecordingsPerFrame";
+        public static string ROOT_FILEPATH = "RootMotionPath";
 
         #endregion
 

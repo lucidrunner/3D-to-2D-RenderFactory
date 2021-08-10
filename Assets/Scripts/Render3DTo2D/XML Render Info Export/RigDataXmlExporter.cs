@@ -13,6 +13,7 @@ using Render3DTo2D.SMAnimator;
 using Render3DTo2D.Utility;
 using Render3DTo2D.Utility.IO;
 using RootChecker;
+using UnityEngine;
 
 namespace Render3DTo2D.XML_Render_Info_Export
 {
@@ -132,6 +133,18 @@ namespace Render3DTo2D.XML_Render_Info_Export
             XmlMethods.WriteStringElement(aXmlWriter, XmlTags.STATIC_FOLDER, _folderSettings.StaticFolderName);
             XmlMethods.WriteStringElement(aXmlWriter, XmlTags.SUBFOLDERS, _folderSettings.CreateAnimationSubfolders.ToString());
             
+            //If we're exporting Root Motion, add a relative path
+            if (aExportArgs.RootMotionFilePath != null)
+            {
+                //Get the Root Path based on the LastOutputPath
+                var _root = new DirectoryInfo(aExportArgs.LastOutputPath).Parent?.FullName;
+                if (_root != null)
+                {
+                    //We have to do the Path.GetFullPath trick since the original FilePath can give us \ or / as a separation character, while the DirectoryInfo only gives us one of them
+                    XmlMethods.WriteStringElement(aXmlWriter, XmlTags.ROOT_FILEPATH, Path.GetFullPath(aExportArgs.RootMotionFilePath).Replace(_root, "ROOT"));
+                }
+            }
+            
             if (_isometricWrite)
             {
                 //Get the angle and write it for an isometric rig
@@ -238,13 +251,15 @@ namespace Render3DTo2D.XML_Render_Info_Export
             public string LastOutputPath { get; }
             public StopMotionAnimatorInfo SmAnimatorInfo { get; }
             public string TimeStamp { get; }
+            public string RootMotionFilePath { get; }
 
-            public RigRenderExportArgs(CameraRig aCameraRig, string aLastOutputPath, string aTimeStamp, StopMotionAnimatorInfo aSmAnimatorInfo = null)
+            public RigRenderExportArgs(CameraRig aCameraRig, string aLastOutputPath, string aTimeStamp, StopMotionAnimatorInfo aSmAnimatorInfo = null, string aRootMotionFilePath = null)
             {
                 CameraRig = aCameraRig;
                 LastOutputPath = aLastOutputPath;
                 SmAnimatorInfo = aSmAnimatorInfo;
                 TimeStamp = aTimeStamp;
+                RootMotionFilePath = aRootMotionFilePath;
             }
         }
         

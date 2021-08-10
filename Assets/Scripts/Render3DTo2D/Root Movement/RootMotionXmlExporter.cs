@@ -22,7 +22,15 @@ namespace Render3DTo2D.Root_Movement
         internal static void Export(RenderFactoryEvents.ExportTransformArgs aExportTransformArgs, Transform aFactoryTransform, List<TransformRecorder.AnimationRecording> aAnimationRecordings)
         {
             FLogger.LogMessage(null, FLogger.Severity.Debug, "Entering Root Motion export write now.", nameof(RootMotionXmlExporter));
-            using (XmlWriter _xmlWriter = WriteDocumentStart(aExportTransformArgs, aFactoryTransform))
+            
+            //TODO Path is wrong here?
+            //The passed transform is already root by default but this is just some future proofing if we ever change that by accident
+            string _modelName = RootFinder.FindHighestRoot(aFactoryTransform).name;
+            string _fileName = $"{_modelName} - Root Motion Recording.xml";
+            string _path = Path.Combine(aExportTransformArgs.OutputPath, _fileName);
+            
+            
+            using (XmlWriter _xmlWriter = WriteDocumentStart(aExportTransformArgs, _path, _modelName))
             {
                 
                 _xmlWriter.WriteStartElement(XmlTags.ANIMATION_LIST);
@@ -36,6 +44,7 @@ namespace Render3DTo2D.Root_Movement
                 }
                 _xmlWriter.WriteEndElement();
                 XmlMethods.WriteDocumentEnd(_xmlWriter);
+                aExportTransformArgs.SetFilePath(_path);
             }
         }
 
@@ -118,26 +127,21 @@ namespace Render3DTo2D.Root_Movement
             
         }
 
-        private static XmlWriter WriteDocumentStart(RenderFactoryEvents.ExportTransformArgs aExportTransformArgs, Transform aFactoryTransform)
+        private static XmlWriter WriteDocumentStart(RenderFactoryEvents.ExportTransformArgs aExportTransformArgs, string aPath, string aModelName)
         {
-            //TODO Path is wrong here
-            //The passed transform is already root by default but this is just some future proofing if we ever change that by accident
-            string _modelName = RootFinder.FindHighestRoot(aFactoryTransform).name;
-            string _fileName = $"{_modelName} - Root Motion Recording.xml";
-            string _path = Path.Combine(aExportTransformArgs.OutputPath, _fileName);
-            
-            
             //Setup & Start the writer
             XmlWriterSettings _settings = new XmlWriterSettings {Indent = true, IndentChars = "\t"};
 
-            XmlWriter _xmlWriter = XmlWriter.Create(_path, _settings);
+            XmlWriter _xmlWriter = XmlWriter.Create(aPath, _settings);
+            
+            
             
             //Write the start of the document and the root node
             _xmlWriter.WriteStartDocument();
             _xmlWriter.WriteStartElement(XmlTags.TRANSFORM_EXPORT_ROOT);
             
             //Write the model name
-            XmlMethods.WriteStringElement(_xmlWriter, XmlTags.NAME, _modelName);
+            XmlMethods.WriteStringElement(_xmlWriter, XmlTags.NAME, aModelName);
             //Write the timestamp
             XmlMethods.WriteStringElement(_xmlWriter, XmlTags.TIMESTAMP, aExportTransformArgs.TimeStamp.ToString());
 

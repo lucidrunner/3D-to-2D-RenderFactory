@@ -121,9 +121,9 @@ namespace Render3DTo2D.Rigging
             name = $"{name}_{rigTag}";
         }
 
-        public void ExportAnimationData(StopMotionAnimatorInfo aSmAnimatorInfo)
+        public void ExportAnimationData(StopMotionAnimatorInfo aSmAnimatorInfo, string aRootMotionFilePath = null)
         {
-            RigDataXmlExporter.Export(new RigDataXmlExporter.RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo));
+            RigDataXmlExporter.Export(new RigDataXmlExporter.RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
         }
 
         #endregion

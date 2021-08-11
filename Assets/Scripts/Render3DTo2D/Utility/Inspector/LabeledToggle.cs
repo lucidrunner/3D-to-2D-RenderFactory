@@ -1,6 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Render3DTo2D.Utility.Inspector
@@ -16,7 +15,7 @@ namespace Render3DTo2D.Utility.Inspector
 
         public bool State => toggle;
         
-        [SerializeField, InlineProperty, LabelText("$Label")]
+        [SerializeField]
         private bool toggle;
 
         public LabeledToggle(string aLabel, bool aInitialState)

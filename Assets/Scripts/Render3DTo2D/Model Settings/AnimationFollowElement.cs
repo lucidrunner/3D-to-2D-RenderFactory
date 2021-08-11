@@ -1,7 +1,6 @@
 ﻿using System;
 using Render3DTo2D.Utility;
 using Render3DTo2D.Utility.Inspector;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Render3DTo2D.Model_Settings
@@ -20,7 +19,7 @@ namespace Render3DTo2D.Model_Settings
         }
         
         public ToggleTransform Follow => followTransform;
-        [SerializeField, BoxGroup("$AnimationName"), HideLabel]
+        [SerializeField]
         private ToggleTransform followTransform = new ToggleTransform("Camera Mimic Motion For", InspectorTooltips.FollowTransform, false, new bool[9]);
     }
 }

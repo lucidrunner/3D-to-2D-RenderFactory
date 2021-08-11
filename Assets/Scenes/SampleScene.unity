@@ -3743,8 +3743,76 @@ MonoBehaviour:
       conditionalOne: 0
       conditionalTwo: 0
       conditionalThree: 0
-  toggleOverride: 0
-  animationFollowElements: []
+  toggleOverride: 1
+  animationFollowElements:
+  - animationName: standing run forward
+    followTransform:
+      groupName: Camera Mimic Motion For
+      enableScaleRow: 0
+      positionRow:
+        rowName: Position
+        buttonTooltip: Applies the delta change to the rig, causing the cameras to
+          mimic the models movement & rotation on all toggled axes.
+        label1: X
+        label2: Y
+        label3: Z
+        conditionalOne: 1
+        conditionalTwo: 1
+        conditionalThree: 1
+      rotationRow:
+        rowName: Rotation
+        buttonTooltip: Applies the delta change to the rig, causing the cameras to
+          mimic the models movement & rotation on all toggled axes.
+        label1: X
+        label2: Y
+        label3: Z
+        conditionalOne: 1
+        conditionalTwo: 1
+        conditionalThree: 1
+      scaleRow:
+        rowName: Scale
+        buttonTooltip: Applies the delta change to the rig, causing the cameras to
+          mimic the models movement & rotation on all toggled axes.
+        label1: X
+        label2: Y
+        label3: Z
+        conditionalOne: 1
+        conditionalTwo: 1
+        conditionalThree: 1
+  - animationName: standing walk back
+    followTransform:
+      groupName: Camera Mimic Motion For
+      enableScaleRow: 0
+      positionRow:
+        rowName: Position
+        buttonTooltip: Applies the delta change to the rig, causing the cameras to
+          mimic the models movement & rotation on all toggled axes.
+        label1: X
+        label2: Y
+        label3: Z
+        conditionalOne: 1
+        conditionalTwo: 1
+        conditionalThree: 1
+      rotationRow:
+        rowName: Rotation
+        buttonTooltip: Applies the delta change to the rig, causing the cameras to
+          mimic the models movement & rotation on all toggled axes.
+        label1: X
+        label2: Y
+        label3: Z
+        conditionalOne: 1
+        conditionalTwo: 1
+        conditionalThree: 1
+      scaleRow:
+        rowName: Scale
+        buttonTooltip: Applies the delta change to the rig, causing the cameras to
+          mimic the models movement & rotation on all toggled axes.
+        label1: X
+        label2: Y
+        label3: Z
+        conditionalOne: 1
+        conditionalTwo: 1
+        conditionalThree: 1
 --- !u!114 &1311078741
 MonoBehaviour:
   m_ObjectHideFlags: 0

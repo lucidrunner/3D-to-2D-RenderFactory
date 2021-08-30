@@ -304,9 +304,6 @@ namespace Render3DTo2D.Model_Settings
         public bool ApplyBaselineDeviation => applyBaselineDeviation;
         [SerializeField] private bool applyBaselineDeviation = true;
 
-        public bool PreferEulerAngles => preferEulerAngles;
-        [SerializeField] private bool preferEulerAngles = false;
-        
         public int RootMotionTolerance => rootMotionTolerance;
         [SerializeField] private int rootMotionTolerance = 6;
 
@@ -421,7 +418,6 @@ namespace Render3DTo2D.Model_Settings
             isometricStepSize = aRenderingSettings.isometricStepSize;
             omnidirectionalEdgeCalculator = aRenderingSettings.omnidirectionalEdgeCalculator;
             overwriteExistingFrames = aRenderingSettings.overwriteExistingFrames;
-            preferEulerAngles = aRenderingSettings.preferEulerAngles;
             recordingsPerFrame = aRenderingSettings.recordingsPerFrame;
             renderBackgroundColor = aRenderingSettings.renderBackgroundColor;
             renderNameFormat = new List<string>(aRenderingSettings.renderNameFormat);

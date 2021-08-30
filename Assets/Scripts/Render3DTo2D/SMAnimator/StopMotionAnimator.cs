@@ -29,6 +29,8 @@ namespace Render3DTo2D.SMAnimator
         public int CurrentCycle { get; private set; } = 0;
 
         public int CurrentFrame { get; private set; } = 0;
+        
+        public float CurrentRealTime() =>  GetCurrentClipLength() * GetCurrentNormalizedTime();
 
         private float AnimationStepLength
         {
@@ -111,6 +113,7 @@ namespace Render3DTo2D.SMAnimator
                 GeneralUtilities.FocusSceneCamera(RootFinder.FindHighestRoot(transform).gameObject);
 
             
+            
             //Increment the frame counter if we're supposed to
             if(aIncrementFrame)
             {
@@ -182,6 +185,7 @@ namespace Render3DTo2D.SMAnimator
         #endregion
 
         #region Private Methods
+
 
 
         private float GetCurrentNormalizedTime()

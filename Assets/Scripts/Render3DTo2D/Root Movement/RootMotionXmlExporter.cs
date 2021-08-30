@@ -80,6 +80,7 @@ namespace Render3DTo2D.Root_Movement
             //and add the frame # as an attribute
             aXMLWriter.WriteAttributeString(XmlTags.FRAME_INDEX, aFrameRecording.FrameIndex.ToString());
             aXMLWriter.WriteAttributeString(XmlTags.FRAME_STEPLENGTH, aFrameRecording.FrameStepTime.ToString(CultureInfo.InvariantCulture));
+            aXMLWriter.WriteAttributeString(XmlTags.FRAME_REALTIME, aFrameRecording.FrameRealTime.ToString(CultureInfo.InvariantCulture));
 
             //Only write the sub-nodes to a frame if there's any change to them
             if (!aFrameRecording.HasChanged)
@@ -101,28 +102,31 @@ namespace Render3DTo2D.Root_Movement
             var _transform = aFrameRecording.FrameTransform;
             
             //Basically, construct a vector for pos / rot / scale where each is either 0 or the delta depending on if it's toggled in the setting. Then only write those that have a magnitude.
-            //POSITION
+            //POSITION DELTA
             var _posDelta = new Vector3(aRootMotionSetting.Export.PositionXToggled ? _transform.PositionDeltaX : 0, aRootMotionSetting.Export.PositionYToggled ? _transform.PositionDeltaY : 0,
                 aRootMotionSetting.Export.PositionZToggled ? _transform.PositionDeltaZ : 0);
             if (_posDelta != Vector3.zero)
             {
-                XmlMethods.WriteVector3(aXMLWriter, XmlTags.POSITION, aRenderingSettings.ApplyBaselineDeviation ? GeneralUtilities.DeviateVector(_posDelta, aRenderingSettings.BaselineScale, GlobalRenderingSettings.Instance.BaselineScale) : _posDelta, aRenderingSettings.RootMotionTolerance);
+                XmlMethods.WriteVector3(aXMLWriter, XmlTags.POSITION_DELTA, aRenderingSettings.ApplyBaselineDeviation ? GeneralUtilities.DeviateVector(_posDelta, aRenderingSettings.BaselineScale, GlobalRenderingSettings.Instance.BaselineScale) : _posDelta, aRenderingSettings.RootMotionTolerance);
             }
             
-            //ROTATION
+            //ROTATION DELTA
             var _rotDelta = new Vector3(aRootMotionSetting.Export.RotationXToggled ? _transform.RotationDeltaX : 0, aRootMotionSetting.Export.RotationYToggled ? _transform.RotationDeltaY : 0,
                 aRootMotionSetting.Export.RotationZToggled ? _transform.RotationDeltaZ : 0);
             if (_rotDelta != Vector3.zero)
             {
-                XmlMethods.WriteVector3(aXMLWriter, XmlTags.ROTATION_EULER, _rotDelta, aRenderingSettings.RootMotionTolerance);
+                XmlMethods.WriteVector3(aXMLWriter, XmlTags.ROTATION_EULER_DELTA, _rotDelta, aRenderingSettings.RootMotionTolerance);
             }
             
-            //SCALE
+            //ROTATION QUATERNION
+            XmlMethods.WriteQuaternion(aXMLWriter, XmlTags.ROTATION, _transform.Rotation, aRenderingSettings.RootMotionTolerance);
+
+            //SCALE_DELTA DELTA
             var _scaleDelta = new Vector3(aRootMotionSetting.Export.ScaleXToggled ? _transform.ScaleDeltaX : 0, aRootMotionSetting.Export.ScaleYToggled ? _transform.ScaleDeltaY : 0,
                 aRootMotionSetting.Export.ScaleZToggled ? _transform.ScaleDeltaZ : 0);
             if (_scaleDelta != Vector3.zero)
             {
-                XmlMethods.WriteVector3(aXMLWriter, XmlTags.SCALE, _scaleDelta, aRenderingSettings.RootMotionTolerance);
+                XmlMethods.WriteVector3(aXMLWriter, XmlTags.SCALE_DELTA, _scaleDelta, aRenderingSettings.RootMotionTolerance);
             }
             
         }

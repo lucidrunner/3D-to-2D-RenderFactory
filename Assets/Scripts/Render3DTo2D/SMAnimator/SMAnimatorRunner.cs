@@ -12,7 +12,7 @@ namespace Render3DTo2D.SMAnimator
 {
     public class SMAnimatorRunner
     {
-        public FrameArgs CurrentFrameInfo => new FrameArgs(CurrentFrame, CurrentAnimationIndex, LastStepTime);
+        public FrameArgs CurrentFrameInfo => new FrameArgs(CurrentFrame, CurrentAnimationIndex, LastStepTime, smAnimator.CurrentRealTime());
         
         public int CurrentFrame => smAnimator.CurrentFrame;
         public int CurrentAnimationIndex { get; private set; } = 0;
@@ -171,12 +171,14 @@ namespace Render3DTo2D.SMAnimator
         public int CurrentAnimationIndex { get; }
         public int CurrentFrame { get; }
         public float LastStepTime { get; }
+        public float FrameRealTime { get; }
 
-        public FrameArgs(int aCurrentFrame, int aCurrentAnimationIndex, float aLastStepTime)
+        public FrameArgs(int aCurrentFrame, int aCurrentAnimationIndex, float aLastStepTime, float aCurrentFrameTime)
         {
             CurrentFrame = aCurrentFrame;
             CurrentAnimationIndex = aCurrentAnimationIndex;
             LastStepTime = aLastStepTime;
+            FrameRealTime = aCurrentFrameTime;
         }
     }
 }

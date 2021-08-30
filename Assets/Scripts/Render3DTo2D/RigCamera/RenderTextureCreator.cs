@@ -35,7 +35,9 @@ namespace Render3DTo2D.RigCamera
 
         public void CreateAndRenderNewRt(int aSize)
         {
-            RenderingSettings _renderingSettings = RenderingSettings.GetFor(transform);
+            var _renderingSettings = RenderingSettings.GetFor(transform);
+
+            ReleaseTexture();
             
             renderTexture = new RenderTexture(aSize, aSize, _renderingSettings.PresetRenderTextureDepth, _renderingSettings.PresetRenderTextureFormat,
                 _renderingSettings.PresetRenderTextureReadWrite) {name = $"RT_{RootFinder.FindHighestRoot(transform).GetInstanceID()}_{_textureNumber}"};
@@ -46,7 +48,14 @@ namespace Render3DTo2D.RigCamera
             renderedCamera.targetTexture = renderTexture;
             renderedCamera.Render();
         }
-        
+
+        private void ReleaseTexture()
+        {
+            if (renderTexture == null) return;
+            renderedCamera.targetTexture = null;
+            renderTexture.Release();
+            renderTexture = null;
+        }
 
         #endregion Public Methods
 

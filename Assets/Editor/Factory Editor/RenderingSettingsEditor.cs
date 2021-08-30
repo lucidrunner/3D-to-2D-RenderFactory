@@ -68,7 +68,6 @@ namespace Factory_Editor
         //Root Motion
         private SerializedProperty recordingsPerFrameProp;
         private SerializedProperty applyBaselineDeviationProp;
-        private SerializedProperty preferEulerAnglesProp;
         private SerializedProperty rootMotionToleranceProp;
  
         protected virtual void OnEnable()
@@ -132,7 +131,6 @@ namespace Factory_Editor
             //Root Motion
             recordingsPerFrameProp = serializedObject.FindProperty("recordingsPerFrame");
             applyBaselineDeviationProp = serializedObject.FindProperty("applyBaselineDeviation");
-            preferEulerAnglesProp = serializedObject.FindProperty("preferEulerAngles");
             rootMotionToleranceProp = serializedObject.FindProperty("rootMotionTolerance");
 
          
@@ -381,7 +379,6 @@ namespace Factory_Editor
                 EditorGUILayout.PropertyField(recordingsPerFrameProp, new GUIContent(recordingsPerFrameProp.displayName, InspectorTooltips.RootMotionRecordingsPerFrame));
                 //    applyBaselineDeviationProp.boolValue = EditorGUILayout.ToggleLeft(new GUIContent(applyBaselineDeviationProp.displayName, InspectorTooltips.ApplyBaselineDeviation), applyBaselineDeviationProp.boolValue);
                 EditorGUILayout.PropertyField(applyBaselineDeviationProp, new GUIContent(applyBaselineDeviationProp.displayName, InspectorTooltips.ApplyBaselineDeviation));
-                EditorGUILayout.PropertyField(preferEulerAnglesProp, new GUIContent(preferEulerAnglesProp.displayName, InspectorTooltips.PreferEulerAngles));
                 if (EditorGUILayout.BeginFadeGroup(showAdvancedFields.faded))
                 {
                     EditorGUILayout.PropertyField(rootMotionToleranceProp, new GUIContent(rootMotionToleranceProp.displayName, InspectorTooltips.RootMotionTolerance));

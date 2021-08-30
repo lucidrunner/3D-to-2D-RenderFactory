@@ -33,12 +33,13 @@
         public static string ANIMATION_INDEX = "AnimationIndex";
         public static string ANIMATION_NAME = "AnimationName";
         public static string FRAME_RECORDING = "FrameRecording";
-        public static string POSITION = "PositionVector3";
-        public static string ROTATION = "RotationQuaternion";
-        public static string ROTATION_EULER = "RotationEulerVector3";
-        public static string SCALE = "ScaleVector3";
+        public static string POSITION_DELTA = "PositionDelta";
+        public static string ROTATION = "Rotation";
+        public static string ROTATION_EULER_DELTA = "RotationDelta";
+        public static string SCALE_DELTA = "ScaleDelta";
         public static string FRAME_INDEX = "FrameIndex";
         public static string FRAME_STEPLENGTH = "StepElapsedTime";
+        public static string FRAME_REALTIME = "ElapsedRealTime";
         public static string SUBSTEPS = "RecordingsPerFrame";
         public static string ROOT_FILEPATH = "RootMotionPath";
 

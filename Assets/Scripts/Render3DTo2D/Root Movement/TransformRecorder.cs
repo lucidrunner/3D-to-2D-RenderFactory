@@ -56,6 +56,7 @@ namespace Render3DTo2D.Root_Movement
                 public int AnimationIndex { get; }
                 public int FrameIndex { get; }
                 public float FrameStepTime { get; }
+                public float FrameRealTime { get; }
                 
                 public StoredTransform FrameTransform { get; }
 
@@ -68,7 +69,7 @@ namespace Render3DTo2D.Root_Movement
                     FrameIndex = aFrameArgs.CurrentFrame;
                     AnimationIndex = aFrameArgs.CurrentAnimationIndex;
                     FrameStepTime = aFrameArgs.LastStepTime;
-
+                    FrameRealTime = aFrameArgs.FrameRealTime;
                     FrameTransform = aTransform;
                 }
             }

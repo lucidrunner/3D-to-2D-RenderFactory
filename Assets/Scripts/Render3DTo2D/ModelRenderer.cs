@@ -125,6 +125,7 @@ namespace Render3DTo2D
 
         private void SetPosition()
         {
+            GameObject _model = GetComponentInChildren<ModelInfo>().gameObject;
             var _settings = RenderingSettings.GetFor(transform);
             defaultPosition = transform.position;
             //Move the model to 0,0 if desired
@@ -132,17 +133,19 @@ namespace Render3DTo2D
                 transform.position = Vector3.zero;
             //And center the camera on it too
             if (_settings.CenterCameraOnRenderStartup)
-                GeneralUtilities.FocusSceneCamera(gameObject);
+                GeneralUtilities.FocusSceneCamera(_model != null ? _model : gameObject);
+            
         }
 
         private void ResetPosition()
         {
+            GameObject _model = GetComponentInChildren<ModelInfo>().gameObject;
             transform.position = defaultPosition;
             GetSelectedRenderFactory(runFactoryType, out var _factory);
             _factory.FinishedCallback -= RenderFactoryOnFinishedCallback;
             //Move the camera to the model if we moved it to begin with
             if(RenderingSettings.GetFor(transform).CenterCameraOnRenderStartup)
-                GeneralUtilities.FocusSceneCamera(gameObject);
+                GeneralUtilities.FocusSceneCamera(_model != null ? _model : gameObject);
         }
 
 

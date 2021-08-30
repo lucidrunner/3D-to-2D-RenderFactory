@@ -88,10 +88,11 @@ namespace Render3DTo2D.Utility
 
         public static void FocusSceneCamera(GameObject aGameObject)
         {
-            var _prevObject = Selection.activeGameObject;
-            Selection.activeGameObject = aGameObject;
-            SceneView.lastActiveSceneView.FrameSelected();
-            Selection.activeGameObject = _prevObject;
+            var _pos = aGameObject.transform.position;
+            _pos.y = 0;
+            SceneView.lastActiveSceneView.pivot = _pos;
+            SceneView.lastActiveSceneView.Repaint();
         }
+
     }
 }

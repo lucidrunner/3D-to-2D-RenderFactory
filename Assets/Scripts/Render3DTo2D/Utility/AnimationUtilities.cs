@@ -37,6 +37,7 @@ namespace Render3DTo2D.Utility
             var _root = RootFinder.FindHighestRoot(aTransform);
             return _root.GetComponent<Animator>() != null ? _root : _root.GetComponentInChildren<Animator>()?.transform;
         }
+        
 
         public static bool HasRootMotion(AnimationClip aAnimationClip)
         {

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Shared_Scripts
 {
-    public class FactorySettings : ScriptableObject
+    public class FactorySettings : SettingsBase
     {
-        public const string SettingsPath = "Assets/RenderFactory/Settings/FactorySettings.asset";
+        public const string SettingsPath = SettingsBasePath +  "FactorySettings.asset";
 
         [SerializeField] private EditorColors.EditorPalette editorPalette;
         [SerializeField] private EditorColors.ButtonPalette buttonPalette;
@@ -68,5 +68,4 @@ namespace Shared_Scripts
             return new SerializedObject(GetOrCreateSettings());
         }
     }
-
 }

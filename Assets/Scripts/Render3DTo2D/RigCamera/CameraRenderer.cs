@@ -8,6 +8,7 @@ using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Setup;
 using Render3DTo2D.Utility;
+using Shared_Scripts;
 using UnityEngine;
 
 namespace Render3DTo2D.RigCamera
@@ -185,10 +186,12 @@ namespace Render3DTo2D.RigCamera
             //Set the background color to the color provided in the settings
             RenderingSettings _renderingSettings = RenderingSettings.GetFor(transform);
             renderCamera.backgroundColor = _renderingSettings.RenderBackgroundColor;
+            
             //Get the list for the name format
-            renderNameFormat = _renderingSettings.RenderNameFormat;
+            var _namingSettings = NamingSettings.GetOrCreateSettings();
+            renderNameFormat = _namingSettings.RenderNameFormat;
             //Set if we should include a C / A / F identifier in the format
-            includeFormatIdentifier = _renderingSettings.IncludeFormatIdentifier;
+            includeFormatIdentifier = _namingSettings.IncludeFormatIdentifier;
             
             //Set our camera culling mask to only match our root object layer
             defaultLayerMask = renderCamera.cullingMask;

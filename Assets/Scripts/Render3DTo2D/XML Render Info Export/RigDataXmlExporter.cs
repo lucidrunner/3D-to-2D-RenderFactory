@@ -13,6 +13,7 @@ using Render3DTo2D.SMAnimator;
 using Render3DTo2D.Utility;
 using Render3DTo2D.Utility.IO;
 using RootChecker;
+using Shared_Scripts;
 using UnityEngine;
 
 namespace Render3DTo2D.XML_Render_Info_Export
@@ -170,8 +171,9 @@ namespace Render3DTo2D.XML_Render_Info_Export
             //Write the animation meta data
             aXMLWriter.WriteStartElement(XmlTags.ANIMATION_SETUP);
             //Write the render name format
+            var _namingSettings = NamingSettings.GetOrCreateSettings();
             StringBuilder _format = new StringBuilder();
-            foreach (char _signifier in _settings.RenderNameFormat)
+            foreach (char _signifier in _namingSettings.RenderNameFormat)
             {
                 _format.Append(_signifier);
             }
@@ -179,8 +181,8 @@ namespace Render3DTo2D.XML_Render_Info_Export
             //Add some extra info on the name format so we can use it more easily
             List<(string attributeTag, string attributeString)> _nameAttributes = new List<(string attributeTag, string attributeString)>
             {
-                (XmlTags.NAME_PREFIX, _settings.IncludeFormatIdentifier.ToString()),
-                (XmlTags.PREFER_ANIMATION_NAME, _settings.UseAnimationName.ToString())
+                (XmlTags.NAME_PREFIX, _namingSettings.IncludeFormatIdentifier.ToString()),
+                (XmlTags.PREFER_ANIMATION_NAME, _namingSettings.UseAnimationName.ToString())
             };
             XmlMethods.WriteStringElement(aXMLWriter, XmlTags.NAME_FORMAT, _format.ToString(), _nameAttributes.ToArray());
             //Write the FPS for the animations

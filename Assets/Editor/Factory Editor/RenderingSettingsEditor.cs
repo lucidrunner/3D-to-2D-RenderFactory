@@ -50,12 +50,6 @@ namespace Factory_Editor
         private SerializedProperty renderingTextureReadWriteProp;
         private SerializedProperty renderingIgnoreListProp;
      
-        //Naming
-        private SerializedProperty useAnimationNameProp;
-        private SerializedProperty includeRigTagProp;
-        private SerializedProperty useFormatIdentifierProp;
-        private SerializedProperty includeStaticTagProp;
-        private SerializedProperty renderNameFormatProp;
      
         //Isometric
         private SerializedProperty isometricDefaultAngleProp;
@@ -112,11 +106,7 @@ namespace Factory_Editor
             renderingIgnoreListProp = serializedObject.FindProperty("renderIgnoreList");
 
             //Naming
-            useAnimationNameProp = serializedObject.FindProperty("useAnimationName");
-            includeRigTagProp = serializedObject.FindProperty("includeRigTag");
-            useFormatIdentifierProp = serializedObject.FindProperty("includeFormatIdentifier");
-            includeStaticTagProp = serializedObject.FindProperty("includeStaticTag");
-            renderNameFormatProp = serializedObject.FindProperty("renderNameFormat");
+            
          
             //Isometric
             isometricDefaultAngleProp = serializedObject.FindProperty("isometricDefaultAngle");
@@ -162,13 +152,8 @@ namespace Factory_Editor
             //Calculator
             DrawCalculatorSettings();
 
-
             //Render Output
             DrawRenderingSettings(_target);
-
-            //Naming Settings
-            DrawNamingSettings(_target);
-
 
             //Isometric Settings
             DrawIsometricSettings();
@@ -300,50 +285,7 @@ namespace Factory_Editor
 
             InspectorUtility.EndFoldoutGroup(renderOutputFoldoutState);
         }
-
-        private void DrawNamingSettings(RenderingSettings aTarget)
-        {
-            namingFoldoutState = InspectorUtility.BeginFoldoutGroup("Output Naming", namingFoldoutState);
-            if (namingFoldoutState)
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("Current Name Format Example", EditorStyles.boldLabel);
-                EditorGUILayout.LabelField(aTarget.ExampleOutput, EditorStyles.boldLabel);
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.PropertyField(useAnimationNameProp, new GUIContent("Use Animation Name over Index", InspectorTooltips.UseAnimationName));
-                EditorGUILayout.PropertyField(includeRigTagProp, new GUIContent(includeRigTagProp.displayName, InspectorTooltips.IncludeRigTag));
-                EditorGUILayout.PropertyField(useFormatIdentifierProp, new GUIContent(useFormatIdentifierProp.displayName, InspectorTooltips.AddIdentifiers));
-                EditorGUILayout.PropertyField(includeStaticTagProp, new GUIContent("Include Static Tag (If Applicable)", InspectorTooltips.IncludeStaticTag));
-
-                InspectorUtility.BeginSubBoxGroup("Format Order", EditorColors.HeaderAlt1, EditorColors.BodyAlt1);
-                var _color = GUI.backgroundColor;
-                for (int _index = 0; _index < renderNameFormatProp.arraySize; _index++)
-                {
-                    var _prop = renderNameFormatProp.GetArrayElementAtIndex(_index);
-                    GUI.backgroundColor = EditorColors.BodyAlt2;
-                    EditorGUILayout.BeginHorizontal(FactoryStyles.ClosedSubBoxGroup);
-                    GUI.backgroundColor = _color;
-                    EditorGUILayout.LabelField(_prop.stringValue, EditorStyles.boldLabel);
-                    if (InspectorUtility.DrawButton(new GUIContent("▲"), EditorColors.DefaultButton))
-                    {
-                        aTarget.MoveFormatLeft(_index);
-                    }
-
-                    if (InspectorUtility.DrawButton(new GUIContent("▼"), EditorColors.DefaultButton))
-                    {
-                        aTarget.MoveFormatRight(_index);
-                    }
-                    EditorGUILayout.EndHorizontal();
-                }
-
-                if (InspectorUtility.DrawButton(new GUIContent("Reset Default Order"), EditorColors.DefaultButton))
-                    aTarget.ResetFormat();
-                InspectorUtility.EndBoxGroup();
-            }
-
-            InspectorUtility.EndFoldoutGroup(namingFoldoutState);
-        }
+        
 
         private void DrawIsometricSettings()
         {

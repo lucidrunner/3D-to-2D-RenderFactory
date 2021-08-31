@@ -13,6 +13,7 @@ using Render3DTo2D.Logging;
 using Render3DTo2D.Root_Movement;
 using Render3DTo2D.Setup;
 using Render3DTo2D.Utility;
+using Shared_Scripts;
 
 namespace Render3DTo2D.Factory_Core
 {
@@ -80,7 +81,7 @@ namespace Render3DTo2D.Factory_Core
                 //Set our current frame & animation index & possible animation name
                 _renderInfoBuilder.SetAnimationNumber(_smAnimatorRunner.CurrentAnimationIndex)
                     .SetFrameNumber(_smAnimatorRunner.CurrentFrame)
-                    .SetAnimationName(_renderingSettings.UseAnimationName ? smAnimator.CurrentlyPlayedAnimation : "");
+                    .SetAnimationName(NamingSettings.GetOrCreateSettings().UseAnimationName ? smAnimator.CurrentlyPlayedAnimation : "");
 
                 FLogger.LogMessage(this, FLogger.Severity.Status, $"Rendering for animation / frame {_smAnimatorRunner.CurrentAnimationIndex} / {_smAnimatorRunner.CurrentFrame}");
                 

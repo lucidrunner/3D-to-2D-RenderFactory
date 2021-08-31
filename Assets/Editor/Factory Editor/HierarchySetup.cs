@@ -7,6 +7,7 @@ using Render3DTo2D.Root_Movement;
 using Render3DTo2D.Setup;
 using Render3DTo2D.Utility;
 using RootChecker;
+using Shared_Scripts;
 using UnityEditor;
 using UnityEngine;
 

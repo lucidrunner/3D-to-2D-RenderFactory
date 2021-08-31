@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Factory_Editor
+namespace Shared_Scripts
 {
     /* Some colors
      * Palette 1 
@@ -25,8 +25,8 @@ namespace Factory_Editor
         {
             //Set the current default colors for all the different styles we use
             LabelDefault = SaveTextColorsForStyle(EditorStyles.label);
-            FoldoutHeaderDefault = SaveTextColorsForStyle(InspectorUtility.FactoryStyles.FoldoutHeader);
-            SubFoldoutHeaderDefault = SaveTextColorsForStyle(InspectorUtility.FactoryStyles.SubFoldoutHeader);
+            FoldoutHeaderDefault = SaveTextColorsForStyle(FactoryStyles.FoldoutHeader);
+            SubFoldoutHeaderDefault = SaveTextColorsForStyle(FactoryStyles.SubFoldoutHeader);
             BoldLabelDefault = SaveTextColorsForStyle(EditorStyles.boldLabel);
             ListHeaderDefault = SaveTextColorsForStyle(EditorStyles.foldout);
             ButtonDefaultColor = SaveTextColorsForStyle(GUI.skin.button);
@@ -234,8 +234,8 @@ namespace Factory_Editor
         {
             SetColorForStyle(EditorStyles.label, TextColor);
             SetColorForStyle(EditorStyles.boldLabel, TextColor);
-            SetColorForStyle(InspectorUtility.FactoryStyles.FoldoutHeader, TextColor);
-            SetColorForStyle(InspectorUtility.FactoryStyles.SubFoldoutHeader, TextColor);
+            SetColorForStyle(FactoryStyles.FoldoutHeader, TextColor);
+            SetColorForStyle(FactoryStyles.SubFoldoutHeader, TextColor);
             SetColorForStyle(EditorStyles.foldout, TextColor);
         }
 
@@ -243,8 +243,8 @@ namespace Factory_Editor
         {
             SetColorForStyle(EditorStyles.label, LabelDefault);
             SetColorForStyle(EditorStyles.boldLabel, BoldLabelDefault);
-            SetColorForStyle(InspectorUtility.FactoryStyles.FoldoutHeader, FoldoutHeaderDefault);
-            SetColorForStyle(InspectorUtility.FactoryStyles.SubFoldoutHeader, SubFoldoutHeaderDefault);
+            SetColorForStyle(FactoryStyles.FoldoutHeader, FoldoutHeaderDefault);
+            SetColorForStyle(FactoryStyles.SubFoldoutHeader, SubFoldoutHeaderDefault);
             SetColorForStyle(EditorStyles.foldout, ListHeaderDefault);
         }
         

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Shared_Scripts;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,24 +24,43 @@ namespace Factory_Editor
                 {
                     var _settings = FactorySettings.GetSerializedSettings();
                     _settings.UpdateIfRequiredOrScript();
-                    GUILayout.Space(5f);
-                    GUILayout.Label("Factory Colors", new GUIStyle(EditorStyles.boldLabel));
-                    InspectorUtility.GuiLine(aSpaceBefore: -5, aSpaceAfter:1);
+                    
+                    //COLORS
+                    DrawHeader("Factory Colors");
                     EditorGUI.BeginChangeCheck();
                     EditorGUILayout.PropertyField(_settings.FindProperty("editorPalette"), Styles.editorPalette);
                     EditorGUILayout.PropertyField(_settings.FindProperty("buttonPalette"), Styles.buttonPalette);
                     var _changed = EditorGUI.EndChangeCheck();
-                    GUILayout.Space(5f);
-                    GUILayout.Label("Prefabs", new GUIStyle(EditorStyles.boldLabel));
-                    InspectorUtility.GuiLine(aSpaceBefore: -5, aSpaceAfter:1);
+                    
+                    //PREFABS
+                    DrawHeader("Prefabs");
                     EditorGUILayout.PropertyField(_settings.FindProperty("overseerPrefab"), Styles.overseerPrefab);
+                    
+                    //GENERAL SETTINGS
+                    DrawHeader("Camera Follow Settings");
+                    EditorGUILayout.PropertyField(_settings.FindProperty("followCameraOnRender"));
+                    EditorGUILayout.PropertyField(_settings.FindProperty("centerCameraOnRenderStartup"));
+                    EditorGUILayout.PropertyField(_settings.FindProperty("centerModelOnRenderStartup"));
+                    
+                    //Possible alt if tooltips aren't working
+                    // EditorGUILayout.PropertyField(centerModelOnStartProp, new GUIContent(centerModelOnStartProp.displayName, InspectorTooltips.MoveModelOnStartup));
+                    // EditorGUILayout.PropertyField(focusOnStartProp, new GUIContent(focusOnStartProp.displayName, InspectorTooltips.FocusModelOnStartup));
+                    // EditorGUILayout.PropertyField(focusOnRenderProp, new GUIContent(focusOnRenderProp.displayName, InspectorTooltips.FollowModelOnRender));
+                    
+                    
                     _settings.ApplyModifiedProperties();
-
                     InspectorUtility.RepaintAll();
                 },
                 keywords = new HashSet<string>(new[] {Styles.editorPalette.text, Styles.buttonPalette.text, Styles.overseerPrefab.text})
             };
             return _provider;
+        }
+
+        private static void DrawHeader(string aLabel)
+        {
+            GUILayout.Space(5f);
+            GUILayout.Label(aLabel, new GUIStyle(EditorStyles.boldLabel));
+            InspectorUtility.GuiLine(aSpaceBefore: -5, aSpaceAfter:1);
         }
     }
 }

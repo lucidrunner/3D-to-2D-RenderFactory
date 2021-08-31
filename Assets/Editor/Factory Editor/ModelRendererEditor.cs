@@ -1,6 +1,7 @@
 ﻿using Render3DTo2D;
 using Render3DTo2D.Rigging;
 using Render3DTo2D.Utility.Inspector;
+using Shared_Scripts;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;

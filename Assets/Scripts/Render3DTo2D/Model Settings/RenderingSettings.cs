@@ -35,18 +35,7 @@ namespace Render3DTo2D.Model_Settings
         [SerializeField] protected int animationFramesPerSecond = 16;
         
         
-        [SerializeField, Tooltip(InspectorTooltips.MoveModelOnStartup)]
-        private bool centerModelOnRenderStartup = true;
-        [SerializeField, Tooltip(InspectorTooltips.FocusModelOnStartup)]
-        private bool centerCameraOnRenderStartup = true;
-        [SerializeField, Tooltip(InspectorTooltips.FollowModelOnRender)]
-        private bool followCameraOnRender = true;
         
-        public bool CenterModelOnRenderStartup => centerModelOnRenderStartup;
-
-        public bool CenterCameraOnRenderStartup => centerCameraOnRenderStartup;
-
-        public bool FollowCameraOnRender => followCameraOnRender;
         
         #endregion
 

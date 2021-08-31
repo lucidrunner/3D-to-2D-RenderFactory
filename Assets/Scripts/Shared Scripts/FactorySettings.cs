@@ -1,16 +1,32 @@
-﻿using Render3DTo2D.Setup;
+using Render3DTo2D.Model_Settings;
 using UnityEditor;
 using UnityEngine;
 
-namespace Factory_Editor
+namespace Shared_Scripts
 {
-    class FactorySettings : ScriptableObject
+    public class FactorySettings : ScriptableObject
     {
         public const string SettingsPath = "Assets/RenderFactory/Settings/FactorySettings.asset";
-        
+
         [SerializeField] private EditorColors.EditorPalette editorPalette;
         [SerializeField] private EditorColors.ButtonPalette buttonPalette;
         [SerializeField] private GameObject overseerPrefab;
+
+
+        [SerializeField, Tooltip(InspectorTooltips.MoveModelOnStartup)]
+        private bool centerModelOnRenderStartup = true;
+
+        [SerializeField, Tooltip(InspectorTooltips.FocusModelOnStartup)]
+        private bool centerCameraOnRenderStartup = true;
+
+        [SerializeField, Tooltip(InspectorTooltips.FollowModelOnRender)]
+        private bool followCameraOnRender = true;
+
+        public bool CenterModelOnRenderStartup => centerModelOnRenderStartup;
+
+        public bool CenterCameraOnRenderStartup => centerCameraOnRenderStartup;
+
+        public bool FollowCameraOnRender => followCameraOnRender;
 
         public GameObject OverseerPrefab => overseerPrefab;
 
@@ -18,7 +34,7 @@ namespace Factory_Editor
 
         public EditorColors.EditorPalette EditorPalette => editorPalette;
 
-        internal static FactorySettings GetOrCreateSettings()
+        public static FactorySettings GetOrCreateSettings()
         {
             var _settings = AssetDatabase.LoadAssetAtPath<FactorySettings>(SettingsPath);
             if (_settings != null) return _settings;
@@ -26,7 +42,7 @@ namespace Factory_Editor
             _settings = ScriptableObject.CreateInstance<FactorySettings>();
             _settings.editorPalette = EditorColors.EditorPalette.BubbleGum;
             _settings.buttonPalette = EditorColors.ButtonPalette.Default;
-            var _prefabGUIDs = AssetDatabase.FindAssets("t:Prefab", new[] {"Assets/RenderFactory/Prefabs"});
+            var _prefabGUIDs = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/RenderFactory/Prefabs" });
             GameObject _prefab = null;
             foreach (string _prefabGUID in _prefabGUIDs)
             {
@@ -36,7 +52,8 @@ namespace Factory_Editor
                 {
                     var _gameObject = _object as GameObject;
                     if (_gameObject == null) continue;
-                    if (_gameObject.GetComponent<Overseer>() == null) continue;
+                    //TODO Not magic string here
+                    if (_gameObject.CompareTag("Overseer")) continue;
                     _prefab = _gameObject;
                     break;
                 }
@@ -51,9 +68,10 @@ namespace Factory_Editor
             return _settings;
         }
 
-        internal static SerializedObject GetSerializedSettings()
+        public static SerializedObject GetSerializedSettings()
         {
             return new SerializedObject(GetOrCreateSettings());
         }
     }
+
 }

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2349552665651356136}
   m_Layer: 0
   m_Name: Overseer
-  m_TagString: Untagged
+  m_TagString: Overseer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,6 +52,7 @@ MonoBehaviour:
   spaceBetweenModels: {x: 5, y: 5}
   modelsPerRow: 10
   defaultRowOffset: 15
+  optionalRenderer: {fileID: 0}
 --- !u!114 &162653128868120419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,6 +93,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settingsMode: 0
   animationFramesPerSecond: 16
+  centerModelOnRenderStartup: 1
+  centerCameraOnRenderStartup: 1
+  followCameraOnRender: 1
   automaticDepthCalculation: 1
   enableBoundsCalculator: 1
   boundsCalculatorSizeModifier: 1
@@ -134,7 +138,6 @@ MonoBehaviour:
   isometricMaxSteps: 100000
   recordingsPerFrame: 1
   applyBaselineDeviation: 1
-  preferEulerAngles: 0
   rootMotionTolerance: 6
   defaultInsertClampCutoff: 25
   clampingDecimalTolerance: 3

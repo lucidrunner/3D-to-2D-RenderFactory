@@ -1,9 +1,7 @@
 {
-    "name": "GameAssembly",
+    "name": "SharedScripts",
     "rootNamespace": "",
-    "references": [
-        "GUID:a2317ca8618992049a6550706c8ad5c0"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

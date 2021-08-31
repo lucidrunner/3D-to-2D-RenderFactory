@@ -89,7 +89,7 @@ namespace Render3DTo2D.Utility
         public static void FocusSceneCamera(GameObject aGameObject)
         {
             var _pos = aGameObject.transform.position;
-            _pos.y = 0;
+            _pos.y = SceneView.lastActiveSceneView.pivot.y;
             SceneView.lastActiveSceneView.pivot = _pos;
             SceneView.lastActiveSceneView.Repaint();
         }

@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab63dc755fcc4174957eb1ef00576671, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f15d915753d12740b95652d3cea5779, type: 3}
   m_Name: FactorySettings
   m_EditorClassIdentifier: 
   editorPalette: 2
   buttonPalette: 2
-  overseerPrefab: {fileID: 722932076010524099, guid: 7d4058f0a37f04f49a7da7c247bb0d9c,
-    type: 3}
+  overseerPrefab: {fileID: 0}
+  centerModelOnRenderStartup: 1
+  centerCameraOnRenderStartup: 1
+  followCameraOnRender: 1

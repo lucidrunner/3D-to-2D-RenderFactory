@@ -1,5 +1,6 @@
 ﻿using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Utility.Inspector;
+using Shared_Scripts;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
@@ -14,9 +15,6 @@ namespace Factory_Editor
      
         //General
         private SerializedProperty fpsProp;
-        private SerializedProperty focusOnStartProp;
-        private SerializedProperty focusOnRenderProp;
-        private SerializedProperty centerModelOnStartProp;
  
         //Calculator
         private SerializedProperty boundsCalcEnabledProp;
@@ -77,9 +75,6 @@ namespace Factory_Editor
          
             //General
             fpsProp = serializedObject.FindProperty("animationFramesPerSecond");
-            focusOnRenderProp = serializedObject.FindProperty("followCameraOnRender");
-            focusOnStartProp = serializedObject.FindProperty("centerCameraOnRenderStartup");
-            centerModelOnStartProp = serializedObject.FindProperty("centerModelOnRenderStartup");
 
             //Calculator
             boundsCalcEnabledProp = serializedObject.FindProperty("enableBoundsCalculator");
@@ -190,9 +185,6 @@ namespace Factory_Editor
             if (generalFoldoutState)
             {
                 EditorGUILayout.PropertyField(fpsProp, new GUIContent(fpsProp.displayName, InspectorTooltips.FPS));
-                EditorGUILayout.PropertyField(centerModelOnStartProp, new GUIContent(centerModelOnStartProp.displayName, InspectorTooltips.MoveModelOnStartup));
-                EditorGUILayout.PropertyField(focusOnStartProp, new GUIContent(focusOnStartProp.displayName, InspectorTooltips.FocusModelOnStartup));
-                EditorGUILayout.PropertyField(focusOnRenderProp, new GUIContent(focusOnRenderProp.displayName, InspectorTooltips.FollowModelOnRender));
             }
 
             InspectorUtility.EndFoldoutGroup(generalFoldoutState);
@@ -326,7 +318,7 @@ namespace Factory_Editor
                 {
                     var _prop = renderNameFormatProp.GetArrayElementAtIndex(_index);
                     GUI.backgroundColor = EditorColors.BodyAlt2;
-                    EditorGUILayout.BeginHorizontal(InspectorUtility.FactoryStyles.ClosedSubBoxGroup);
+                    EditorGUILayout.BeginHorizontal(FactoryStyles.ClosedSubBoxGroup);
                     GUI.backgroundColor = _color;
                     EditorGUILayout.LabelField(_prop.stringValue, EditorStyles.boldLabel);
                     if (InspectorUtility.DrawButton(new GUIContent("▲"), EditorColors.DefaultButton))

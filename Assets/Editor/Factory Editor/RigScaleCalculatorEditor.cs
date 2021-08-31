@@ -1,5 +1,6 @@
 ﻿using Render3DTo2D.Isometric;
 using Render3DTo2D.Rigging;
+using Shared_Scripts;
 using UnityEditor;
 using UnityEngine;
 

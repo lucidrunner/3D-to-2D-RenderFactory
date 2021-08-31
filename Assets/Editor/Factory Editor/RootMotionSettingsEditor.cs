@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Render3DTo2D.Root_Movement;
 using Render3DTo2D.Utility.Inspector;
+using Shared_Scripts;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;

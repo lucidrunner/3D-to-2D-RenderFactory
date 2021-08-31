@@ -6,6 +6,7 @@ using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Setup;
 using Render3DTo2D.Utility;
 using RootChecker;
+using Shared_Scripts;
 using UnityEngine;
 
 namespace Render3DTo2D.SMAnimator
@@ -83,7 +84,7 @@ namespace Render3DTo2D.SMAnimator
                 animator.Update(_currentAnimTime);
                 
                 //If we're supposed to, center the scene camera on the model
-                if(RenderingSettings.GetFor(transform).FollowCameraOnRender)
+                if(FactorySettings.GetOrCreateSettings().FollowCameraOnRender)
                 {
                     GeneralUtilities.FocusSceneCamera(AnimationUtilities.GetAnimatorTransform(transform).gameObject);
                 }
@@ -111,7 +112,7 @@ namespace Render3DTo2D.SMAnimator
             
             
             //If we're supposed to, center the scene camera on the model
-            if(RenderingSettings.GetFor(transform).FollowCameraOnRender)
+            if(FactorySettings.GetOrCreateSettings().FollowCameraOnRender)
                 GeneralUtilities.FocusSceneCamera(AnimationUtilities.GetAnimatorTransform(transform).gameObject);
 
             
@@ -170,7 +171,7 @@ namespace Render3DTo2D.SMAnimator
             animator.Update(0);
             
             //If we're supposed to, center the scene camera on the model
-            if(RenderingSettings.GetFor(transform).FollowCameraOnRender)
+            if(FactorySettings.GetOrCreateSettings().FollowCameraOnRender)
                 GeneralUtilities.FocusSceneCamera(AnimationUtilities.GetAnimatorTransform(transform).gameObject);
             
             //Call the animation changed event and pass the animation number

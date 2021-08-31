@@ -8,6 +8,7 @@ using Render3DTo2D.Root_Movement;
 using Render3DTo2D.Single_Frame;
 using Render3DTo2D.Utility;
 using RootChecker;
+using Shared_Scripts;
 using UnityEditor;
 
 namespace Render3DTo2D
@@ -119,7 +120,8 @@ namespace Render3DTo2D
 
         private void RenderFactoryOnFinishedCallback(object aSender, EventArgs aE)
         {
-            if(RenderingSettings.GetFor(transform).CenterModelOnRenderStartup)
+            
+            if(FactorySettings.GetOrCreateSettings().CenterModelOnRenderStartup)
                 ResetPosition();
         }
 
@@ -129,10 +131,10 @@ namespace Render3DTo2D
             var _settings = RenderingSettings.GetFor(transform);
             defaultPosition = transform.position;
             //Move the model to 0,0 if desired
-            if(_settings.CenterModelOnRenderStartup)
+            if(FactorySettings.GetOrCreateSettings().CenterModelOnRenderStartup)
                 transform.position = Vector3.zero;
             //And center the camera on it too
-            if (_settings.CenterCameraOnRenderStartup)
+            if (FactorySettings.GetOrCreateSettings().CenterCameraOnRenderStartup)
                 GeneralUtilities.FocusSceneCamera(_model != null ? _model : gameObject);
             
         }
@@ -144,7 +146,7 @@ namespace Render3DTo2D
             GetSelectedRenderFactory(runFactoryType, out var _factory);
             _factory.FinishedCallback -= RenderFactoryOnFinishedCallback;
             //Move the camera to the model if we moved it to begin with
-            if(RenderingSettings.GetFor(transform).CenterCameraOnRenderStartup)
+            if(FactorySettings.GetOrCreateSettings().CenterCameraOnRenderStartup)
                 GeneralUtilities.FocusSceneCamera(_model != null ? _model : gameObject);
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.SMAnimator;
+using Shared_Scripts;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;

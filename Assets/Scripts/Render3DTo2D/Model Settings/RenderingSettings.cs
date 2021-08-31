@@ -34,6 +34,9 @@ namespace Render3DTo2D.Model_Settings
         public int AnimationFPS => animationFramesPerSecond;
         [SerializeField] protected int animationFramesPerSecond = 16;
         
+        [SerializeField, Tooltip(InspectorTooltips.MoveModelOnStartup)]
+        private bool centerModelOnRenderStartup = true;
+        public bool CenterModelOnRenderStartup => centerModelOnRenderStartup;
         
         
         
@@ -151,6 +154,7 @@ namespace Render3DTo2D.Model_Settings
         
         
         
+        //TODO MOVE TO SEPARATE FACTORY SETTINGS
         #region Naming
 
         public string ExampleOutput

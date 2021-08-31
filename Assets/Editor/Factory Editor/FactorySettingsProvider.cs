@@ -40,14 +40,8 @@ namespace Factory_Editor
                     DrawHeader("Camera Follow Settings");
                     EditorGUILayout.PropertyField(_settings.FindProperty("followCameraOnRender"));
                     EditorGUILayout.PropertyField(_settings.FindProperty("centerCameraOnRenderStartup"));
-                    EditorGUILayout.PropertyField(_settings.FindProperty("centerModelOnRenderStartup"));
-                    
-                    //Possible alt if tooltips aren't working
-                    // EditorGUILayout.PropertyField(centerModelOnStartProp, new GUIContent(centerModelOnStartProp.displayName, InspectorTooltips.MoveModelOnStartup));
-                    // EditorGUILayout.PropertyField(focusOnStartProp, new GUIContent(focusOnStartProp.displayName, InspectorTooltips.FocusModelOnStartup));
-                    // EditorGUILayout.PropertyField(focusOnRenderProp, new GUIContent(focusOnRenderProp.displayName, InspectorTooltips.FollowModelOnRender));
-                    
-                    
+
+
                     _settings.ApplyModifiedProperties();
                     InspectorUtility.RepaintAll();
                 },

@@ -12,17 +12,12 @@ namespace Shared_Scripts
         [SerializeField] private EditorColors.ButtonPalette buttonPalette;
         [SerializeField] private GameObject overseerPrefab;
 
-
-        [SerializeField, Tooltip(InspectorTooltips.MoveModelOnStartup)]
-        private bool centerModelOnRenderStartup = true;
-
+        
         [SerializeField, Tooltip(InspectorTooltips.FocusModelOnStartup)]
         private bool centerCameraOnRenderStartup = true;
 
         [SerializeField, Tooltip(InspectorTooltips.FollowModelOnRender)]
         private bool followCameraOnRender = true;
-
-        public bool CenterModelOnRenderStartup => centerModelOnRenderStartup;
 
         public bool CenterCameraOnRenderStartup => centerCameraOnRenderStartup;
 

@@ -15,6 +15,7 @@ namespace Factory_Editor
      
         //General
         private SerializedProperty fpsProp;
+        private SerializedProperty centerModelProp;
  
         //Calculator
         private SerializedProperty boundsCalcEnabledProp;
@@ -75,6 +76,7 @@ namespace Factory_Editor
          
             //General
             fpsProp = serializedObject.FindProperty("animationFramesPerSecond");
+            centerModelProp = serializedObject.FindProperty("centerModelOnRenderStartup");
 
             //Calculator
             boundsCalcEnabledProp = serializedObject.FindProperty("enableBoundsCalculator");
@@ -185,6 +187,7 @@ namespace Factory_Editor
             if (generalFoldoutState)
             {
                 EditorGUILayout.PropertyField(fpsProp, new GUIContent(fpsProp.displayName, InspectorTooltips.FPS));
+                EditorGUILayout.PropertyField(centerModelProp, new GUIContent(centerModelProp.displayName, InspectorTooltips.MoveModelOnStartup));
             }
 
             InspectorUtility.EndFoldoutGroup(generalFoldoutState);
@@ -215,6 +218,7 @@ namespace Factory_Editor
                     {
                         EditorGUILayout.PropertyField(boundsIncludeRenderIgnoreProp, new GUIContent(boundsIncludeRenderIgnoreProp.displayName, InspectorTooltips.IncludeRenderIgnore));
                         EditorGUI.indentLevel++;
+                        //TODO This can't be drawn in a foldout, write a custom foldout via fade groups instead of our current system
                         EditorGUILayout.PropertyField(boundsIgnoreListProp, new GUIContent("Mesh Ignore List", InspectorTooltips.BoundsIgnoreList), true);
                         EditorGUI.indentLevel--;
                     }

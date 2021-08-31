@@ -121,7 +121,7 @@ namespace Render3DTo2D
         private void RenderFactoryOnFinishedCallback(object aSender, EventArgs aE)
         {
             
-            if(FactorySettings.GetOrCreateSettings().CenterModelOnRenderStartup)
+            if(RenderingSettings.GetFor(transform).CenterModelOnRenderStartup)
                 ResetPosition();
         }
 
@@ -131,7 +131,7 @@ namespace Render3DTo2D
             var _settings = RenderingSettings.GetFor(transform);
             defaultPosition = transform.position;
             //Move the model to 0,0 if desired
-            if(FactorySettings.GetOrCreateSettings().CenterModelOnRenderStartup)
+            if(RenderingSettings.GetFor(transform).CenterModelOnRenderStartup)
                 transform.position = Vector3.zero;
             //And center the camera on it too
             if (FactorySettings.GetOrCreateSettings().CenterCameraOnRenderStartup)

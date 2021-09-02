@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Unity.Plastic.Antlr3.Runtime.Debug;
 using UnityEditor;
 using UnityEngine;
 
@@ -88,14 +90,16 @@ namespace Shared_Scripts
 
         private void ApplyRigTagChange()
         {
-            if(includeRigTag == (renderNameFormat.FirstOrDefault(aElement => aElement.Equals("Rig Tag")) == null))
+            bool _performChange = includeRigTag != renderNameFormat.Contains("Rig Tag");
+            if(_performChange)
                 ApplyTagChange(includeRigTag, "Rig Tag", renderNameFormat.IndexOf("Model Name") + 1); //We add the rig tag after the model name by default
         }
 
 
         private void ApplyStaticTagChange()
         {
-            if(includeStaticTag == (renderNameFormat.FirstOrDefault(aElement => aElement.Equals("Static")) == null))
+            bool _performChange = includeStaticTag != renderNameFormat.Contains("Static");
+            if(_performChange)
                 ApplyTagChange(includeStaticTag, "Static", renderNameFormat.Count); //We add the static tag at the end of the name
         }
 
@@ -105,7 +109,9 @@ namespace Shared_Scripts
             {
                 var _element = renderNameFormat.FirstOrDefault(aElement => aElement.Equals(aLabelText));
                 if (_element != null)
+                {
                     renderNameFormat.Remove(_element);
+                }
             }
 
             else
@@ -147,6 +153,12 @@ namespace Shared_Scripts
         public static SerializedObject GetSerializedSettings()
         {
             return new SerializedObject(GetOrCreateSettings());
+        }
+
+        private void OnValidate()
+        {
+            ApplyRigTagChange();
+            ApplyStaticTagChange();
         }
     }
 }

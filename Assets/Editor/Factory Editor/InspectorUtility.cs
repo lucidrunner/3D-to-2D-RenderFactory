@@ -318,6 +318,46 @@ namespace Factory_Editor
                 _editor.Repaint();
             }
         }
+        
+        public static void DrawProperty(SerializedProperty aProperty, float aLabelScreenWidth, params GUILayoutOption[] aOptions)
+        {
+            var _prevLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = Screen.width * aLabelScreenWidth;
+            EditorGUILayout.PropertyField(aProperty, aOptions);
+            EditorGUIUtility.labelWidth = _prevLabelWidth;
+        }
+
+        public static void DrawToggleProperty(SerializedProperty aProperty, bool aToggleLeft = false)
+        {
+            GUILayout.BeginHorizontal();
+            if (aToggleLeft)
+                EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
+            GUILayout.Label(aProperty.displayName);
+
+            if(!aToggleLeft)
+            {
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
+            }
+
+            GUILayout.EndHorizontal();
+        }
+        
+        public static void DrawToggleProperty(SerializedProperty aProperty, GUIContent aLabelContent, bool aToggleLeft = false)
+        {
+            GUILayout.BeginHorizontal();
+            if (aToggleLeft)
+                EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
+            GUILayout.Label(aLabelContent);
+
+            if(!aToggleLeft)
+            {
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
+            }
+
+            GUILayout.EndHorizontal();
+        }
     }
 
 }

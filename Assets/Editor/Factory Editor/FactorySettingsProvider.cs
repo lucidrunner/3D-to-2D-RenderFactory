@@ -39,8 +39,8 @@ namespace Factory_Editor
                     
                     //GENERAL SETTINGS
                     DrawHeader("Camera Follow Settings");
-                    EditorGUILayout.PropertyField(_settings.FindProperty("followCameraOnRender"));
-                    EditorGUILayout.PropertyField(_settings.FindProperty("centerCameraOnRenderStartup"));
+                    InspectorUtility.DrawToggleProperty(_settings.FindProperty("followCameraOnRender"));
+                    InspectorUtility.DrawToggleProperty(_settings.FindProperty("centerCameraOnRenderStartup"));
 
 
                     _settings.ApplyModifiedProperties();
@@ -81,10 +81,13 @@ namespace Factory_Editor
                     EditorGUILayout.LabelField(_target.ExampleOutput, EditorStyles.boldLabel);
                     EditorGUILayout.EndHorizontal();
 
-                    EditorGUILayout.PropertyField(_useAnimationNameProp, new GUIContent("Use Animation Name over Index", InspectorTooltips.UseAnimationName));
-                    EditorGUILayout.PropertyField(_includeRigTagProp, new GUIContent(_includeRigTagProp.displayName, InspectorTooltips.IncludeRigTag));
-                    EditorGUILayout.PropertyField(_useFormatIdentifierProp, new GUIContent(_useFormatIdentifierProp.displayName, InspectorTooltips.AddIdentifiers));
-                    EditorGUILayout.PropertyField(_includeStaticTagProp, new GUIContent("Include Static Tag (If Applicable)", InspectorTooltips.IncludeStaticTag));
+                    InspectorUtility.DrawToggleProperty(_useAnimationNameProp, new GUIContent("Use Animation Name over Index", InspectorTooltips.UseAnimationName));
+                    InspectorUtility.DrawToggleProperty(_useFormatIdentifierProp, new GUIContent(_useFormatIdentifierProp.displayName, InspectorTooltips.AddIdentifiers));
+                    
+                    InspectorUtility.DrawToggleProperty(_includeRigTagProp, new GUIContent(_includeRigTagProp.displayName, InspectorTooltips.IncludeRigTag));
+                    
+                    InspectorUtility.DrawToggleProperty(_includeStaticTagProp, new GUIContent("Include Static Tag (If Applicable)", InspectorTooltips.IncludeStaticTag));
+                    
                     InspectorUtility.BeginSubBoxGroup("Format Order", EditorColors.HeaderAlt1, EditorColors.BodyAlt1);
                     var _color = GUI.backgroundColor;
                     for (int _index = 0; _index < _renderNameFormatProp.arraySize; _index++)

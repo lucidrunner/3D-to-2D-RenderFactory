@@ -15,6 +15,5 @@ MonoBehaviour:
   editorPalette: 2
   buttonPalette: 2
   overseerPrefab: {fileID: 0}
-  centerModelOnRenderStartup: 1
   centerCameraOnRenderStartup: 1
-  followCameraOnRender: 1
+  followCameraOnRender: 0

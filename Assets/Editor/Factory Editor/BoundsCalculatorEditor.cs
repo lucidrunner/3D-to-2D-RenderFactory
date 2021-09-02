@@ -1,6 +1,7 @@
 ﻿using Render3DTo2D.Factory_Core;
 using Shared_Scripts;
 using UnityEditor;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 namespace Factory_Editor
@@ -8,7 +9,8 @@ namespace Factory_Editor
     [CustomEditor(typeof(BoundsCalculator))]
     public class BoundsCalculatorEditor : Editor
     {
-        private bool headerGroupExpanded ;
+        [SerializeField] private bool foldoutTarget;
+        [SerializeField] private AnimBool foldoutCurrent;
 
         private SerializedProperty meshListProp;
         private SerializedProperty boundListProp;
@@ -20,6 +22,8 @@ namespace Factory_Editor
             meshListProp = serializedObject.FindProperty("meshesInHierarchy");
             colorProp = serializedObject.FindProperty("boundsColor");
             toggleDrawProp = serializedObject.FindProperty("drawCalculatedBounds");
+            foldoutCurrent = new AnimBool(foldoutTarget);
+            foldoutCurrent.valueChanged.AddListener(Repaint);
         }
 
         public override void OnInspectorGUI()
@@ -32,9 +36,9 @@ namespace Factory_Editor
 
 
             EditorColors.OverrideTextColors();
-            headerGroupExpanded = InspectorUtility.BeginFoldoutGroup("Debug", headerGroupExpanded);
+            bool _showFoldout = InspectorUtility.BeginFoldoutGroup("Debug", ref foldoutTarget, ref foldoutCurrent);
 
-            if (headerGroupExpanded)
+            if (foldoutTarget)
             {
                 toggleDrawProp.boolValue = InspectorUtility.DrawToggleButton(toggleDrawProp.boolValue, new GUIContent("Draw Bounds"));
                 if (InspectorUtility.DrawButton(new GUIContent("Recalculate"), EditorColors.ButtonAction))
@@ -54,7 +58,7 @@ namespace Factory_Editor
             }
         
         
-            InspectorUtility.EndFoldoutGroup(headerGroupExpanded);
+            InspectorUtility.EndNewFoldoutGroup(_showFoldout);
 
             bool _modified = serializedObject.hasModifiedProperties;
         

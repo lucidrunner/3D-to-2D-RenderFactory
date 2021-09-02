@@ -28,7 +28,8 @@ namespace Factory_Editor
         private SerializedProperty runFactoryTypeProp;
     
         //Admin
-        [SerializeField] private bool setupFoldoutState = false;
+        [SerializeField] private bool setupFoldoutTarget = false;
+        [SerializeField] private AnimBool setupFoldoutCurrent;
         private AnimBool showIsometricOptions;
         private AnimBool showRigAdd;
         private AnimBool showFactoryAdd;
@@ -81,9 +82,10 @@ namespace Factory_Editor
             GUILayout.Label("Setup", new GUIStyle(GUI.skin.label) {fontStyle = FontStyle.Bold});
             InspectorUtility.GuiLine(aHeight: 2, aSpaceBefore: -5, aSpaceAfter: -2);
             
-            setupFoldoutState = InspectorUtility.BeginFoldoutGroup(setupFoldoutState ? "Hide" : "Show", setupFoldoutState);
             
-            if (setupFoldoutState)
+            bool _showFoldout = InspectorUtility.BeginFoldoutGroup("Details", ref setupFoldoutTarget, ref setupFoldoutCurrent);
+            
+            if (_showFoldout)
             {
                 EditorGUILayout.PropertyField(setupFactoryTypeProp);
                 if (!Mathf.Approximately(showRigAdd.faded, 0f))
@@ -99,7 +101,7 @@ namespace Factory_Editor
                 }
             }
 
-            InspectorUtility.EndFoldoutGroup(setupFoldoutState);
+            InspectorUtility.EndNewFoldoutGroup(_showFoldout);
         }
 
         private static void DrawSettingsOverrides(ModelRenderer aTarget)

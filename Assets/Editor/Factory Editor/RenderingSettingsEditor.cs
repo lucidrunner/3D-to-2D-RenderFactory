@@ -363,7 +363,8 @@ namespace Factory_Editor
     [CustomEditor(typeof(GlobalRenderingSettings))]
     public class GlobalRenderingSettingsEditor : RenderingSettingsEditor
     {
-        [SerializeField] private bool clampingFoldoutState;
+        [SerializeField] private bool clampingFoldoutTarget;
+        [SerializeField] private AnimBool clampingFoldoutCurrent;
         private SerializedProperty clampInsertCutoffProp;
         private SerializedProperty clampDecimalTolerance;
 
@@ -372,7 +373,8 @@ namespace Factory_Editor
             base.OnEnable();
             clampInsertCutoffProp = serializedObject.FindProperty("defaultInsertClampCutoff");
             clampDecimalTolerance = serializedObject.FindProperty("clampingDecimalTolerance");
-        
+            clampingFoldoutCurrent = new AnimBool(clampingFoldoutTarget);
+            clampingFoldoutCurrent.valueChanged.AddListener(Repaint);
         }
 
         protected override bool IsGlobalSettings()
@@ -384,19 +386,18 @@ namespace Factory_Editor
         {
             base.OnInspectorGUI();
 
-            clampingFoldoutState = InspectorUtility.BeginFoldoutGroup("Animation Clamping Setup Settings", clampingFoldoutState);
-            if (clampingFoldoutState)
+            bool _showFoldout = InspectorUtility.BeginFoldoutGroup("Animation Clamping Setup Settings", ref clampingFoldoutTarget, ref clampingFoldoutCurrent);
+            if (_showFoldout)
             {
-                EditorGUILayout.PropertyField(clampInsertCutoffProp);
-                EditorGUILayout.PropertyField(clampDecimalTolerance);
+                InspectorUtility.DrawProperty(clampInsertCutoffProp);
+                InspectorUtility.DrawProperty(clampDecimalTolerance);
             }
-            InspectorUtility.EndFoldoutGroup(clampingFoldoutState);
+            InspectorUtility.EndNewFoldoutGroup(_showFoldout);
         }
 
         [MenuItem("CONTEXT/RenderingSettings/Reset To Global Values")]
         static void ResetToGlobal(MenuCommand aCommand)
         {
-            
             RenderingSettings _settings = (RenderingSettings) aCommand.context;
             _settings.ResetToGlobal();
         }

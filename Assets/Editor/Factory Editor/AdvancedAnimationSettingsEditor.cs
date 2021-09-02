@@ -13,7 +13,8 @@ namespace Factory_Editor
     public class AdvancedAnimationSettingsEditor : Editor
     {
         private SerializedProperty animationSettingsProp;
-        [SerializeField] private bool settingsFoldoutState;
+        [SerializeField] private bool foldoutStateTarget;
+        [SerializeField] private AnimBool foldoutStateCurrent;
 
         private List<(AnimBool aShowLooping, AnimBool aShowClampSettings)> settingAnimBool = new List<(AnimBool aShowLooping, AnimBool aShowClampSettings)>();
 
@@ -21,6 +22,8 @@ namespace Factory_Editor
         {
             animationSettingsProp = serializedObject.FindProperty("animationSettings");
             ReloadAnimBoolList();
+            foldoutStateCurrent = new AnimBool(foldoutStateTarget);
+            foldoutStateCurrent.valueChanged.AddListener(Repaint);
         }
 
         public override void OnInspectorGUI()
@@ -33,8 +36,8 @@ namespace Factory_Editor
 
             EditorColors.OverrideTextColors();
         
-            settingsFoldoutState = InspectorUtility.BeginFoldoutGroup("Individual Animation Settings", settingsFoldoutState);
-            if (settingsFoldoutState)
+            bool _displayList = InspectorUtility.BeginFoldoutGroup("Individual Animation Settings", ref foldoutStateTarget, ref foldoutStateCurrent);
+            if (_displayList)
             {
                 for (int _index = 0; _index < animationSettingsProp.arraySize; _index++)
                 {
@@ -43,7 +46,7 @@ namespace Factory_Editor
                 }    
             }
 
-            InspectorUtility.EndFoldoutGroup(settingsFoldoutState);
+            InspectorUtility.EndNewFoldoutGroup(_displayList);
             EditorColors.ResetTextColor();
 
             var _prevColor = GUI.backgroundColor;

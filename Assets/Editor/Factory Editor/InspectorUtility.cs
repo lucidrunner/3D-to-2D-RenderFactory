@@ -375,7 +375,7 @@ namespace Factory_Editor
             }
         }
         
-        public static void DrawProperty(SerializedProperty aProperty, float aLabelScreenWidth, params GUILayoutOption[] aOptions)
+        public static void DrawProperty(SerializedProperty aProperty, float aLabelScreenWidth = 0.45f, params GUILayoutOption[] aOptions)
         {
             var _prevLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = Screen.width * aLabelScreenWidth;

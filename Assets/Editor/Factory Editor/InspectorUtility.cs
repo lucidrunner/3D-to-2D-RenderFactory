@@ -2,6 +2,7 @@
 using System.Linq;
 using Shared_Scripts;
 using UnityEditor;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 namespace Factory_Editor
@@ -21,8 +22,14 @@ namespace Factory_Editor
         {
             return DrawFoldoutGroup(aFoldoutLabel, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, aFoldoutState, FactoryStyles.FoldoutHeader, FactoryStyles.FoldoutBody);
         }
-        
-        
+
+        public static bool BeginFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
+        {
+            return DrawNewFoldoutGroup(aFoldoutLabel, ref aFoldoutTarget, ref aCurrentFoldoutState, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, FactoryStyles.NewFoldoutHeader,
+                FactoryStyles.NewFoldoutBody);
+        }
+
+
         public static bool BeginSubFoldoutGroup(string aFoldoutLabel, Color? aHeaderHighlight, Color? aGroupHighlight, bool aFoldoutState)
         {
             return DrawFoldoutGroup(aFoldoutLabel, aHeaderHighlight, aGroupHighlight, aFoldoutState, FactoryStyles.SubFoldoutHeader, FactoryStyles.SubFoldoutBody);
@@ -62,7 +69,62 @@ namespace Factory_Editor
                 
             return aFoldoutState;
         }
-        
+
+        private static bool DrawNewFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color aHeaderHighlight, Color aGroupHighlight, GUIStyle aFoldoutHeader, GUIStyle aFoldoutBody)
+        {
+            
+            var _prevColor = GUI.backgroundColor;
+            GUI.backgroundColor = aHeaderHighlight;
+            
+            //HEADER
+            //Begin by drawing the header box group
+            EditorGUILayout.BeginVertical(aFoldoutHeader);
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label(aFoldoutLabel, "BoldLabel");
+            GUILayout.FlexibleSpace();
+
+            //Depending on if we're currently showing / hiding we want to display the opposite label on the button
+            string _expandButtonLabel = aFoldoutTarget ? "Hide" : "Show";
+            
+            //Flip the current target if we press the button
+            if (DrawButton(new GUIContent(_expandButtonLabel), EditorColors.ButtonAction, ButtonSize.Standard))
+            {
+                aFoldoutTarget = !aFoldoutTarget;
+            }
+            
+            //And set that target to the anim bool so we can use our fade group 
+            aCurrentFoldoutState.target = aFoldoutTarget;
+
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+            GUI.backgroundColor = _prevColor;
+            
+            
+            //BODY
+            var _showFade = EditorGUILayout.BeginFadeGroup(aCurrentFoldoutState.faded);
+            if (_showFade)
+            {
+                GUI.backgroundColor = aGroupHighlight;
+                EditorGUILayout.BeginVertical(aFoldoutBody);
+                GUI.backgroundColor = _prevColor;
+            }
+
+            //Return if we should show our variables atm
+            return _showFade;
+        }
+
+
+        public static void EndNewFoldoutGroup(bool aFoldoutState)
+        {
+            //If we're currently drawing the group, end our vertical
+            if (aFoldoutState)
+            {
+                EditorGUILayout.EndVertical();   
+            }
+            
+            EditorGUILayout.EndFadeGroup();
+        }
+
         public static void EndFoldoutGroup(bool aFoldoutState)
         {
             if(aFoldoutState)
@@ -326,6 +388,15 @@ namespace Factory_Editor
             EditorGUILayout.PropertyField(aProperty, aOptions);
             EditorGUIUtility.labelWidth = _prevLabelWidth;
         }
+        
+        public static void DrawProperty(SerializedProperty aProperty, GUIContent aPropertyLabel, float aLabelScreenWidth = 0.45f, params GUILayoutOption[] aOptions)
+        {
+            var _prevLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = Screen.width * aLabelScreenWidth;
+            EditorGUILayout.PropertyField(aProperty, aPropertyLabel, aOptions);
+            EditorGUIUtility.labelWidth = _prevLabelWidth;
+        }
+
 
         public static void DrawToggleProperty(SerializedProperty aProperty, bool aToggleLeft = false)
         {

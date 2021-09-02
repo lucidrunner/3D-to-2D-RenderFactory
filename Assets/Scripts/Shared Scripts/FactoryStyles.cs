@@ -18,6 +18,20 @@ namespace Shared_Scripts
             fontSize = 13
         };
 
+        public static readonly GUIStyle NewFoldoutHeader = new GUIStyle(GUI.skin.box)
+        {
+            margin =  new RectOffset(0,0,5,0),
+            padding = new RectOffset(5,5,5,5),
+            normal = {background = FactoryEditorTextures.BoxHeaderBackground}
+        };
+
+        public static readonly GUIStyle NewFoldoutBody = new GUIStyle(GUI.skin.box)
+        {
+            padding = new RectOffset(5,5,5,5),
+            margin =  new RectOffset(19,5,0,5),
+            normal = {background = FactoryEditorTextures.BoxBackground}
+        };
+
             
         public static readonly GUIStyle FoldoutBody = new GUIStyle(GUI.skin.textArea)
         {

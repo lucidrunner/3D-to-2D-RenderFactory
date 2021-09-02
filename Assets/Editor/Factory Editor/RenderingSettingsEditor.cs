@@ -105,9 +105,6 @@ namespace Factory_Editor
             renderingTextureReadWriteProp = serializedObject.FindProperty("renderTextureReadWrite");
             renderingIgnoreListProp = serializedObject.FindProperty("renderIgnoreList");
 
-            //Naming
-            
-         
             //Isometric
             isometricDefaultAngleProp = serializedObject.FindProperty("isometricDefaultAngle");
             isometricBaselineProp = serializedObject.FindProperty("isometricBaseline");
@@ -123,6 +120,8 @@ namespace Factory_Editor
          
             showAdvancedFields = new AnimBool(ShowAdvanced());
             showAdvancedFields.valueChanged.AddListener(Repaint);
+            calculatorFoldoutCurrent = new AnimBool(calculatorFoldoutTarget);
+            calculatorFoldoutCurrent.valueChanged.AddListener(Repaint);
         }
 
         protected AnimBool showAdvancedFields;
@@ -133,15 +132,21 @@ namespace Factory_Editor
         [SerializeField] private bool isometricFoldoutState;
         [SerializeField] private bool rootMotionFoldoutState;
 
+        [SerializeField] private bool calculatorFoldoutTarget;
+        [SerializeField] private AnimBool calculatorFoldoutCurrent;
+
 
         public override void OnInspectorGUI()
         {
             serializedObject.UpdateIfRequiredOrScript();
 
+            //Draw script target
             GUI.enabled = false;
             EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((RenderingSettings) target), typeof(RenderingSettings), false);
             GUI.enabled = true;
             var _target = (RenderingSettings) target;
+            
+            //Draw standard / advanced settings mode, and set the fade target to the correct toggle
             EditorGUILayout.PropertyField(settingsModeProp);
             showAdvancedFields.target = ShowAdvanced();
             EditorColors.OverrideTextColors();
@@ -157,7 +162,6 @@ namespace Factory_Editor
 
             //Isometric Settings
             DrawIsometricSettings();
-            
 
             //Root Motion
             DrawRootMotionSettings();
@@ -180,30 +184,29 @@ namespace Factory_Editor
 
         private void DrawCalculatorSettings()
         {
-            calculatorFoldoutState = InspectorUtility.BeginFoldoutGroup("Frame Scale Calculator Settings", calculatorFoldoutState);
-            if (calculatorFoldoutState)
+            bool _showCalculator = InspectorUtility.BeginFoldoutGroup("Frame Scale Calculator Settings", ref calculatorFoldoutTarget, ref calculatorFoldoutCurrent);
+            if (_showCalculator)
             {
                 if (IsGlobalSettings())
                     GUI.enabled = false;
-                EditorGUILayout.PropertyField(boundsCalcEnabledProp, new GUIContent("Enable Per Frame Scale Calculation", InspectorTooltips.EnableBoundsCalculator));
+                InspectorUtility.DrawToggleProperty(boundsCalcEnabledProp, new GUIContent("Enable Per Frame Scale Calculation", InspectorTooltips.EnableBoundsCalculator));
                 GUI.enabled = true;
 
                 if (ShowAdvanced())
-                    EditorGUILayout.PropertyField(automaticDepthCalculationProp, new GUIContent(automaticDepthCalculationProp.displayName, InspectorTooltips.AutomaticDepthCalculation));
+                    InspectorUtility.DrawToggleProperty(automaticDepthCalculationProp, new GUIContent(automaticDepthCalculationProp.displayName, InspectorTooltips.AutomaticDepthCalculation));
 
                 if (EditorGUILayout.BeginFadeGroup(showAdvancedFields.faded))
                 {
                     //Bounds Calculator
                     InspectorUtility.BeginSubBoxGroup("Standard Bounds Calculator Advanced Settings", EditorColors.HeaderAlt1, EditorColors.BodyAlt1);
-                    EditorGUILayout.PropertyField(boundsCalcOverdrawProp, new GUIContent("Bounds Size Modifier", InspectorTooltips.BoundsOverdraw));
-                    EditorGUILayout.PropertyField(boundsCalcStepPercentageProp, new GUIContent(boundsCalcStepPercentageProp.displayName, InspectorTooltips.CalculatorStepPercentage));
-                    EditorGUILayout.PropertyField(boundsCalcMaxPaddingProp, new GUIContent("Bounds Calculator Max Pixel Padding", InspectorTooltips.CalculatorMaxPadding));
-                    EditorGUILayout.PropertyField(boundsCalcMaxStepsProp, new GUIContent("Bounds Calculator Max Steps", InspectorTooltips.CalculatorMaxSteps));
+                    InspectorUtility.DrawProperty(boundsCalcOverdrawProp, new GUIContent("Bounds Size Modifier", InspectorTooltips.BoundsOverdraw));
+                    InspectorUtility.DrawProperty(boundsCalcStepPercentageProp, new GUIContent(boundsCalcStepPercentageProp.displayName, InspectorTooltips.CalculatorStepPercentage));
+                    InspectorUtility.DrawProperty(boundsCalcMaxPaddingProp, new GUIContent("Bounds Calculator Max Pixel Padding", InspectorTooltips.CalculatorMaxPadding));
+                    InspectorUtility.DrawProperty(boundsCalcMaxStepsProp, new GUIContent("Bounds Calculator Max Steps", InspectorTooltips.CalculatorMaxSteps));
                     if(!IsGlobalSettings())
                     {
-                        EditorGUILayout.PropertyField(boundsIncludeRenderIgnoreProp, new GUIContent(boundsIncludeRenderIgnoreProp.displayName, InspectorTooltips.IncludeRenderIgnore));
+                        InspectorUtility.DrawToggleProperty(boundsIncludeRenderIgnoreProp, new GUIContent(boundsIncludeRenderIgnoreProp.displayName, InspectorTooltips.IncludeRenderIgnore));
                         EditorGUI.indentLevel++;
-                        //TODO This can't be drawn in a foldout, write a custom foldout via fade groups instead of our current system
                         EditorGUILayout.PropertyField(boundsIgnoreListProp, new GUIContent("Mesh Ignore List", InspectorTooltips.BoundsIgnoreList), true);
                         EditorGUI.indentLevel--;
                     }
@@ -218,22 +221,23 @@ namespace Factory_Editor
 
                 if (IsGlobalSettings() || !boundsCalcEnabledProp.boolValue)
                     GUI.enabled = false;
-                EditorGUILayout.PropertyField(useEdgeCalcProp, new GUIContent("Use Close Edge Calculator", InspectorTooltips.UseEdgeCalculatorTooltip));
+                InspectorUtility.DrawToggleProperty(useEdgeCalcProp, new GUIContent("Use Close Edge Calculator", InspectorTooltips.UseEdgeCalculatorTooltip));
                 GUI.enabled = useEdgeCalcProp.boolValue && boundsCalcEnabledProp.boolValue;
-                EditorGUILayout.PropertyField(bypassStandardCalcProp, new GUIContent(bypassStandardCalcProp.displayName, InspectorTooltips.BypassStandardCalculator));
-                EditorGUILayout.PropertyField(edgeCalcOmniDirectionalProp, new GUIContent(edgeCalcOmniDirectionalProp.displayName, InspectorTooltips.UseInverseEdgeCalculator));
+                InspectorUtility.DrawToggleProperty(bypassStandardCalcProp, new GUIContent(bypassStandardCalcProp.displayName, InspectorTooltips.BypassStandardCalculator));
+                InspectorUtility.DrawToggleProperty(edgeCalcOmniDirectionalProp, new GUIContent(edgeCalcOmniDirectionalProp.displayName, InspectorTooltips.UseInverseEdgeCalculator));
                 GUI.enabled = true;
                 if (EditorGUILayout.BeginFadeGroup(showAdvancedFields.faded))
                 {
-                    EditorGUILayout.PropertyField(edgeCalcStepSizeProp, new GUIContent(edgeCalcStepSizeProp.displayName, InspectorTooltips.EdgeCalculatorStepSize));
-                    EditorGUILayout.PropertyField(bottomOffsetProp, new GUIContent(bottomOffsetProp.displayName, InspectorTooltips.EdgeCalculatorBottomOffset));
+                    InspectorUtility.DrawProperty(edgeCalcStepSizeProp, new GUIContent(edgeCalcStepSizeProp.displayName, InspectorTooltips.EdgeCalculatorStepSize));
+                    InspectorUtility.DrawProperty(bottomOffsetProp, new GUIContent(bottomOffsetProp.displayName, InspectorTooltips.EdgeCalculatorBottomOffset));
                 }
 
                 EditorGUILayout.EndFadeGroup();
                 InspectorUtility.EndSubBoxGroup();
             }
 
-            InspectorUtility.EndFoldoutGroup(calculatorFoldoutState);
+            InspectorUtility.EndNewFoldoutGroup(_showCalculator);
+            
         }
 
         private void DrawRenderingSettings(RenderingSettings _target)

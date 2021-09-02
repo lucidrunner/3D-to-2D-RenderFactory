@@ -32,6 +32,7 @@ namespace Factory_Editor
 
             internal SettingState(SerializedProperty aSetting, RootMotionSettingsEditor aEditor)
             {
+                Debug.Log("Creating new SettingState");
                 AnimationNameProp = aSetting.FindPropertyRelative("animationName");
                 EnableExportProp = aSetting.FindPropertyRelative("enableExport");
                 EnableFollowProp = aSetting.FindPropertyRelative("enableFollow");
@@ -41,6 +42,8 @@ namespace Factory_Editor
                 ClampRotationProp = aSetting.FindPropertyRelative("forceRotationClamp");
                 ExportOverrideTransformProp = aSetting.FindPropertyRelative("overrideExportTransform");
                 FollowOverrideTransformProp = aSetting.FindPropertyRelative("overrideFollowTransform");
+                
+                Debug.Log("AnimationNameProp is null: " + AnimationNameProp == null);
                 
                 displayExportOverrideButton = new AnimBool(EnableExportProp.boolValue);
                 displayFollowOverrideButton = new AnimBool(EnableFollowProp.boolValue);
@@ -56,7 +59,6 @@ namespace Factory_Editor
                 displayClampingSettings.valueChanged.AddListener(aEditor.Repaint);
             
             }
-
         }
 
         [SerializeField] private AnimBool displayRootMotion;
@@ -73,7 +75,8 @@ namespace Factory_Editor
         private SerializedProperty defaultFollowProp;
         private SerializedProperty settingListProp;
         [SerializeField] private bool currentRootMotionTab;
-        [SerializeField] private bool rootMotionFoldoutState;
+        [SerializeField] private bool rootMotionFoldoutTarget;
+        [SerializeField] private AnimBool rootMotionFoldoutCurrent;
 
 
         private void OnEnable()
@@ -90,11 +93,14 @@ namespace Factory_Editor
             displayRootMotionList = new AnimBool(rootMotionExportProp.boolValue);
             displayDefaultFollowSettings = new AnimBool(!rootMotionExportProp.boolValue);
             displayClampingSettings = new AnimBool(applyDefaultRootMovementProp.boolValue);
+            rootMotionFoldoutCurrent = new AnimBool(rootMotionFoldoutTarget);
             displayRootMotion.valueChanged.AddListener(Repaint);
             displayDefault.valueChanged.AddListener(Repaint);
             displayRootMotionList.valueChanged.AddListener(Repaint);
             displayDefaultFollowSettings.valueChanged.AddListener(Repaint);
             displayClampingSettings.valueChanged.AddListener(Repaint);
+            rootMotionFoldoutCurrent.valueChanged.AddListener(Repaint);
+            
 
             if (settingStates.Count != settingListProp.arraySize)
             {
@@ -102,9 +108,10 @@ namespace Factory_Editor
             }
         }
 
+
         private void RefreshStateList()
         {
-            settingStates.Clear();
+            settingStates = new List<SettingState>();
             for (int _index = 0; _index < settingListProp.arraySize; _index++)
             {
                 var _settingProp = settingListProp.GetArrayElementAtIndex(_index);
@@ -114,11 +121,18 @@ namespace Factory_Editor
 
         public override void OnInspectorGUI()
         {
+            
             serializedObject.UpdateIfRequiredOrScript();
             GUI.enabled = false;
             EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((RootMotionSettings) target), typeof(RootMotionSettings), false);
             GUI.enabled = true;
+            //Ugly check needed to sync our states on reset:ing the RootMotionSettings-script
             var _target = (RootMotionSettings) target;
+            if(_target.HasReset)
+            {
+                RefreshStateList();
+                _target.HasReset = false;
+            }
 
 
             EditorGUILayout.BeginHorizontal();
@@ -172,8 +186,8 @@ namespace Factory_Editor
             //Show List
             if (EditorGUILayout.BeginFadeGroup(displayRootMotionList.faded))
             {
-                rootMotionFoldoutState = InspectorUtility.BeginSubFoldoutGroup("Individual Animation Settings", EditorColors.FoldoutHeader, EditorColors.FoldoutBody, rootMotionFoldoutState);
-                if(rootMotionFoldoutState)
+                bool _displayFoldout = InspectorUtility.BeginSubFoldoutGroup("Individual Animation Settings", ref rootMotionFoldoutTarget, ref rootMotionFoldoutCurrent);
+                if(_displayFoldout)
                 {
                     foreach (var _settingState in settingStates)
                     {
@@ -183,7 +197,7 @@ namespace Factory_Editor
                     }
                 }
 
-                InspectorUtility.EndFoldoutGroup(rootMotionFoldoutState);
+                InspectorUtility.EndNewFoldoutGroup(_displayFoldout);
         
                 if(InspectorUtility.DrawButton(new GUIContent("Reload Animation List"), EditorColors.ButtonRunAlt))
                 {

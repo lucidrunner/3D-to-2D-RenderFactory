@@ -31,20 +31,16 @@ namespace Shared_Scripts
             margin =  new RectOffset(19,5,0,5),
             normal = {background = FactoryEditorTextures.BoxBackground}
         };
-
-            
-        public static readonly GUIStyle FoldoutBody = new GUIStyle(GUI.skin.textArea)
+        public static readonly GUIStyle NewSubFoldoutHeader = new GUIStyle(GUI.skin.box)
         {
-            margin =  new RectOffset(7, 6, 0, 5),
-            padding = new RectOffset(5,5,5,5),
-            normal = {background = FactoryEditorTextures.FoldoutBodyBackground}
+            margin =  new RectOffset(5, 9, 5, 0),
+            normal = {background = FactoryEditorTextures.BoxHeaderBackground}
         };
-            
-        public static readonly GUIStyle SubFoldoutBody = new GUIStyle(GUI.skin.textArea)
+
+        public static readonly GUIStyle NewSubFoldoutBody = new GUIStyle(GUI.skin.box)
         {
-            margin =  new RectOffset(4, 6, 0, 5),
-            padding = new RectOffset(5,5,5,5),
-            normal = {background = FactoryEditorTextures.FoldoutBodyBackground}
+            margin =  new RectOffset(5, 9, 0, 0),
+            normal = {background = FactoryEditorTextures.BoxBackground}
         };
 
 

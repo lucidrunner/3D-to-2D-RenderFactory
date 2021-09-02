@@ -56,6 +56,8 @@ namespace Factory_Editor
             showFactoryAdd.valueChanged.AddListener(Repaint);
             showIsometricOptions  = new AnimBool(cameraRigProp.enumValueIndex ==  (int)CameraRigger.SetupInfo.RigType.Isometric);
             showIsometricOptions.valueChanged.AddListener(Repaint);
+            setupFoldoutCurrent = new AnimBool(setupFoldoutTarget);
+            setupFoldoutCurrent.valueChanged.AddListener(Repaint);
         }
 
         public override void OnInspectorGUI()

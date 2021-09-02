@@ -12,11 +12,6 @@ namespace Factory_Editor
 
         #region Foldout
 
-        public static bool BeginFoldoutGroup(string aFoldoutLabel, bool aFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
-        {
-            return DrawFoldoutGroup(aFoldoutLabel, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, aFoldoutState, FactoryStyles.FoldoutHeader, FactoryStyles.FoldoutBody);
-        }
-
         public static bool BeginFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
         {
             return DrawNewFoldoutGroup(aFoldoutLabel, ref aFoldoutTarget, ref aCurrentFoldoutState, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, FactoryStyles.NewFoldoutHeader,
@@ -24,9 +19,10 @@ namespace Factory_Editor
         }
 
 
-        public static bool BeginSubFoldoutGroup(string aFoldoutLabel, Color? aHeaderHighlight, Color? aGroupHighlight, bool aFoldoutState)
+        public static bool BeginSubFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
         {
-            return DrawFoldoutGroup(aFoldoutLabel, aHeaderHighlight, aGroupHighlight, aFoldoutState, FactoryStyles.SubFoldoutHeader, FactoryStyles.SubFoldoutBody);
+            return DrawNewFoldoutGroup(aFoldoutLabel, ref aFoldoutTarget, ref aCurrentFoldoutState, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, FactoryStyles.NewSubFoldoutHeader,
+                FactoryStyles.NewSubFoldoutBody);
         }
 
         private static bool DrawFoldoutGroup(string aFoldoutLabel, Color? aHeaderHighlight, Color? aGroupHighlight, bool aFoldoutState, GUIStyle aHeaderStyle, GUIStyle aBodyStyle)

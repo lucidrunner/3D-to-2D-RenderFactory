@@ -59,6 +59,8 @@ namespace Render3DTo2D.Root_Movement
 
         [SerializeField] private bool forceRotationClamp = false;
 
+        public bool HasReset = false;
+
         [SerializeField]
         private ToggleTransform defaultExport = new ToggleTransform("Default Export", InspectorTooltips.ExportTransform);
 
@@ -88,6 +90,7 @@ namespace Render3DTo2D.Root_Movement
         {
             animator = AnimationUtilities.GetAnimatorTransform(transform).GetComponent<Animator>();
             SetupSettingsList();
+            HasReset = true;
         }
 
         private void SetupSettingsList()

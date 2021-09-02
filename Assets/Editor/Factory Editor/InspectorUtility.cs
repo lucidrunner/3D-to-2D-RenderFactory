@@ -9,12 +9,6 @@ namespace Factory_Editor
 {
     public static class InspectorUtility
     {
-        #region Textures
-        
-        
-
-        #endregion
-
 
         #region Foldout
 

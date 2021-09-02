@@ -120,20 +120,31 @@ namespace Factory_Editor
          
             showAdvancedFields = new AnimBool(ShowAdvanced());
             showAdvancedFields.valueChanged.AddListener(Repaint);
+            generalFoldoutCurrent = new AnimBool(generalFoldoutTarget);
+            generalFoldoutCurrent.valueChanged.AddListener(Repaint);
             calculatorFoldoutCurrent = new AnimBool(calculatorFoldoutTarget);
             calculatorFoldoutCurrent.valueChanged.AddListener(Repaint);
+            renderOutputFoldoutCurrent = new AnimBool(renderOutputFoldoutTarget);
+            renderOutputFoldoutCurrent.valueChanged.AddListener(Repaint);
+            isometricFoldoutCurrent = new AnimBool(isometricFoldoutTarget);
+            isometricFoldoutCurrent.valueChanged.AddListener(Repaint);
+            rootMotionFoldoutCurrent = new AnimBool(rootMotionFoldoutTarget);
+            rootMotionFoldoutCurrent.valueChanged.AddListener(Repaint);
         }
-
+        
         protected AnimBool showAdvancedFields;
-        [SerializeField] private bool generalFoldoutState;
-        [SerializeField] private bool calculatorFoldoutState;
-        [SerializeField] private bool renderOutputFoldoutState;
-        [SerializeField] private bool namingFoldoutState;
-        [SerializeField] private bool isometricFoldoutState;
-        [SerializeField] private bool rootMotionFoldoutState;
-
+        //Declare our Foldout overheads
+        [SerializeField] private bool generalFoldoutTarget;
+        [SerializeField] private AnimBool generalFoldoutCurrent;
         [SerializeField] private bool calculatorFoldoutTarget;
         [SerializeField] private AnimBool calculatorFoldoutCurrent;
+        [SerializeField] private bool renderOutputFoldoutTarget;
+        [SerializeField] private AnimBool renderOutputFoldoutCurrent;
+        [SerializeField] private bool isometricFoldoutTarget;
+        [SerializeField] private AnimBool isometricFoldoutCurrent;
+        [SerializeField] private bool rootMotionFoldoutTarget;
+        [SerializeField] private AnimBool rootMotionFoldoutCurrent;
+
 
 
         public override void OnInspectorGUI()
@@ -172,14 +183,13 @@ namespace Factory_Editor
 
         private void DrawGeneralSettings()
         {
-            generalFoldoutState = InspectorUtility.BeginFoldoutGroup("General Settings", generalFoldoutState);
-            if (generalFoldoutState)
+            bool _showGeneral = InspectorUtility.BeginFoldoutGroup("General Settings", ref generalFoldoutTarget, ref generalFoldoutCurrent);
+            if (_showGeneral)
             {
                 EditorGUILayout.PropertyField(fpsProp, new GUIContent(fpsProp.displayName, InspectorTooltips.FPS));
                 EditorGUILayout.PropertyField(centerModelProp, new GUIContent(centerModelProp.displayName, InspectorTooltips.MoveModelOnStartup));
             }
-
-            InspectorUtility.EndFoldoutGroup(generalFoldoutState);
+            InspectorUtility.EndNewFoldoutGroup(_showGeneral);
         }
 
         private void DrawCalculatorSettings()
@@ -207,7 +217,7 @@ namespace Factory_Editor
                     {
                         InspectorUtility.DrawToggleProperty(boundsIncludeRenderIgnoreProp, new GUIContent(boundsIncludeRenderIgnoreProp.displayName, InspectorTooltips.IncludeRenderIgnore));
                         EditorGUI.indentLevel++;
-                        EditorGUILayout.PropertyField(boundsIgnoreListProp, new GUIContent("Mesh Ignore List", InspectorTooltips.BoundsIgnoreList), true);
+                        EditorGUILayout.PropertyField(boundsIgnoreListProp, new GUIContent("Mesh Ignore List", InspectorTooltips.BoundsIgnoreList), true, GUILayout.MaxWidth(Screen.width - 63));
                         EditorGUI.indentLevel--;
                     }
 
@@ -242,20 +252,16 @@ namespace Factory_Editor
 
         private void DrawRenderingSettings(RenderingSettings _target)
         {
-            renderOutputFoldoutState = InspectorUtility.BeginFoldoutGroup("Render Output Settings", renderOutputFoldoutState);
+             bool _showRenderOutput = InspectorUtility.BeginFoldoutGroup("Render Output Settings", ref renderOutputFoldoutTarget, ref renderOutputFoldoutCurrent);
 
-            if (renderOutputFoldoutState)
+            if (_showRenderOutput)
             {
                 renderingLayerProp.intValue = InspectorUtility.DrawListPopup("Rendering Layer", _target.RenderingLayerOptions, renderingLayerProp.intValue, InspectorTooltips.RenderingLayer);
-                EditorGUILayout.PropertyField(backgroundColorProp, new GUIContent(backgroundColorProp.displayName, InspectorTooltips.RenderBackgroundColor));
-
-
-                EditorGUILayout.PropertyField(baseTextureSizeProp, new GUIContent(baseTextureSizeProp.displayName, InspectorTooltips.BaseTextureSize));
-                
-                
-                EditorGUILayout.PropertyField(overwriteFramesProp, new GUIContent(overwriteFramesProp.displayName, InspectorTooltips.OverwriteExisting));
+                InspectorUtility.DrawProperty(backgroundColorProp, new GUIContent(backgroundColorProp.displayName, InspectorTooltips.RenderBackgroundColor));
+                InspectorUtility.DrawProperty(baseTextureSizeProp, new GUIContent(baseTextureSizeProp.displayName, InspectorTooltips.BaseTextureSize));
+                InspectorUtility.DrawToggleProperty(overwriteFramesProp, new GUIContent(overwriteFramesProp.displayName, InspectorTooltips.OverwriteExisting));
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(baselineScaleProp, new GUIContent("Baseline Reference Scale", InspectorTooltips.BaselineTooltip));
+                InspectorUtility.DrawProperty(baselineScaleProp, new GUIContent("Baseline Reference Scale", InspectorTooltips.BaselineTooltip));
 
                 var _currentColor = GUI.backgroundColor;
                 GUI.backgroundColor = EditorColors.ButtonAction;
@@ -272,14 +278,18 @@ namespace Factory_Editor
                 if (EditorGUILayout.BeginFadeGroup(showAdvancedFields.faded))
                 {
                     InspectorUtility.BeginSubBoxGroup("Advanced Settings", EditorColors.HeaderAlt1, EditorColors.BodyAlt1);
-                    EditorGUILayout.PropertyField(setToLayerProp, new GUIContent("Visible during other Renders", InspectorTooltips.SetToLayer));
-                    EditorGUILayout.PropertyField(nearestMultipleProp, new GUIContent("Set Output to nearest multiple of 4", InspectorTooltips.NearestMultiple));
-                    EditorGUILayout.PropertyField(renderingFormatProp, new GUIContent(renderingFormatProp.displayName, InspectorTooltips.RenderingFormat));
-                    EditorGUILayout.PropertyField(renderTextureFormatProp, new GUIContent(renderTextureFormatProp.displayName, InspectorTooltips.RenderTextureFormat));
+                    InspectorUtility.DrawToggleProperty(setToLayerProp, new GUIContent("Visible during other Renders", InspectorTooltips.SetToLayer));
+                    InspectorUtility.DrawToggleProperty(nearestMultipleProp, new GUIContent("Set Output to nearest multiple of 4", InspectorTooltips.NearestMultiple));
+                    InspectorUtility.DrawProperty(renderingFormatProp, new GUIContent(renderingFormatProp.displayName, InspectorTooltips.RenderingFormat));
+                    InspectorUtility.DrawProperty(renderTextureFormatProp, new GUIContent(renderTextureFormatProp.displayName, InspectorTooltips.RenderTextureFormat));
                     renderingTextureDepthProp.intValue = InspectorUtility.DrawListPopup("Render Texture Depth", _target.RenderTextureDepthOptions, renderingTextureDepthProp.intValue, InspectorTooltips.RenderTextureDepth);
-                    EditorGUILayout.PropertyField(renderingTextureReadWriteProp, new GUIContent(renderingTextureReadWriteProp.displayName, InspectorTooltips.RenderTextureReadWrite));
+                    InspectorUtility.DrawProperty(renderingTextureReadWriteProp, new GUIContent(renderingTextureReadWriteProp.displayName, InspectorTooltips.RenderTextureReadWrite));
                     EditorGUI.indentLevel++;
-                    if(!IsGlobalSettings()) EditorGUILayout.PropertyField(renderingIgnoreListProp, new GUIContent("Mesh Ignore List", InspectorTooltips.RenderingIgnoreList), true);
+                    if(!IsGlobalSettings())
+                    {
+                        EditorGUILayout.PropertyField(renderingIgnoreListProp, new GUIContent("Mesh Ignore List", InspectorTooltips.RenderingIgnoreList), true, GUILayout.MaxWidth(Screen.width - 63));
+                    }
+
                     EditorGUI.indentLevel--;
                     InspectorUtility.EndSubBoxGroup();
                 }
@@ -287,49 +297,49 @@ namespace Factory_Editor
                 EditorGUILayout.EndFadeGroup();
             }
 
-            InspectorUtility.EndFoldoutGroup(renderOutputFoldoutState);
+            InspectorUtility.EndNewFoldoutGroup(_showRenderOutput);
         }
         
 
         private void DrawIsometricSettings()
         {
-            isometricFoldoutState = InspectorUtility.BeginFoldoutGroup("Isometric Setup Settings", isometricFoldoutState);
+            
+            bool _showIsometric = InspectorUtility.BeginFoldoutGroup("Isometric Setup Settings", ref isometricFoldoutTarget, ref isometricFoldoutCurrent);
 
-            if (isometricFoldoutState)
+            if (_showIsometric)
             {
-                EditorGUILayout.PropertyField(isometricDefaultAngleProp, new GUIContent(isometricDefaultAngleProp.displayName, InspectorTooltips.IsometricDefaultAngle));
-                EditorGUILayout.PropertyField(isometricBaselineProp, new GUIContent(isometricBaselineProp.displayName, InspectorTooltips.IsometricDefaultBaseline));
-                EditorGUILayout.PropertyField(preferBasePlateDeviationProp, new GUIContent(preferBasePlateDeviationProp.displayName, InspectorTooltips.IsometricPreferBasePlate));
+                InspectorUtility.DrawProperty(isometricDefaultAngleProp, new GUIContent(isometricDefaultAngleProp.displayName, InspectorTooltips.IsometricDefaultAngle));
+                InspectorUtility.DrawProperty(isometricBaselineProp, new GUIContent(isometricBaselineProp.displayName, InspectorTooltips.IsometricDefaultBaseline));
+                InspectorUtility.DrawToggleProperty(preferBasePlateDeviationProp, new GUIContent(preferBasePlateDeviationProp.displayName, InspectorTooltips.IsometricPreferBasePlate));
                 if (EditorGUILayout.BeginFadeGroup(showAdvancedFields.faded))
                 {
-                    EditorGUILayout.PropertyField(isometricStepSizeProp, new GUIContent(isometricStepSizeProp.displayName, InspectorTooltips.IsometricStepSize));
-                    EditorGUILayout.PropertyField(isometricMaxStepsProp, new GUIContent(isometricMaxStepsProp.displayName, InspectorTooltips.IsometricMaxSteps));
+                    InspectorUtility.DrawProperty(isometricStepSizeProp, new GUIContent(isometricStepSizeProp.displayName, InspectorTooltips.IsometricStepSize));
+                    InspectorUtility.DrawProperty(isometricMaxStepsProp, new GUIContent(isometricMaxStepsProp.displayName, InspectorTooltips.IsometricMaxSteps));
                 }
 
                 EditorGUILayout.EndFadeGroup();
             }
 
-            InspectorUtility.EndFoldoutGroup(isometricFoldoutState);
+            InspectorUtility.EndNewFoldoutGroup(_showIsometric);
         }
 
         private void DrawRootMotionSettings()
         {
-            rootMotionFoldoutState = InspectorUtility.BeginFoldoutGroup("Root Motion Export Settings", rootMotionFoldoutState);
+            bool _showRootMotion = InspectorUtility.BeginFoldoutGroup("Root Motion Export Settings", ref rootMotionFoldoutTarget, ref rootMotionFoldoutCurrent);
 
-            if (rootMotionFoldoutState)
+            if (_showRootMotion)
             {
-                EditorGUILayout.PropertyField(recordingsPerFrameProp, new GUIContent(recordingsPerFrameProp.displayName, InspectorTooltips.RootMotionRecordingsPerFrame));
-                //    applyBaselineDeviationProp.boolValue = EditorGUILayout.ToggleLeft(new GUIContent(applyBaselineDeviationProp.displayName, InspectorTooltips.ApplyBaselineDeviation), applyBaselineDeviationProp.boolValue);
-                EditorGUILayout.PropertyField(applyBaselineDeviationProp, new GUIContent(applyBaselineDeviationProp.displayName, InspectorTooltips.ApplyBaselineDeviation));
+                InspectorUtility.DrawProperty(recordingsPerFrameProp, new GUIContent(recordingsPerFrameProp.displayName, InspectorTooltips.RootMotionRecordingsPerFrame));
+                InspectorUtility.DrawToggleProperty(applyBaselineDeviationProp, new GUIContent(applyBaselineDeviationProp.displayName, InspectorTooltips.ApplyBaselineDeviation));
                 if (EditorGUILayout.BeginFadeGroup(showAdvancedFields.faded))
                 {
-                    EditorGUILayout.PropertyField(rootMotionToleranceProp, new GUIContent(rootMotionToleranceProp.displayName, InspectorTooltips.RootMotionTolerance));
+                    InspectorUtility.DrawProperty(rootMotionToleranceProp, new GUIContent(rootMotionToleranceProp.displayName, InspectorTooltips.RootMotionTolerance));
                 }
 
                 EditorGUILayout.EndFadeGroup();
             }
 
-            InspectorUtility.EndFoldoutGroup(rootMotionFoldoutState);
+            InspectorUtility.EndNewFoldoutGroup(_showRootMotion);
         }
 
         protected virtual bool IsGlobalSettings()

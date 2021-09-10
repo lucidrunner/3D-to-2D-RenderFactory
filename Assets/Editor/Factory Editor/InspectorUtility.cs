@@ -14,53 +14,18 @@ namespace Factory_Editor
 
         public static bool BeginFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
         {
-            return DrawNewFoldoutGroup(aFoldoutLabel, ref aFoldoutTarget, ref aCurrentFoldoutState, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, FactoryStyles.NewFoldoutHeader,
+            return DrawFoldoutGroup(aFoldoutLabel, ref aFoldoutTarget, ref aCurrentFoldoutState, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, FactoryStyles.NewFoldoutHeader,
                 FactoryStyles.NewFoldoutBody);
         }
 
 
         public static bool BeginSubFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
         {
-            return DrawNewFoldoutGroup(aFoldoutLabel, ref aFoldoutTarget, ref aCurrentFoldoutState, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, FactoryStyles.NewSubFoldoutHeader,
+            return DrawFoldoutGroup(aFoldoutLabel, ref aFoldoutTarget, ref aCurrentFoldoutState, aHeaderHighlight ?? EditorColors.FoldoutHeader, aGroupHighlight ?? EditorColors.FoldoutBody, FactoryStyles.NewSubFoldoutHeader,
                 FactoryStyles.NewSubFoldoutBody);
         }
 
-        private static bool DrawFoldoutGroup(string aFoldoutLabel, Color? aHeaderHighlight, Color? aGroupHighlight, bool aFoldoutState, GUIStyle aHeaderStyle, GUIStyle aBodyStyle)
-        {
-            var _prevColor = GUI.backgroundColor;
-            if(aHeaderHighlight.HasValue)
-            {
-                GUI.backgroundColor = aHeaderHighlight.Value;
-            }
-
-            
-            
-            aFoldoutState = EditorGUILayout.BeginFoldoutHeaderGroup(aFoldoutState, aFoldoutLabel, aHeaderStyle);
-
-            GUI.backgroundColor = _prevColor;
-
-            if (aGroupHighlight.HasValue && aFoldoutState)
-            {
-                GUI.backgroundColor = aGroupHighlight.Value;
-            }
-
-            if (aFoldoutState)
-            {
-                var _foldoutBodyStyle = new GUIStyle(aBodyStyle)
-                {
-                    normal = {background = FactoryEditorTextures.FoldoutBodyBackground}
-                };
-                
-
-                EditorGUILayout.BeginVertical(_foldoutBodyStyle);
-            }
-
-            GUI.backgroundColor = _prevColor;
-                
-            return aFoldoutState;
-        }
-
-        private static bool DrawNewFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color aHeaderHighlight, Color aGroupHighlight, GUIStyle aFoldoutHeader, GUIStyle aFoldoutBody)
+        private static bool DrawFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color aHeaderHighlight, Color aGroupHighlight, GUIStyle aFoldoutHeader, GUIStyle aFoldoutBody)
         {
             
             var _prevColor = GUI.backgroundColor;
@@ -68,10 +33,12 @@ namespace Factory_Editor
             
             //HEADER
             //Begin by drawing the header box group
+            EditorColors.OverrideTextColors();
             EditorGUILayout.BeginVertical(aFoldoutHeader);
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label(aFoldoutLabel, "BoldLabel");
             GUILayout.FlexibleSpace();
+            EditorColors.ResetTextColor();
 
             //Depending on if we're currently showing / hiding we want to display the opposite label on the button
             string _expandButtonLabel = aFoldoutTarget ? "Hide" : "Show";
@@ -104,7 +71,7 @@ namespace Factory_Editor
         }
 
 
-        public static void EndNewFoldoutGroup(bool aFoldoutState)
+        public static void EndFoldoutGroup(bool aFoldoutState)
         {
             //If we're currently drawing the group, end our vertical
             if (aFoldoutState)
@@ -115,15 +82,6 @@ namespace Factory_Editor
             EditorGUILayout.EndFadeGroup();
         }
 
-        public static void EndFoldoutGroup(bool aFoldoutState)
-        {
-            if(aFoldoutState)
-            {
-                EditorGUILayout.EndVertical();
-            }
-
-            EditorGUILayout.EndFoldoutHeaderGroup();
-        }
 
         #endregion
 
@@ -135,11 +93,13 @@ namespace Factory_Editor
             
             if(aBoxTitle != null)
             {
+                EditorColors.OverrideTextColors();
                 if(aTitleBar.HasValue)
                     GUI.backgroundColor = aTitleBar.Value;
                 EditorGUILayout.BeginVertical(FactoryStyles.BoxGroupHeader);
                 GUILayout.Label(aBoxTitle, "BoldLabel");
                 EditorGUILayout.EndVertical();
+                EditorColors.ResetTextColor();
             }
             
             
@@ -169,11 +129,13 @@ namespace Factory_Editor
 
             if(aListObjectTitle != null)
             {
+                EditorColors.OverrideTextColors();
                 if(aTitleHighlight.HasValue)
                     GUI.backgroundColor = aTitleHighlight.Value;
                 EditorGUILayout.BeginVertical(FactoryStyles.BoxGroupHeader);
                 GUILayout.Label(aListObjectTitle, new GUIStyle("BoldLabel"));
                 EditorGUILayout.EndVertical();
+                EditorColors.ResetTextColor();
             }
             GUI.backgroundColor = _prevColor;
             
@@ -229,16 +191,6 @@ namespace Factory_Editor
             {
                 _serializedProperty.boolValue = aNewState;
             }
-        }
-
-        public static int DrawListPopup(string aPopupLabel, string[] aPopupOptions, int aCurrentIndex, string aToolTip = null)
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(new GUIContent(aPopupLabel, aToolTip));
-            aCurrentIndex = EditorGUILayout.Popup(aCurrentIndex, aPopupOptions);
-            EditorGUILayout.EndHorizontal();
-
-            return aCurrentIndex;
         }
 
         public static void DrawToggleTransform(SerializedProperty aToggleTransformProp, bool aIncludeLabel = true, Color? aHeaderColor = null, Color? aBodyColor = null)
@@ -314,6 +266,7 @@ namespace Factory_Editor
 
 
         //Allows us to pass the params without having to explicitly set the size
+
         public static bool DrawButton(GUIContent aGUIContent, Color aColor, params GUILayoutOption[] aOptions)
         {
             EditorColors.OverrideButtonColors();
@@ -325,6 +278,7 @@ namespace Factory_Editor
         public static bool DrawButton(GUIContent aGUIContent, Color aColor, ButtonSize aButtonSize = ButtonSize.Standard, params GUILayoutOption[] aOptions)
         {
             var _prevColor = GUI.backgroundColor;
+            var _prevColor2 = GUI.color;
             EditorColors.OverrideButtonColors();
             float _height = 20f;
             switch (aButtonSize)
@@ -370,30 +324,48 @@ namespace Factory_Editor
                 _editor.Repaint();
             }
         }
-        
+
         public static void DrawProperty(SerializedProperty aProperty, float aLabelScreenWidth = 0.45f, params GUILayoutOption[] aOptions)
         {
+            EditorColors.OverrideTextColors();
             var _prevLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = Screen.width * aLabelScreenWidth;
             EditorGUILayout.PropertyField(aProperty, aOptions);
             EditorGUIUtility.labelWidth = _prevLabelWidth;
+            EditorColors.ResetTextColor();
         }
-        
+
         public static void DrawProperty(SerializedProperty aProperty, GUIContent aPropertyLabel, float aLabelScreenWidth = 0.45f, params GUILayoutOption[] aOptions)
         {
+            EditorColors.OverrideTextColors();
             var _prevLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = Screen.width * aLabelScreenWidth;
             EditorGUILayout.PropertyField(aProperty, aPropertyLabel, aOptions);
             EditorGUIUtility.labelWidth = _prevLabelWidth;
+            EditorColors.ResetTextColor();
+        }
+
+        public static int DrawListPopup(string aPopupLabel, string[] aPopupOptions, int aCurrentIndex, string aToolTip = null, float aLabelScreenWidth = 0.45f)
+        {
+            EditorColors.OverrideTextColors();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(new GUIContent(aPopupLabel, aToolTip), GUILayout.Width(Screen.width * aLabelScreenWidth));
+            GUILayout.FlexibleSpace();
+            aCurrentIndex = EditorGUILayout.Popup(aCurrentIndex, aPopupOptions);
+            EditorGUILayout.EndHorizontal();
+            EditorColors.ResetTextColor();
+
+            return aCurrentIndex;
         }
 
 
         public static void DrawToggleProperty(SerializedProperty aProperty, bool aToggleLeft = false)
         {
+            EditorColors.OverrideTextColors();
             GUILayout.BeginHorizontal();
             if (aToggleLeft)
                 EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
-            GUILayout.Label(aProperty.displayName);
+            GUILayout.Label(aProperty.displayName, EditorStyles.label);
 
             if(!aToggleLeft)
             {
@@ -402,6 +374,7 @@ namespace Factory_Editor
             }
 
             GUILayout.EndHorizontal();
+            EditorColors.ResetTextColor();
         }
         
         public static void DrawToggleProperty(SerializedProperty aProperty, GUIContent aLabelContent, bool aToggleLeft = false)
@@ -409,7 +382,9 @@ namespace Factory_Editor
             GUILayout.BeginHorizontal();
             if (aToggleLeft)
                 EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
-            GUILayout.Label(aLabelContent);
+            EditorColors.OverrideTextColors();
+            GUILayout.Label(aLabelContent, EditorStyles.label);
+            EditorColors.ResetTextColor();
 
             if(!aToggleLeft)
             {

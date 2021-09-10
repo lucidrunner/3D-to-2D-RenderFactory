@@ -186,10 +186,10 @@ namespace Factory_Editor
             bool _showGeneral = InspectorUtility.BeginFoldoutGroup("General Settings", ref generalFoldoutTarget, ref generalFoldoutCurrent);
             if (_showGeneral)
             {
-                EditorGUILayout.PropertyField(fpsProp, new GUIContent(fpsProp.displayName, InspectorTooltips.FPS));
-                EditorGUILayout.PropertyField(centerModelProp, new GUIContent(centerModelProp.displayName, InspectorTooltips.MoveModelOnStartup));
+                InspectorUtility.DrawProperty(fpsProp, new GUIContent(fpsProp.displayName, InspectorTooltips.FPS));
+                InspectorUtility.DrawToggleProperty(centerModelProp, new GUIContent(centerModelProp.displayName, InspectorTooltips.MoveModelOnStartup));
             }
-            InspectorUtility.EndNewFoldoutGroup(_showGeneral);
+            InspectorUtility.EndFoldoutGroup(_showGeneral);
         }
 
         private void DrawCalculatorSettings()
@@ -246,7 +246,7 @@ namespace Factory_Editor
                 InspectorUtility.EndSubBoxGroup();
             }
 
-            InspectorUtility.EndNewFoldoutGroup(_showCalculator);
+            InspectorUtility.EndFoldoutGroup(_showCalculator);
             
         }
 
@@ -297,7 +297,7 @@ namespace Factory_Editor
                 EditorGUILayout.EndFadeGroup();
             }
 
-            InspectorUtility.EndNewFoldoutGroup(_showRenderOutput);
+            InspectorUtility.EndFoldoutGroup(_showRenderOutput);
         }
         
 
@@ -320,7 +320,7 @@ namespace Factory_Editor
                 EditorGUILayout.EndFadeGroup();
             }
 
-            InspectorUtility.EndNewFoldoutGroup(_showIsometric);
+            InspectorUtility.EndFoldoutGroup(_showIsometric);
         }
 
         private void DrawRootMotionSettings()
@@ -339,7 +339,7 @@ namespace Factory_Editor
                 EditorGUILayout.EndFadeGroup();
             }
 
-            InspectorUtility.EndNewFoldoutGroup(_showRootMotion);
+            InspectorUtility.EndFoldoutGroup(_showRootMotion);
         }
 
         protected virtual bool IsGlobalSettings()
@@ -392,7 +392,7 @@ namespace Factory_Editor
                 InspectorUtility.DrawProperty(clampInsertCutoffProp);
                 InspectorUtility.DrawProperty(clampDecimalTolerance);
             }
-            InspectorUtility.EndNewFoldoutGroup(_showFoldout);
+            InspectorUtility.EndFoldoutGroup(_showFoldout);
         }
 
         [MenuItem("CONTEXT/RenderingSettings/Reset To Global Values")]

@@ -62,11 +62,13 @@ namespace Factory_Editor
 
                 EditorGUILayout.BeginHorizontal();
 
-                _deletionToggle.boolValue = GUILayout.Toggle(_deletionToggle.boolValue, "Deletion Safety Toggle");
+                
+                InspectorUtility.DrawToggleProperty(_deletionToggle, new GUIContent("Deletion Safety Toggle"), true);
+               // _deletionToggle.boolValue = GUILayout.Toggle(_deletionToggle.boolValue, "Deletion Safety Toggle");
 
                 GUI.enabled = _deletionToggle.boolValue;
                 GUI.backgroundColor = EditorColors.ButtonAction;
-                if(GUILayout.Button("Delete Rig"))
+                if(InspectorUtility.DrawButton(new GUIContent("Delete Rig"), EditorColors.ButtonAction))
                 {
                     _target.RemoveRig(_index);
                 }

@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Shared_Scripts
 {
@@ -21,6 +22,7 @@ namespace Shared_Scripts
         private static readonly Color[] SubFoldoutHeaderDefault;
         private static readonly Color[] ListHeaderDefault;
         private static readonly Color[] ButtonDefaultColor;
+        private static readonly Color[] HelpBoxDefault;
         static EditorColors()
         {
             //Set the current default colors for all the different styles we use
@@ -30,6 +32,8 @@ namespace Shared_Scripts
             BoldLabelDefault = SaveTextColorsForStyle(EditorStyles.boldLabel);
             ListHeaderDefault = SaveTextColorsForStyle(EditorStyles.foldout);
             ButtonDefaultColor = SaveTextColorsForStyle(GUI.skin.button);
+            HelpBoxDefault = SaveTextColorsForStyle(EditorStyles.helpBox);
+            //
         }
 
         private static Color[] SaveTextColorsForStyle(GUIStyle aLabel)
@@ -237,6 +241,7 @@ namespace Shared_Scripts
             SetColorForStyle(FactoryStyles.FoldoutHeader, TextColor);
             SetColorForStyle(FactoryStyles.SubFoldoutHeader, TextColor);
             SetColorForStyle(EditorStyles.foldout, TextColor);
+            SetColorForStyle(EditorStyles.helpBox, TextColor);
         }
 
         public static void ResetTextColor()
@@ -246,6 +251,7 @@ namespace Shared_Scripts
             SetColorForStyle(FactoryStyles.FoldoutHeader, FoldoutHeaderDefault);
             SetColorForStyle(FactoryStyles.SubFoldoutHeader, SubFoldoutHeaderDefault);
             SetColorForStyle(EditorStyles.foldout, ListHeaderDefault);
+            SetColorForStyle(EditorStyles.helpBox, HelpBoxDefault);
         }
         
         public static void OverrideButtonColors()

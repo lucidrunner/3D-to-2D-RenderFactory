@@ -35,7 +35,7 @@ namespace Factory_Editor
 
             InspectorUtility.BeginBoxGroup("Setup", EditorColors.Header, EditorColors.Body);
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(baseFolderProp);
+            InspectorUtility.DrawProperty(baseFolderProp);
             if (InspectorUtility.DrawButton(new GUIContent("Open"), EditorColors.ButtonAction, GUILayout.MaxWidth(50f), GUILayout.MinWidth(50f)))
             {
                 string _folder = EditorUtility.OpenFolderPanel("Select Output Folder", baseFolderProp.stringValue, "");
@@ -43,10 +43,10 @@ namespace Factory_Editor
                     baseFolderProp.stringValue = _folder;
             }
             EditorGUILayout.EndHorizontal();
-            EditorGUILayout.PropertyField(timeStampedProp);
-            EditorGUILayout.PropertyField(subfolderProp);
-            EditorGUILayout.PropertyField(staticFolderProp);
-            EditorGUILayout.PropertyField(rootMotionFolderProp);
+            InspectorUtility.DrawToggleProperty(timeStampedProp);
+            InspectorUtility.DrawToggleProperty(subfolderProp);
+            InspectorUtility.DrawProperty(staticFolderProp);
+            InspectorUtility.DrawProperty(rootMotionFolderProp);
             InspectorUtility.EndBoxGroup();
             
             EditorColors.ResetTextColor();

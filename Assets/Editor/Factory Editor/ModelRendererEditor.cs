@@ -89,7 +89,7 @@ namespace Factory_Editor
             
             if (_showFoldout)
             {
-                EditorGUILayout.PropertyField(setupFactoryTypeProp);
+                InspectorUtility.DrawProperty(setupFactoryTypeProp);
                 if (!Mathf.Approximately(showRigAdd.faded, 0f))
                 {
                     DrawAddRigBox(aTarget);
@@ -103,7 +103,7 @@ namespace Factory_Editor
                 }
             }
 
-            InspectorUtility.EndNewFoldoutGroup(_showFoldout);
+            InspectorUtility.EndFoldoutGroup(_showFoldout);
         }
 
         private static void DrawSettingsOverrides(ModelRenderer aTarget)
@@ -185,22 +185,22 @@ namespace Factory_Editor
             {
                 InspectorUtility.BeginSubBoxGroup("Rig Setup", EditorColors.Header, EditorColors.Body);
                 InspectorUtility.BeginSubBoxGroup("Type", EditorColors.HeaderAlt1, EditorColors.BodyAlt1);
-                EditorGUILayout.PropertyField(cameraRigProp);
+                InspectorUtility.DrawProperty(cameraRigProp);
                 if (ShowIsometric)
                 {
-                    EditorGUILayout.PropertyField(isometricAngleProp);
-                    EditorGUILayout.PropertyField(isometricBaseSizeProp);
+                    InspectorUtility.DrawProperty(isometricAngleProp);
+                    InspectorUtility.DrawProperty(isometricBaseSizeProp);
                 }
                 InspectorUtility.EndSubBoxGroup();
                 InspectorUtility.BeginSubBoxGroup("Placement", EditorColors.HeaderAlt2, EditorColors.BodyAlt2);
-                EditorGUILayout.PropertyField(numberOfCamerasProp);
-                EditorGUILayout.PropertyField(initialCameraOffsetProp);
-                EditorGUILayout.PropertyField(invertCameraRotationProp);
-                EditorGUILayout.PropertyField(placementTypeProp);
+                InspectorUtility.DrawProperty(numberOfCamerasProp);
+                InspectorUtility.DrawProperty(initialCameraOffsetProp);
+                InspectorUtility.DrawProperty(invertCameraRotationProp);
+                InspectorUtility.DrawProperty(placementTypeProp);
                 if (placementTypeProp.enumValueIndex == (int) CameraRigger.SetupInfo.PlacementType.AutoWrap)
-                    EditorGUILayout.PropertyField(halfWrapProp, new GUIContent("Mirrored Half Wrap"));
+                    InspectorUtility.DrawProperty(halfWrapProp, new GUIContent("Mirrored Half Wrap"));
                 else if (placementTypeProp.enumValueIndex == (int) CameraRigger.SetupInfo.PlacementType.Manual)
-                    EditorGUILayout.PropertyField(manualAngleProp, new GUIContent("Angle Between Cameras"));
+                    InspectorUtility.DrawProperty(manualAngleProp, new GUIContent("Angle Between Cameras"));
                 InspectorUtility.EndSubBoxGroup();
                 if(InspectorUtility.DrawButton(new GUIContent("Add Rig To Factory"), EditorColors.ButtonRun, InspectorUtility.ButtonSize.Large))
                     aTarget.AddCameraRigToFactory();

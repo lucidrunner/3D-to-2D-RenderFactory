@@ -25,8 +25,8 @@ namespace Factory_Editor
             EditorColors.OverrideTextColors();
             InspectorUtility.BeginBoxGroup("Camera Rig Tags", EditorColors.Header, EditorColors.Body);
 
-            EditorGUILayout.PropertyField(isometricTagProp);
-            EditorGUILayout.PropertyField(sideViewTagProp);
+            InspectorUtility.DrawProperty(isometricTagProp);
+            InspectorUtility.DrawProperty(sideViewTagProp);
         
             InspectorUtility.EndBoxGroup();
             EditorColors.ResetTextColor();

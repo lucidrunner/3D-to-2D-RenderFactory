@@ -46,19 +46,19 @@ namespace Factory_Editor
                     _target.CalculateAndReturn();
                 }
 
-                EditorGUILayout.PropertyField(colorProp);
+                InspectorUtility.DrawProperty(colorProp);
             
                 GUI.enabled = false;
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(meshListProp, true);
-                EditorGUILayout.PropertyField(boundListProp, true);
+                InspectorUtility.DrawProperty(meshListProp);
+                InspectorUtility.DrawProperty(boundListProp);
                 EditorGUI.indentLevel--;
                 GUI.enabled = true;
             
             }
         
         
-            InspectorUtility.EndNewFoldoutGroup(_showFoldout);
+            InspectorUtility.EndFoldoutGroup(_showFoldout);
 
             bool _modified = serializedObject.hasModifiedProperties;
         

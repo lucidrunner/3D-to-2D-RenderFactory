@@ -46,7 +46,7 @@ namespace Factory_Editor
                 }    
             }
 
-            InspectorUtility.EndNewFoldoutGroup(_displayList);
+            InspectorUtility.EndFoldoutGroup(_displayList);
             EditorColors.ResetTextColor();
 
             var _prevColor = GUI.backgroundColor;
@@ -89,11 +89,11 @@ namespace Factory_Editor
         
             //Looping
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(_loopProp, new GUIContent(_loopProp.displayName, InspectorTooltips.LoopedAnimation));
+            InspectorUtility.DrawToggleProperty(_loopProp, new GUIContent(_loopProp.displayName, InspectorTooltips.LoopedAnimation));
             if (EditorGUILayout.BeginFadeGroup(_showLooping.faded))
             {
                 var _ignoreProp = aSetting.FindPropertyRelative("ignoreLastFrame");
-                EditorGUILayout.PropertyField(_ignoreProp, new GUIContent(_ignoreProp.displayName, InspectorTooltips.IgnoreFrameForLooping));
+                InspectorUtility.DrawToggleProperty(_ignoreProp, new GUIContent(_ignoreProp.displayName, InspectorTooltips.IgnoreFrameForLooping));
             }
             EditorGUILayout.EndFadeGroup();
             EditorGUILayout.EndHorizontal();
@@ -101,7 +101,7 @@ namespace Factory_Editor
             //Clamp Mode Selection
             if (_showClampingProp.boolValue)
             {
-                EditorGUILayout.PropertyField(_clampedModeProp, new GUIContent(_clampedModeProp.displayName, InspectorTooltips.ClampedDetailedMessage));
+                InspectorUtility.DrawProperty(_clampedModeProp, new GUIContent(_clampedModeProp.displayName, InspectorTooltips.ClampedDetailedMessage));
                 switch (_clampedModeProp.enumValueIndex)
                 {
                     case (int)ClampedAnimation.ClampedMode.InsertEndFrame:
@@ -123,8 +123,10 @@ namespace Factory_Editor
             if (EditorGUILayout.BeginFadeGroup(aFaded))
             {
                 var _endFrameMessageProp = aSetting.FindPropertyRelative("clampedFramesInfoMessage");
+                EditorColors.OverrideTextColors();
                 EditorGUILayout.HelpBox(_endFrameMessageProp.stringValue, MessageType.None);
-                EditorGUILayout.PropertyField(aSetting.FindPropertyRelative("insertRemoveLastFrame"), new GUIContent("Remove Previous Last Frame", InspectorTooltips.ClampedInsertRemoveLast));
+                EditorColors.ResetTextColor();
+                InspectorUtility.DrawToggleProperty(aSetting.FindPropertyRelative("insertRemoveLastFrame"), new GUIContent("Remove Previous Last Frame", InspectorTooltips.ClampedInsertRemoveLast));
             }
             EditorGUILayout.EndFadeGroup();
           
@@ -135,9 +137,11 @@ namespace Factory_Editor
             if (EditorGUILayout.BeginFadeGroup(aFaded))
             {
                 var _endFrameMessageProp = aSetting.FindPropertyRelative("stretchFramesInfoMessage");
+                EditorColors.OverrideTextColors();
                 EditorGUILayout.HelpBox(_endFrameMessageProp.stringValue, MessageType.None);
+                EditorColors.ResetTextColor();
                 var _indexProp = aSetting.FindPropertyRelative("stretchStartFrameIndex");
-                EditorGUILayout.PropertyField(_indexProp, new GUIContent(_indexProp.displayName, InspectorTooltips.ClampedStretchFrames));
+                InspectorUtility.DrawProperty(_indexProp, new GUIContent(_indexProp.displayName, InspectorTooltips.ClampedStretchFrames));
             }
             EditorGUILayout.EndFadeGroup();
         }

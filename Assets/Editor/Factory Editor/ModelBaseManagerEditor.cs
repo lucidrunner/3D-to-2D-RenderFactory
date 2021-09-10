@@ -47,13 +47,13 @@ namespace Factory_Editor
             EditorGUI.BeginChangeCheck();
             //Set Camera Angle Box
             InspectorUtility.BeginBoxGroup("Set Camera Angle", EditorColors.Header, EditorColors.Body);
-            EditorGUILayout.PropertyField(cameraAngleProp);
+            InspectorUtility.DrawProperty(cameraAngleProp);
             InspectorUtility.EndBoxGroup();
             
             //Set Size By Box
             InspectorUtility.BeginBoxGroup("Set Size by", EditorColors.Header, EditorColors.Body);
-            EditorGUILayout.PropertyField(orthoScaleProp);
-            EditorGUILayout.PropertyField(referencePlateScaleProp);
+            InspectorUtility.DrawProperty(orthoScaleProp);
+            InspectorUtility.DrawProperty(referencePlateScaleProp);
             InspectorUtility.EndBoxGroup();
             
             bool _hasChangedValues = EditorGUI.EndChangeCheck();

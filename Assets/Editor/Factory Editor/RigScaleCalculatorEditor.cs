@@ -58,7 +58,7 @@ namespace Factory_Editor
         {
             InspectorUtility.BeginBoxGroup("Set Current Camera Size", EditorColors.Header, EditorColors.Body);
             EditorGUILayout.BeginHorizontal();
-            scaleProp.floatValue = EditorGUILayout.FloatField("Orthographic Scale ", scaleProp.floatValue);
+            InspectorUtility.DrawProperty(scaleProp, new GUIContent("Orthographic Scale"));
 
             if (InspectorUtility.DrawButton(new GUIContent("Apply"), EditorColors.ButtonAction))
             {
@@ -73,7 +73,7 @@ namespace Factory_Editor
         {
             InspectorUtility.BeginBoxGroup("Set Current Clipping Depth", EditorColors.Header, EditorColors.Body);
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(setClippingDepthProp);
+            InspectorUtility.DrawProperty(setClippingDepthProp);
             if (InspectorUtility.DrawButton(new GUIContent("Apply"), EditorColors.ButtonAction))
             {
                 aTarget.SetCameraDepths(setClippingDepthProp.floatValue);

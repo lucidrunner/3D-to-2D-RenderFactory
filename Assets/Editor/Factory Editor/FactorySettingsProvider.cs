@@ -39,8 +39,8 @@ namespace Factory_Editor
                     
                     //GENERAL SETTINGS
                     DrawHeader("Camera Follow Settings");
-                    InspectorUtility.DrawToggleProperty(_settings.FindProperty("followCameraOnRender"));
-                    InspectorUtility.DrawToggleProperty(_settings.FindProperty("centerCameraOnRenderStartup"));
+                    EditorGUILayout.PropertyField(_settings.FindProperty("followCameraOnRender"));
+                    EditorGUILayout.PropertyField(_settings.FindProperty("centerCameraOnRenderStartup"));
 
 
                     _settings.ApplyModifiedProperties();

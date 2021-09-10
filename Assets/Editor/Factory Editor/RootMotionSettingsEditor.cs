@@ -197,7 +197,7 @@ namespace Factory_Editor
                     }
                 }
 
-                InspectorUtility.EndNewFoldoutGroup(_displayFoldout);
+                InspectorUtility.EndFoldoutGroup(_displayFoldout);
         
                 if(InspectorUtility.DrawButton(new GUIContent("Reload Animation List"), EditorColors.ButtonRunAlt))
                 {

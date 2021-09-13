@@ -81,13 +81,6 @@ namespace Shared_Scripts
             normal =  {background = FactoryEditorTextures.ClosedBoxBackground}
         };
 
-        public static readonly GUIStyle FactoryButton = new GUIStyle(GUI.skin.button)
-        {
-            normal = {background = EditorGUIUtility.whiteTexture}
-
-        };
-
-
         public static readonly GUIStyle AlignedButton = new GUIStyle(GUI.skin.button)
         {
             margin = new RectOffset(5, 0 ,0 ,0)

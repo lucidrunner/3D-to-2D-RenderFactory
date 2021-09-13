@@ -37,8 +37,6 @@ namespace Shared_Scripts
             }
         }
 
-        private static Texture2D boxheaderBackground;
-
         public static Texture2D ClosedBoxBackground
         {
             get
@@ -49,6 +47,8 @@ namespace Shared_Scripts
                 return closedBoxBackground;
             }
         }
+
+        private static Texture2D boxheaderBackground;
 
         private static Texture2D closedBoxBackground;
 

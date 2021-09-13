@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GitHub.Unity;
 using Shared_Scripts;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
@@ -9,7 +10,6 @@ namespace Factory_Editor
 {
     public static class InspectorUtility
     {
-
         #region Foldout
 
         public static bool BeginFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
@@ -301,6 +301,8 @@ namespace Factory_Editor
 
             var _options = new List<GUILayoutOption>() {GUILayout.Height(_height)};
             _options.AddRange(aOptions);
+            
+            
             bool _result = false;
             GUI.backgroundColor = aColor;
             if (GUILayout.Button(aGUIContent, _options.ToArray()))
@@ -311,6 +313,8 @@ namespace Factory_Editor
             GUI.backgroundColor = _prevColor;
             if(aOverrideColors)
                 EditorColors.ResetButtonColors();
+
+            
             return _result;
         }
 

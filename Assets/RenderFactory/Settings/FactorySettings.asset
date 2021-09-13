@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FactorySettings
   m_EditorClassIdentifier: 
   editorPalette: 0
-  buttonPalette: 2
+  buttonPalette: 0
   overseerPrefab: {fileID: 0}
   centerCameraOnRenderStartup: 1
   followCameraOnRender: 0

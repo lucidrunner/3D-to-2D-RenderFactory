@@ -101,11 +101,8 @@ namespace Factory_Editor
             displayClampingSettings.valueChanged.AddListener(Repaint);
             rootMotionFoldoutCurrent.valueChanged.AddListener(Repaint);
             
-
-            if (settingStates.Count != settingListProp.arraySize)
-            {
-                RefreshStateList();
-            }
+            
+            RefreshStateList();
         }
 
 

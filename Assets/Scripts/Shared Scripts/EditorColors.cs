@@ -51,7 +51,6 @@ namespace Shared_Scripts
             };
         }
 
-
         #region Inspector Palette
 
         public enum EditorPalette

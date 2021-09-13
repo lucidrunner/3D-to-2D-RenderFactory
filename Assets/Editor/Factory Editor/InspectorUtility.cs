@@ -265,21 +265,26 @@ namespace Factory_Editor
         }
 
 
-        //Allows us to pass the params without having to explicitly set the size
-
+        //Allows us to pass the params without having to explicitly set the size & override
         public static bool DrawButton(GUIContent aGUIContent, Color aColor, params GUILayoutOption[] aOptions)
         {
-            EditorColors.OverrideButtonColors();
-            bool _result = DrawButton(aGUIContent, aColor, ButtonSize.Standard, aOptions);
-            EditorColors.ResetButtonColors();
+            bool _result = DrawButton(aGUIContent, aColor, ButtonSize.Standard, true, aOptions);
+            return _result;
+        }
+        
+        //Allows us to pass the params without having to explicitly set the size
+        public static bool DrawButton(GUIContent aGUIContent, Color aColor, bool aOverrideColors = true, params GUILayoutOption[] aOptions)
+        {
+            bool _result = DrawButton(aGUIContent, aColor, ButtonSize.Standard, aOverrideColors, aOptions);
             return _result;
         }
 
-        public static bool DrawButton(GUIContent aGUIContent, Color aColor, ButtonSize aButtonSize = ButtonSize.Standard, params GUILayoutOption[] aOptions)
+        //Full call
+        public static bool DrawButton(GUIContent aGUIContent, Color aColor, ButtonSize aButtonSize, bool aOverrideColors = true, params GUILayoutOption[] aOptions)
         {
             var _prevColor = GUI.backgroundColor;
-            var _prevColor2 = GUI.color;
-            EditorColors.OverrideButtonColors();
+            if(aOverrideColors)
+                EditorColors.OverrideButtonColors();
             float _height = 20f;
             switch (aButtonSize)
             {
@@ -304,7 +309,8 @@ namespace Factory_Editor
                 _result = true;
             }
             GUI.backgroundColor = _prevColor;
-            EditorColors.ResetButtonColors();
+            if(aOverrideColors)
+                EditorColors.ResetButtonColors();
             return _result;
         }
 
@@ -325,43 +331,50 @@ namespace Factory_Editor
             }
         }
 
-        public static void DrawProperty(SerializedProperty aProperty, float aLabelScreenWidth = 0.45f, params GUILayoutOption[] aOptions)
+        public static void DrawProperty(SerializedProperty aProperty, float aLabelScreenWidth = 0.45f, bool aOverrideColors = true, params GUILayoutOption[] aOptions)
         {
-            EditorColors.OverrideTextColors();
+            if(aOverrideColors)
+                EditorColors.OverrideTextColors();
             var _prevLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = Screen.width * aLabelScreenWidth;
             EditorGUILayout.PropertyField(aProperty, aOptions);
             EditorGUIUtility.labelWidth = _prevLabelWidth;
-            EditorColors.ResetTextColor();
+            if(aOverrideColors)    
+                EditorColors.ResetTextColor();
         }
 
-        public static void DrawProperty(SerializedProperty aProperty, GUIContent aPropertyLabel, float aLabelScreenWidth = 0.45f, params GUILayoutOption[] aOptions)
+        public static void DrawProperty(SerializedProperty aProperty, GUIContent aPropertyLabel, float aLabelScreenWidth = 0.45f, bool aOverrideColors = true, params GUILayoutOption[] aOptions)
         {
-            EditorColors.OverrideTextColors();
+            if(aOverrideColors)
+                EditorColors.OverrideTextColors();
             var _prevLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = Screen.width * aLabelScreenWidth;
             EditorGUILayout.PropertyField(aProperty, aPropertyLabel, aOptions);
             EditorGUIUtility.labelWidth = _prevLabelWidth;
-            EditorColors.ResetTextColor();
+            if(aOverrideColors)
+                EditorColors.ResetTextColor();
         }
 
-        public static int DrawListPopup(string aPopupLabel, string[] aPopupOptions, int aCurrentIndex, string aToolTip = null, float aLabelScreenWidth = 0.45f)
+        public static int DrawListPopup(string aPopupLabel, string[] aPopupOptions, int aCurrentIndex, string aToolTip = null, float aLabelScreenWidth = 0.45f, bool aOverrideColors = true)
         {
-            EditorColors.OverrideTextColors();
+            if(aOverrideColors)
+                EditorColors.OverrideTextColors();
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(new GUIContent(aPopupLabel, aToolTip), GUILayout.Width(Screen.width * aLabelScreenWidth));
             GUILayout.FlexibleSpace();
             aCurrentIndex = EditorGUILayout.Popup(aCurrentIndex, aPopupOptions);
             EditorGUILayout.EndHorizontal();
-            EditorColors.ResetTextColor();
+            if(aOverrideColors)
+                EditorColors.ResetTextColor();
 
             return aCurrentIndex;
         }
 
 
-        public static void DrawToggleProperty(SerializedProperty aProperty, bool aToggleLeft = false)
+        public static void DrawToggleProperty(SerializedProperty aProperty, bool aToggleLeft = false, bool aOverrideColors = true)
         {
-            EditorColors.OverrideTextColors();
+            if(aOverrideColors)
+                EditorColors.OverrideTextColors();
             GUILayout.BeginHorizontal();
             if (aToggleLeft)
                 EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
@@ -374,17 +387,20 @@ namespace Factory_Editor
             }
 
             GUILayout.EndHorizontal();
-            EditorColors.ResetTextColor();
+            if(aOverrideColors)
+                EditorColors.ResetTextColor();
         }
         
-        public static void DrawToggleProperty(SerializedProperty aProperty, GUIContent aLabelContent, bool aToggleLeft = false)
+        public static void DrawToggleProperty(SerializedProperty aProperty, GUIContent aLabelContent, bool aToggleLeft = false, bool aOverrideColors = true)
         {
             GUILayout.BeginHorizontal();
             if (aToggleLeft)
                 EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
-            EditorColors.OverrideTextColors();
+            if(aOverrideColors)
+                EditorColors.OverrideTextColors();
             GUILayout.Label(aLabelContent, EditorStyles.label);
-            EditorColors.ResetTextColor();
+            if(aOverrideColors)
+                EditorColors.ResetTextColor();
 
             if(!aToggleLeft)
             {

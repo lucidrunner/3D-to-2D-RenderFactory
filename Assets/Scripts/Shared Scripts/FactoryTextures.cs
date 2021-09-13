@@ -22,7 +22,6 @@ namespace Shared_Scripts
             {
                 if(foldoutBodyBackground == null)
                     foldoutBodyBackground = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/GUI Textures/foldout_border_lightgray.png");
-                    
                 return foldoutBodyBackground;
             }
         }

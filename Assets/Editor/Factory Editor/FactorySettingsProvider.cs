@@ -81,12 +81,12 @@ namespace Factory_Editor
                     EditorGUILayout.LabelField(_target.ExampleOutput, EditorStyles.boldLabel);
                     EditorGUILayout.EndHorizontal();
 
-                    InspectorUtility.DrawToggleProperty(_useAnimationNameProp, new GUIContent("Use Animation Name over Index", InspectorTooltips.UseAnimationName));
-                    InspectorUtility.DrawToggleProperty(_useFormatIdentifierProp, new GUIContent(_useFormatIdentifierProp.displayName, InspectorTooltips.AddIdentifiers));
+                    InspectorUtility.DrawToggleProperty(_useAnimationNameProp, new GUIContent("Use Animation Name over Index", InspectorTooltips.UseAnimationName), aOverrideColors: false);
+                    InspectorUtility.DrawToggleProperty(_useFormatIdentifierProp, new GUIContent(_useFormatIdentifierProp.displayName, InspectorTooltips.AddIdentifiers), aOverrideColors: false);
                     
-                    InspectorUtility.DrawToggleProperty(_includeRigTagProp, new GUIContent(_includeRigTagProp.displayName, InspectorTooltips.IncludeRigTag));
+                    InspectorUtility.DrawToggleProperty(_includeRigTagProp, new GUIContent(_includeRigTagProp.displayName, InspectorTooltips.IncludeRigTag), aOverrideColors: false);
                     
-                    InspectorUtility.DrawToggleProperty(_includeStaticTagProp, new GUIContent("Include Static Tag (If Applicable)", InspectorTooltips.IncludeStaticTag));
+                    InspectorUtility.DrawToggleProperty(_includeStaticTagProp, new GUIContent("Include Static Tag (If Applicable)", InspectorTooltips.IncludeStaticTag), aOverrideColors: false);
                     
                     InspectorUtility.BeginSubBoxGroup("Format Order", EditorColors.HeaderAlt1, EditorColors.BodyAlt1);
                     var _color = GUI.backgroundColor;
@@ -96,20 +96,22 @@ namespace Factory_Editor
                         GUI.backgroundColor = EditorColors.BodyAlt2;
                         EditorGUILayout.BeginHorizontal(FactoryStyles.ClosedSubBoxGroup);
                         GUI.backgroundColor = _color;
+                        EditorColors.OverrideTextColors();
                         EditorGUILayout.LabelField(_prop.stringValue, EditorStyles.boldLabel);
-                        if (InspectorUtility.DrawButton(new GUIContent("▲"), EditorColors.DefaultButton))
+                        EditorColors.ResetTextColor();
+                        if (InspectorUtility.DrawButton(new GUIContent("▲"), EditorColors.DefaultButton, false))
                         {
                             _target.MoveFormatLeft(_index);
                         }
 
-                        if (InspectorUtility.DrawButton(new GUIContent("▼"), EditorColors.DefaultButton))
+                        if (InspectorUtility.DrawButton(new GUIContent("▼"), EditorColors.DefaultButton, false))
                         {
                             _target.MoveFormatRight(_index);
                         }
                         EditorGUILayout.EndHorizontal();
                     }
 
-                    if (InspectorUtility.DrawButton(new GUIContent("Reset Default Order"), EditorColors.DefaultButton))
+                    if (InspectorUtility.DrawButton(new GUIContent("Reset Default Order"), EditorColors.DefaultButton, false))
                         _target.ResetFormat();
                     InspectorUtility.EndBoxGroup();
 

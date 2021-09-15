@@ -85,5 +85,6 @@ namespace Shared_Scripts
         {
             margin = new RectOffset(5, 0 ,0 ,0)
         };
+
     }
 }

@@ -5,6 +5,7 @@ using Shared_Scripts;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
+using Ywz;
 
 namespace Factory_Editor
 {
@@ -48,7 +49,7 @@ namespace Factory_Editor
             {
                 aFoldoutTarget = !aFoldoutTarget;
             }
-            
+
             //And set that target to the anim bool so we can use our fade group 
             aCurrentFoldoutState.target = aFoldoutTarget;
 
@@ -282,6 +283,7 @@ namespace Factory_Editor
         //Full call
         public static bool DrawButton(GUIContent aGUIContent, Color aColor, ButtonSize aButtonSize, bool aOverrideColors = true, params GUILayoutOption[] aOptions)
         {
+            
             var _prevColor = GUI.backgroundColor;
             if(aOverrideColors)
                 EditorColors.OverrideButtonColors();
@@ -305,16 +307,20 @@ namespace Factory_Editor
             
             bool _result = false;
             GUI.backgroundColor = aColor;
+            
             if (GUILayout.Button(aGUIContent, _options.ToArray()))
             {
                 GUI.backgroundColor = _prevColor;
                 _result = true;
             }
+            
+            
             GUI.backgroundColor = _prevColor;
             if(aOverrideColors)
                 EditorColors.ResetButtonColors();
 
             
+
             return _result;
         }
 
@@ -411,8 +417,9 @@ namespace Factory_Editor
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.PropertyField(aProperty, GUIContent.none, true, GUILayout.Width(20));
             }
-
+            
             GUILayout.EndHorizontal();
+            
         }
     }
 

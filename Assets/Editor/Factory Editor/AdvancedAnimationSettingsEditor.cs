@@ -24,7 +24,9 @@ namespace Factory_Editor
             ReloadAnimBoolList();
             foldoutStateCurrent = new AnimBool(foldoutStateTarget);
             foldoutStateCurrent.valueChanged.AddListener(Repaint);
+            
         }
+
 
         public override void OnInspectorGUI()
         {
@@ -51,7 +53,7 @@ namespace Factory_Editor
 
             var _prevColor = GUI.backgroundColor;
             GUI.backgroundColor = EditorColors.ButtonRunAlt;
-            if (GUILayout.Button("Reload Animation List"))
+            if (InspectorUtility.DrawButton(new GUIContent("Reload Animation List"), EditorColors.ButtonRunAlt))
             {
                 _target.SetupSettingsList();
                 ReloadAnimBoolList();

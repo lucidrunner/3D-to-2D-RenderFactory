@@ -48,6 +48,7 @@ namespace Shared_Scripts
             }
         }
 
+        
         private static Texture2D boxheaderBackground;
 
         private static Texture2D closedBoxBackground;

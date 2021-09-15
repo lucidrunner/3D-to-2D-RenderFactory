@@ -211,6 +211,28 @@ namespace Shared_Scripts
             }
         };
 
+        private static readonly Color[,] DarkButtonPalettes =
+        {
+            //Default
+            {
+                Color.green,
+                Color.red,
+                new Color(0.667f, 0.967f, 0.867f),
+                new Color(0.967f, 0.667f, 0.967f),
+                new Color(1f, 0.70f, 0.278f),
+                Color.white
+            },
+            //Pastel
+            {
+                ParseColor("#caffbf"),
+                ParseColor("#ffadad"),
+                ParseColor("#caffbf"),
+                ParseColor("#ffc6ff"),
+                ParseColor("#ffd6a5"),
+                Color.white
+            }
+        };
+
         private const int ToggleOnColorID = 0;
 
         private const int ToggleOffColorID = 1;
@@ -346,24 +368,15 @@ namespace Shared_Scripts
                     _index = 1;
                     break;
                 default:
-                    return ButtonPalettes[0, aButtonColorID];
+                    _index = 0;
+                    break;
             }
 
-            return ButtonPalettes[_index, aButtonColorID];
+            return EditorGUIUtility.isProSkin ? DarkButtonPalettes[_index, aButtonColorID] : ButtonPalettes[_index, aButtonColorID];
         }
 
-        private static Color ButtonTextColor
-        {
-            get
-            {
-                switch (CurrentButtonPalette)
-                {
-                    case ButtonPalette.Dark: return Color.white;
-                    default: return Color.black;
-                }
-            }
-        }
-
+        private static Color ButtonTextColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
+        
         private static Color ParseColor(string aHexString)
         {
             return ColorUtility.TryParseHtmlString(aHexString, out var _color) ? _color : Color.yellow;

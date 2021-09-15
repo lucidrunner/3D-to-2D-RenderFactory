@@ -65,6 +65,8 @@ namespace Factory_Editor
  
         protected virtual void OnEnable()
         {
+            
+            
             //Admin
             settingsModeProp = serializedObject.FindProperty("settingsMode");
          
@@ -149,6 +151,7 @@ namespace Factory_Editor
 
         public override void OnInspectorGUI()
         {
+            
             serializedObject.UpdateIfRequiredOrScript();
 
             //Draw script target
@@ -180,10 +183,17 @@ namespace Factory_Editor
             EditorColors.ResetTextColor();
             serializedObject.ApplyModifiedProperties();
         }
+      
+        //Solves dumb hover problems with buttons but really ineffective
+        // public override bool RequiresConstantRepaint()
+        // {
+        //     return true;
+        // }
 
         private void DrawGeneralSettings()
         {
             bool _showGeneral = InspectorUtility.BeginFoldoutGroup("General Settings", ref generalFoldoutTarget, ref generalFoldoutCurrent);
+            
             if (_showGeneral)
             {
                 InspectorUtility.DrawProperty(fpsProp, new GUIContent(fpsProp.displayName, InspectorTooltips.FPS));
@@ -195,6 +205,7 @@ namespace Factory_Editor
         private void DrawCalculatorSettings()
         {
             bool _showCalculator = InspectorUtility.BeginFoldoutGroup("Frame Scale Calculator Settings", ref calculatorFoldoutTarget, ref calculatorFoldoutCurrent);
+
             if (_showCalculator)
             {
                 if (IsGlobalSettings())
@@ -410,5 +421,6 @@ namespace Factory_Editor
             var _global = _selectedObject.GetComponent<GlobalRenderingSettings>();
             return _global == null;
         }
+
     }
 }

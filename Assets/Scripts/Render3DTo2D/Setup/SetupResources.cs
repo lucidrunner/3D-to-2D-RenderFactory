@@ -145,13 +145,14 @@ namespace Render3DTo2D.Setup
             if(aModelObject.GetComponent<ModelInfo>() != null)
                 Destroy(aModelObject.GetComponent<ModelInfo>());
             var _position = Overseer.GetUniqueScenePosition();
-            //Don't set a position if we're lacking a overseer or have turned off the 
             
             //Create the parent object, set the name to match our model and put our model as a child object of it
             string _name = aModelObject.name;
             GameObject _parent = Instantiate(renderParentObjectPrefab, null, false);
+            //Don't set a position if we're lacking a overseer or have turned off the "Set position" toggle
             if (_position != null)
                 _parent.transform.position = new Vector3(_position.Value.x, aModelObject.transform.localPosition.y, _position.Value.y);
+            //Set the parent name to match our current model name & attach it as a child
             _parent.name = _name;
             aModelObject.transform.SetParent(_parent.transform);
             
@@ -164,6 +165,8 @@ namespace Render3DTo2D.Setup
             if (aModelObject.GetComponent<MovementClamp>() == null)
                 aModelObject.AddComponent<MovementClamp>();
             
+            //Link the components on the parent object
+            _parent.GetComponent<ModelRenderer>()?.LinkComponents();
             
             
             //Reset the model local positionals

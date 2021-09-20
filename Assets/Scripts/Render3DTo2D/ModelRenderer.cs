@@ -75,22 +75,22 @@ namespace Render3DTo2D
         
         public void RenderModel()
         {
-            ModelInfo _modelInfo = GetComponentInChildren<ModelInfo>();
+            LinkComponents();
             SetLayer();
             SetPosition();
             switch (runFactoryType)
             {
                 case RenderFactoryType.Animated:
                 {
-                    if (dynamicRenderFactory == null || !_modelInfo.CanAnimate)
+                    if (dynamicRenderFactory == null || !modelInfo.CanAnimate)
                         return;
                     dynamicRenderFactory.FinishedCallback += RenderFactoryOnFinishedCallback;
-                    dynamicRenderFactory.RunFactory(_modelInfo.Animator);
+                    dynamicRenderFactory.RunFactory(modelInfo.Animator);
                     break;
                 }
                 case RenderFactoryType.Static:
                     staticRenderFactory.FinishedCallback += RenderFactoryOnFinishedCallback;
-                    staticRenderFactory.RunFactory(_modelInfo.Animator);
+                    staticRenderFactory.RunFactory(modelInfo.Animator);
                     break;
             }
         }
@@ -108,14 +108,13 @@ namespace Render3DTo2D
         private void CalculateRigs(bool aRunAll)
         {
             RenderFactory _rf = dynamicRenderFactory;
-            ModelInfo _modelInfo = GetComponentInChildren<ModelInfo>();
-            if (_rf == null || !_modelInfo.CanAnimate)
+            if (_rf == null || modelInfo == null || !modelInfo.CanAnimate)
                 return;
 
             SetLayer();
             SetPosition();
             _rf.FinishedCallback += RenderFactoryOnFinishedCallback;
-            _rf.RunRecalculation(_modelInfo.Animator, aRunAll);
+            _rf.RunRecalculation(modelInfo.Animator, aRunAll);
         }
 
         private void RenderFactoryOnFinishedCallback(object aSender, EventArgs aE)
@@ -127,8 +126,7 @@ namespace Render3DTo2D
 
         private void SetPosition()
         {
-            GameObject _model = GetComponentInChildren<ModelInfo>().gameObject;
-            var _settings = RenderingSettings.GetFor(transform);
+            GameObject _model = modelInfo != null ? modelInfo.gameObject : null;
             defaultPosition = transform.position;
             //Move the model to 0,0 if desired
             if(RenderingSettings.GetFor(transform).CenterModelOnRenderStartup)
@@ -141,7 +139,7 @@ namespace Render3DTo2D
 
         private void ResetPosition()
         {
-            GameObject _model = GetComponentInChildren<ModelInfo>().gameObject;
+            GameObject _model = modelInfo != null ? modelInfo.gameObject : null;
             transform.position = defaultPosition;
             GetSelectedRenderFactory(runFactoryType, out var _factory);
             _factory.FinishedCallback -= RenderFactoryOnFinishedCallback;
@@ -153,11 +151,11 @@ namespace Render3DTo2D
 
         private void SetLayer()
         {
-            GameObject _model = GetComponentInChildren<ModelInfo>().gameObject;
-
             int _layer = RenderingSettings.GetFor(transform).RenderingLayer;
             gameObject.layer = _layer;
-            _model.GetComponent<ModelInfo>().SetLayer(_layer);
+            if (modelInfo == null)
+                return;
+            modelInfo.SetLayer(_layer);
         }
 
 
@@ -201,7 +199,7 @@ namespace Render3DTo2D
                 return "Can't run as selected factory type hasn't been added to the model.";
             if(runFactoryType == RenderFactoryType.Animated && (modelInfo == null || !modelInfo.CanAnimate))
             {
-                return modelInfo == null ? "Can't run animated render factory due to missing ModelInfo component on the model." : "Cant run animated render factory as the model can't animate.";
+                return (modelInfo == null ? "Can't run animated render factory due to missing ModelInfo component on the model." : "Cant run animated render factory as the model can't animate.") + " Resetting the script should solve this if the model is correctly setup.";
             }
             if (!_childRenderFactory.Busy && !EnableRun)
             {
@@ -234,6 +232,12 @@ namespace Render3DTo2D
 
         #region Methods
 
+        public void LinkComponents()
+        {
+            if (modelInfo == null)
+                modelInfo = GetComponentInChildren<ModelInfo>();
+        }
+
         private int defaultLayer;
         private Vector3 defaultPosition = Vector3.zero;
 
@@ -249,7 +253,7 @@ namespace Render3DTo2D
         private void Start()
         {
             
-            defaultLayer = GetComponentInChildren<ModelInfo>().gameObject.layer;
+            defaultLayer = modelInfo != null ? modelInfo.gameObject.layer : gameObject.layer; 
             //Turn off the ability to start rendering while we're running another renderer
             //Also, set the layer to the default layer so we won't interfere 
             RenderFactoryEvents.FactoryStarted += (aSender, aArgs) =>
@@ -258,16 +262,17 @@ namespace Render3DTo2D
                 {
                     RenderingSettings _settings = RenderingSettings.GetFor(transform);
                     enableStart = false;
-                    var _modelInfo = GetComponentInChildren<ModelInfo>();
                     if (!_settings.SetToLayer)
                     {
                         gameObject.layer = 0;
-                        _modelInfo.SetLayer(0);
+                        if(modelInfo != null)
+                            modelInfo.SetLayer(0);
                     }
                     else
                     {
                         gameObject.layer = _settings.RenderingLayer;
-                        _modelInfo.SetLayer(_settings.RenderingLayer);
+                        if(modelInfo != null)
+                            modelInfo.SetLayer(_settings.RenderingLayer);
                     }
                 }
                 
@@ -277,9 +282,9 @@ namespace Render3DTo2D
             RenderFactoryEvents.FactoryEnded += (aSender, aArgs) =>
             {
                 enableStart = true;
-                var _modelInfo = GetComponentInChildren<ModelInfo>();
                 gameObject.layer = defaultLayer;
-                _modelInfo.SetLayer(defaultLayer);
+                if(modelInfo != null) 
+                    modelInfo.SetLayer(defaultLayer);
             };
         }
 

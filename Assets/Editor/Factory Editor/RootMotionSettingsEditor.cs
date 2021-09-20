@@ -32,7 +32,6 @@ namespace Factory_Editor
 
             internal SettingState(SerializedProperty aSetting, RootMotionSettingsEditor aEditor)
             {
-                Debug.Log("Creating new SettingState");
                 AnimationNameProp = aSetting.FindPropertyRelative("animationName");
                 EnableExportProp = aSetting.FindPropertyRelative("enableExport");
                 EnableFollowProp = aSetting.FindPropertyRelative("enableFollow");
@@ -42,9 +41,7 @@ namespace Factory_Editor
                 ClampRotationProp = aSetting.FindPropertyRelative("forceRotationClamp");
                 ExportOverrideTransformProp = aSetting.FindPropertyRelative("overrideExportTransform");
                 FollowOverrideTransformProp = aSetting.FindPropertyRelative("overrideFollowTransform");
-                
-                Debug.Log("AnimationNameProp is null: " + AnimationNameProp == null);
-                
+
                 displayExportOverrideButton = new AnimBool(EnableExportProp.boolValue);
                 displayFollowOverrideButton = new AnimBool(EnableFollowProp.boolValue);
                 displayExportOverrideButton.valueChanged.AddListener(aEditor.Repaint);

@@ -28,6 +28,7 @@ namespace Factory_Editor
             //Clean up the model name before creating the hierarchy
             _selected.name = GeneralUtilities.CleanName(_selected.name);
         
+            //Check if we've already performed setup on the object
             Transform _rootTransform = RootFinder.FindHighestRoot(_selected.transform);
             if(_rootTransform.GetComponent<ModelRenderer>() != null)
             {
@@ -35,6 +36,7 @@ namespace Factory_Editor
             }
             else
             {
+                //If not, perform setup and center it in the scene view
                 ModelSetupHelper.SetupHierarchyOnObject(_selected);
                 GeneralUtilities.FocusSceneCamera(_selected);
             }

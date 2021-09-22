@@ -132,10 +132,12 @@ namespace Render3DTo2D.RigCamera
         {
             //This is a pretty dirty solution tbh but it seems to always work
             var _currentBounds = boundsCalculator.CalculateAndReturn();
-            var _checkedPosition = transform.position;
+            var _transform = transform;
+            var _checkedPosition = _transform.position;
             _checkedPosition.y = _currentBounds.center.y;
+            float _boundsSizeModifier = RenderingSettings.GetFor(_transform).BoundsCalculatorSizeModifier;
             float _overDraw = 1.2f;
-            orthoCam.SetClipPlanes(_currentBounds.max.magnitude * _overDraw  + Vector3.Distance(_checkedPosition, _currentBounds.center));
+            orthoCam.SetClipPlanes((_boundsSizeModifier * _currentBounds.max.magnitude) * _overDraw  + Vector3.Distance(_checkedPosition, _currentBounds.center));
         }
 
         

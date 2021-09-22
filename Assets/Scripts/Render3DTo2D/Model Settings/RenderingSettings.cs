@@ -238,6 +238,7 @@ namespace Render3DTo2D.Model_Settings
                 _hashCode = (_hashCode * 397) ^ scaleCalculatorMaxPadding.GetHashCode();
                 _hashCode = (_hashCode * 397) ^ scaleCalculatorMaxSteps;
                 _hashCode = (_hashCode * 397) ^ enableBoundsCalculator.GetHashCode();
+                _hashCode = (_hashCode * 397) ^ boundsCalculatorSizeModifier.GetHashCode();
                 _hashCode = (_hashCode * 397) ^ useEdgeCalculator.GetHashCode();
                 _hashCode = (_hashCode * 397) ^ omnidirectionalEdgeCalculator.GetHashCode();
                 _hashCode = (_hashCode * 397) ^ bypassStandardCalculator.GetHashCode();

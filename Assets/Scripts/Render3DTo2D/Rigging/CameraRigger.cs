@@ -15,6 +15,17 @@ namespace Render3DTo2D.Rigging
         {
             //Right so we're finally gonna actually add the rigs now
 
+            //If we're doing a prefab rig - load that and return
+            if (aSetupInfo.Rig == SetupInfo.RigType.Prefab)
+            {
+                CameraRig _prefab = aSetupInfo.GetData<CameraRig>(aSetupInfo.Prefab);
+                if (_prefab != null)
+                    return _prefab;
+                
+                //If we've failed with loading the prefab, log & return null
+                FLogger.LogMessage(null, FLogger.Severity.FatalError, "Failed with loading prefab during setup, rig not added to the current factory.", nameof(CameraRigger));
+            }
+            
             //Add the rig prefab object to the aAttachTo
             GameObject _rigObject = SetupResources.Instance.AddCameraRigToGameObject(aRenderFactoryObject, aSetupInfo.Rig);
             CameraRig _cameraRig = _rigObject.GetComponent<CameraRig>();
@@ -27,6 +38,7 @@ namespace Render3DTo2D.Rigging
             float _initalScale = 1;
             switch (aSetupInfo.Rig)
             {
+                case SetupInfo.RigType.TopView:
                 case SetupInfo.RigType.SideView:
                     _initalScale = _renderingSettings.BaselineScale;
                     break;
@@ -90,6 +102,12 @@ namespace Render3DTo2D.Rigging
                 {
                     _eulerAngles.x = aSetupInfo.GetData<float>(aSetupInfo.IsometricAngle);
                 }
+
+                //And if we're dealing with a top down view, rotate the cameras to look down at it
+                if (aSetupInfo.Rig == SetupInfo.RigType.TopView)
+                {
+                    _eulerAngles.x = 90;
+                }
                 
                 //Set the rotation and add the camera
                 _addedCamera.transform.eulerAngles = _eulerAngles;
@@ -109,10 +127,15 @@ namespace Render3DTo2D.Rigging
             switch (aSetupInfo.Rig)
             {
                 case SetupInfo.RigType.SideView:
-                    aCameraRig.SetRigTag(GlobalFolderSettings.Instance.SideRotationalRigTag);
+                    aCameraRig.SetRigTag(GlobalFolderSettings.Instance.SideViewRigTag);
                     break;
                 case SetupInfo.RigType.Isometric:
                     aCameraRig.SetRigTag(GlobalFolderSettings.Instance.IsometricRigTag);
+                    break;
+                case SetupInfo.RigType.TopView:
+                    aCameraRig.SetRigTag(GlobalFolderSettings.Instance.TopDownRigTag);
+                    break;
+                case SetupInfo.RigType.Prefab:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -131,7 +154,15 @@ namespace Render3DTo2D.Rigging
             public enum RigType
             {
                 SideView,
-                Isometric
+                Isometric,
+                TopView,
+                Prefab
+            }
+
+            public enum PlacementMode
+            {
+                Generated,
+                CustomPlacement
             }
 
             //Whether or not the cameras should be placed with an automatically 360 / cameras wrap or via a manual offset + desired angle between each camera
@@ -150,6 +181,7 @@ namespace Render3DTo2D.Rigging
             public readonly string IsometricAngle = "isometricAngle";
             public readonly string IsometricBaseSize = "isometricBase";
             public readonly string HalfWrap = "halfWrap";
+            public readonly string Prefab = "prefab";
             
             public SetupInfo(RigType aRigType, PlacementType aPlacementType)
             {

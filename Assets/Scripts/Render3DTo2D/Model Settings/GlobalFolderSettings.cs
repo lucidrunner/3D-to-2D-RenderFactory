@@ -14,10 +14,14 @@ namespace Render3DTo2D.Model_Settings
         private string isometric = "ISO";
 
 
-        public string SideRotationalRigTag => sideRotational;
+        public string SideViewRigTag => sideView;
 
         [SerializeField]
-        private string sideRotational = "SR";
+        private string sideView = "SIDE";
+
+        public string TopDownRigTag => topDown;
+
+        [SerializeField] private string topDown = "TOP";
 
         #endregion
         

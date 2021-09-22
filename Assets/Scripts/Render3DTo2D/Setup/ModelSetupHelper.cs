@@ -32,7 +32,8 @@ namespace Render3DTo2D.Setup
 
             //Then attach a new Camera Rig to it by passing it along to the Camera Rigger with the setup info
             CameraRig _rig = CameraRigger.AddRigToModel(_rfGameObject, aSetupInfo);
-            
+            if (_rig == null)
+                return;
 
             //Then pass the resulting Camera Rig to the Render factory so they can bind together
             _renderFactory.AddCameraRig(_rig);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GitHub.Unity;
 using Shared_Scripts;
@@ -6,6 +7,7 @@ using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 using Ywz;
+using Object = UnityEngine.Object;
 
 namespace Factory_Editor
 {
@@ -339,6 +341,20 @@ namespace Factory_Editor
             {
                 _editor.Repaint();
             }
+        }
+
+        public static Object DrawObjectPicker(GUIContent aLabel, Object aPropertyObject, Type aObjectType, bool aAllowSceneObjects = false, float aLabelScreenWidth = 0.45f, bool aOverrideColors = true, params GUILayoutOption[] aOptions)
+        {
+            if(aOverrideColors)
+                EditorColors.OverrideTextColors();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(aLabel, GUILayout.Width(Screen.width * aLabelScreenWidth));
+            GUILayout.FlexibleSpace();
+            Object _target = EditorGUILayout.ObjectField(aPropertyObject, aObjectType, aAllowSceneObjects, aOptions);
+            EditorGUILayout.EndHorizontal();
+            if(aOverrideColors)    
+                EditorColors.ResetTextColor();
+            return _target;
         }
 
         public static void DrawProperty(SerializedProperty aProperty, float aLabelScreenWidth = 0.45f, bool aOverrideColors = true, params GUILayoutOption[] aOptions)

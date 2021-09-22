@@ -35,6 +35,10 @@ namespace Render3DTo2D
         private float manualAngle = 30;
         
         [SerializeField] private bool halfWrap = false;
+
+        [SerializeField] private CameraRig prefabRig;
+
+        [SerializeField] private CameraRigger.SetupInfo.PlacementMode placementMode = CameraRigger.SetupInfo.PlacementMode.Generated;
         
         public void AddCameraRigToFactory()
         {
@@ -56,6 +60,10 @@ namespace Render3DTo2D
             
             if(placementType == CameraRigger.SetupInfo.PlacementType.AutoWrap)
                 _setupInfo.AddSetupFlag(_setupInfo.HalfWrap, halfWrap);
+            
+            //If we're doing a prefab rig, add that
+            if(cameraRig == CameraRigger.SetupInfo.RigType.Prefab)
+                _setupInfo.AddSetupFlag(_setupInfo.Prefab, prefabRig);
 
             GetSelectedRenderFactory(setupFactoryType, out var _setupFactory);
             ModelSetupHelper.SetupCameraRig(_setupFactory ,gameObject, _setupInfo);

@@ -23,6 +23,8 @@ namespace Factory_Editor
         private SerializedProperty placementTypeProp;
         private SerializedProperty manualAngleProp;
         private SerializedProperty halfWrapProp;
+        private SerializedProperty prefabProp;
+        private SerializedProperty placementMode;
     
         //Run
         private SerializedProperty runFactoryTypeProp;
@@ -48,6 +50,9 @@ namespace Factory_Editor
             placementTypeProp = serializedObject.FindProperty("placementType");
             manualAngleProp = serializedObject.FindProperty("manualAngle");
             halfWrapProp = serializedObject.FindProperty("halfWrap");
+            prefabProp = serializedObject.FindProperty("prefabRig");
+            placementMode = serializedObject.FindProperty("placementMode");
+            
 
             var _target = (ModelRenderer) target;
             showRigAdd = new AnimBool(_target.ShowAdd);
@@ -186,22 +191,31 @@ namespace Factory_Editor
                 InspectorUtility.BeginSubBoxGroup("Rig Setup", EditorColors.Header, EditorColors.Body);
                 InspectorUtility.BeginSubBoxGroup("Type", EditorColors.HeaderAlt1, EditorColors.BodyAlt1);
                 InspectorUtility.DrawProperty(cameraRigProp);
+                //TODO Move to Placement
                 if (ShowIsometric)
                 {
                     InspectorUtility.DrawProperty(isometricAngleProp);
                     InspectorUtility.DrawProperty(isometricBaseSizeProp);
                 }
+                if (ShowPrefab)
+                {
+                    prefabProp.objectReferenceValue = InspectorUtility.DrawObjectPicker(new GUIContent(prefabProp.displayName), prefabProp.objectReferenceValue, typeof(CameraRig));
+                }
                 InspectorUtility.EndSubBoxGroup();
-                InspectorUtility.BeginSubBoxGroup("Placement", EditorColors.HeaderAlt2, EditorColors.BodyAlt2);
-                InspectorUtility.DrawProperty(numberOfCamerasProp);
-                InspectorUtility.DrawProperty(initialCameraOffsetProp);
-                InspectorUtility.DrawProperty(invertCameraRotationProp);
-                InspectorUtility.DrawProperty(placementTypeProp);
-                if (placementTypeProp.enumValueIndex == (int) CameraRigger.SetupInfo.PlacementType.AutoWrap)
-                    InspectorUtility.DrawProperty(halfWrapProp, new GUIContent("Mirrored Half Wrap"));
-                else if (placementTypeProp.enumValueIndex == (int) CameraRigger.SetupInfo.PlacementType.Manual)
-                    InspectorUtility.DrawProperty(manualAngleProp, new GUIContent("Angle Between Cameras"));
-                InspectorUtility.EndSubBoxGroup();
+                if (!ShowPrefab)
+                {
+                    InspectorUtility.BeginSubBoxGroup("Placement", EditorColors.HeaderAlt2, EditorColors.BodyAlt2);
+                    InspectorUtility.DrawProperty(placementMode);
+                    InspectorUtility.DrawProperty(numberOfCamerasProp);
+                    InspectorUtility.DrawProperty(initialCameraOffsetProp);
+                    InspectorUtility.DrawProperty(invertCameraRotationProp);
+                    InspectorUtility.DrawProperty(placementTypeProp);
+                    if (placementTypeProp.enumValueIndex == (int) CameraRigger.SetupInfo.PlacementType.AutoWrap)
+                        InspectorUtility.DrawProperty(halfWrapProp, new GUIContent("Mirrored Half Wrap"));
+                    else if (placementTypeProp.enumValueIndex == (int) CameraRigger.SetupInfo.PlacementType.Manual)
+                        InspectorUtility.DrawProperty(manualAngleProp, new GUIContent("Angle Between Cameras"));
+                    InspectorUtility.EndSubBoxGroup();
+                }
                 if(InspectorUtility.DrawButton(new GUIContent("Add Rig To Factory"), EditorColors.ButtonRun, InspectorUtility.ButtonSize.Large))
                     aTarget.AddCameraRigToFactory();
                 InspectorUtility.EndSubBoxGroup();
@@ -212,5 +226,6 @@ namespace Factory_Editor
         }
 
         private bool ShowIsometric => cameraRigProp.enumValueIndex == (int) CameraRigger.SetupInfo.RigType.Isometric;
+        private bool ShowPrefab => cameraRigProp.enumValueIndex == (int)CameraRigger.SetupInfo.RigType.Prefab;
     }
 }

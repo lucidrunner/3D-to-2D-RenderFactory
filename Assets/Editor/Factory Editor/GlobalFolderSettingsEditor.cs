@@ -9,13 +9,15 @@ namespace Factory_Editor
     {
         private SerializedProperty isometricTagProp;
         private SerializedProperty sideViewTagProp;
+        private SerializedProperty topViewTagProp;
         protected override void OnEnable()
         {
             base.OnEnable();
 
             isometricTagProp = serializedObject.FindProperty("isometric");
-            sideViewTagProp = serializedObject.FindProperty("sideRotational");
-        
+            sideViewTagProp = serializedObject.FindProperty("sideView");
+            topViewTagProp = serializedObject.FindProperty("topDown");
+
         }
 
         public override void OnInspectorGUI()
@@ -27,6 +29,7 @@ namespace Factory_Editor
 
             InspectorUtility.DrawProperty(isometricTagProp);
             InspectorUtility.DrawProperty(sideViewTagProp);
+            InspectorUtility.DrawProperty(topViewTagProp);
         
             InspectorUtility.EndBoxGroup();
             EditorColors.ResetTextColor();

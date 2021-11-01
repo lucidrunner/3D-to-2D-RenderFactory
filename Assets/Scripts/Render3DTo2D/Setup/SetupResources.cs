@@ -113,6 +113,7 @@ namespace Render3DTo2D.Setup
             switch(aSetupInfoRig)
             {
                 case CameraRigger.SetupInfo.RigType.SideView:
+                case CameraRigger.SetupInfo.RigType.TopView:
                     _toReturn = Instantiate(cameraRigPrefab, aGameObject.transform, false);
                     break;
                 case CameraRigger.SetupInfo.RigType.Isometric:

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Render3DTo2D.Isometric;
 using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
+using Render3DTo2D.RigCamera;
 using Render3DTo2D.Setup;
 using UnityEngine;
 
@@ -14,7 +15,6 @@ namespace Render3DTo2D.Rigging
         public static CameraRig AddRigToModel(GameObject aRenderFactoryObject, SetupInfo aSetupInfo)
         {
             //Right so we're finally gonna actually add the rigs now
-
             //If we're doing a prefab rig - load that and return
             if (aSetupInfo.Rig == SetupInfo.RigType.Prefab)
             {
@@ -30,10 +30,15 @@ namespace Render3DTo2D.Rigging
             GameObject _rigObject = SetupResources.Instance.AddCameraRigToGameObject(aRenderFactoryObject, aSetupInfo.Rig);
             CameraRig _cameraRig = _rigObject.GetComponent<CameraRig>();
 
-            //Setup the cameras on the rig
-            SetupCamerasOnRig(_cameraRig, ref aSetupInfo);
-            
-            //Depending on type, get the correct initial scale from the global / specific rendering settings
+            //Set the tag
+            SetupRigMode(_cameraRig, ref aSetupInfo);
+
+            //If we're supposed to setup cameras on the rig, do so 
+            if (aSetupInfo.SetPlacementMode == SetupInfo.PlacementMode.Generated)
+                SetupCamerasOnRig(_cameraRig, ref aSetupInfo);
+            else
+                SetupManualPlacementOnRig(_cameraRig);
+                //Depending on type, get the correct initial scale from the global / specific rendering settings
             var _renderingSettings = RenderingSettings.GetFor(aRenderFactoryObject.transform);
             float _initalScale = 1;
             switch (aSetupInfo.Rig)
@@ -60,8 +65,6 @@ namespace Render3DTo2D.Rigging
 
         private static void SetupCamerasOnRig(CameraRig aCameraRig, ref SetupInfo aSetupInfo)
         {
-            //Set the tag
-            SetupRigTag(aCameraRig, ref aSetupInfo);
             
             //Get the camera anchor
             GameObject _anchor = aCameraRig.CameraAnchor;
@@ -74,7 +77,7 @@ namespace Render3DTo2D.Rigging
 
             
             
-            if (aSetupInfo.Placement == SetupInfo.PlacementType.Manual)
+            if (aSetupInfo.SetPlacementType == SetupInfo.PlacementType.Manual)
                 _cameraStepSize = (float)aSetupInfo.GetData(aSetupInfo.ManualAngle);
             else if (aSetupInfo.GetData<bool>(aSetupInfo.HalfWrap) && _numberOfCameras > 1)
                 _cameraStepSize = 180f / (_numberOfCameras -1); // -1 because we want to go the full 180%
@@ -122,8 +125,14 @@ namespace Render3DTo2D.Rigging
             }
         }
 
-        private static void SetupRigTag(CameraRig aCameraRig, ref SetupInfo aSetupInfo)
+        private static void SetupManualPlacementOnRig(CameraRig aCameraRig)
         {
+            aCameraRig.SetupManualPlacementMode();
+        }
+
+        private static void SetupRigMode(CameraRig aCameraRig, ref SetupInfo aSetupInfo)
+        {
+            aCameraRig.SetupRigMode(aSetupInfo.Rig);
             switch (aSetupInfo.Rig)
             {
                 case SetupInfo.RigType.SideView:
@@ -183,10 +192,11 @@ namespace Render3DTo2D.Rigging
             public readonly string HalfWrap = "halfWrap";
             public readonly string Prefab = "prefab";
             
-            public SetupInfo(RigType aRigType, PlacementType aPlacementType)
+            public SetupInfo(RigType aRigType, PlacementMode aPlacementMode, PlacementType aSetPlacementTypeType)
             {
                 Rig = aRigType;
-                Placement = aPlacementType;
+                SetPlacementType = aSetPlacementTypeType;
+                SetPlacementMode = aPlacementMode;
             }
 
             public void AddSetupFlag(string aFlag, object aData)
@@ -213,7 +223,9 @@ namespace Render3DTo2D.Rigging
 
             public RigType Rig { get; }
             
-            public PlacementType Placement { get; }
+            public PlacementType SetPlacementType { get; }
+            
+            public PlacementMode SetPlacementMode { get; }
 
             //These properties make it a bit easier to visualise when using but could have been replaced with a generic UnPack(flag) instead
             public int NumberOfCameras

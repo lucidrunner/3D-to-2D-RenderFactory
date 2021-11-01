@@ -43,7 +43,7 @@ namespace Render3DTo2D
         public void AddCameraRigToFactory()
         {
             //Android style packaging for setup info cause I did a bunch of mobile work right before factory 2.0
-            CameraRigger.SetupInfo _setupInfo = new CameraRigger.SetupInfo(cameraRig, placementType);
+            CameraRigger.SetupInfo _setupInfo = new CameraRigger.SetupInfo(cameraRig, placementMode, placementType);
             
             //The always include settings
             _setupInfo.AddSetupFlag(_setupInfo.NumberOfCamerasInt, numberOfCameras);
@@ -53,12 +53,11 @@ namespace Render3DTo2D
             //Isometric settings
             if (cameraRig == CameraRigger.SetupInfo.RigType.Isometric)
                 _setupInfo.AddIsometricInfo(isometricAngle, isometricBaseSize);
-            
+
             //If needed - manual placement settings
             if(placementType == CameraRigger.SetupInfo.PlacementType.Manual)
                 _setupInfo.AddSetupFlag(_setupInfo.ManualAngle, manualAngle);
-            
-            if(placementType == CameraRigger.SetupInfo.PlacementType.AutoWrap)
+            else if(placementType == CameraRigger.SetupInfo.PlacementType.AutoWrap)
                 _setupInfo.AddSetupFlag(_setupInfo.HalfWrap, halfWrap);
             
             //If we're doing a prefab rig, add that

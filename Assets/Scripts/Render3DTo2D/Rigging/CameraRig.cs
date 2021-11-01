@@ -22,11 +22,14 @@ namespace Render3DTo2D.Rigging
 
         [SerializeField, HideInInspector] 
         private RigRenderer rigRenderer = null;
-
+        
         [SerializeField, HideInInspector]
         private string rigTag = "";
-        
 
+        [SerializeField, HideInInspector] private bool manualPlacementMode = false;
+
+        [SerializeField, HideInInspector] private CameraRigger.SetupInfo.RigType rigType;
+        
         #endregion
 
         #region Properties
@@ -42,6 +45,7 @@ namespace Render3DTo2D.Rigging
         private List<GameObject> cameras = new List<GameObject>();
 
         private string lastOutputPath = "";
+        
 
         #endregion
 
@@ -121,6 +125,16 @@ namespace Render3DTo2D.Rigging
             name = $"{name}_{rigTag}";
         }
 
+        public void SetupManualPlacementMode()
+        {
+            manualPlacementMode = true;
+        }
+
+        public void SetupRigMode(CameraRigger.SetupInfo.RigType aRigType)
+        {
+            rigType = aRigType;
+        }
+        
         public void ExportAnimationData(StopMotionAnimatorInfo aSmAnimatorInfo, string aRootMotionFilePath = null)
         {
             RigDataXmlExporter.Export(new RigDataXmlExporter.RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
@@ -147,5 +161,6 @@ namespace Render3DTo2D.Rigging
         }
 
         #endregion
+
     }
 }

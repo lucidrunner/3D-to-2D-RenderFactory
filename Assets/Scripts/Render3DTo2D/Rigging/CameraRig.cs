@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Render3DTo2D.Factory_Core;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.RigCamera;
@@ -30,6 +31,9 @@ namespace Render3DTo2D.Rigging
 
         [SerializeField, HideInInspector] private CameraRigger.SetupInfo.RigType rigType;
         
+        [SerializeField, HideInInspector]
+        private List<CameraRenderer> cameras = new List<CameraRenderer>();
+        
         #endregion
 
         #region Properties
@@ -42,7 +46,6 @@ namespace Render3DTo2D.Rigging
 
         #region Private Fields
 
-        private List<GameObject> cameras = new List<GameObject>();
 
         private string lastOutputPath = "";
         
@@ -139,28 +142,64 @@ namespace Render3DTo2D.Rigging
         {
             RigDataXmlExporter.Export(new RigDataXmlExporter.RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
         }
+        
+        //TODO This needs to be called at the end of normal rigging too
+        public void ValidateCameraSetup()
+        {
+            //If we're not doing manual placement this is just a reload of the camera lists in this / the calculator class
+            cameras = new List<CameraRenderer>();
+            var _anchorTransform = cameraAnchor.transform;
+            for (var _index = 0; _index < _anchorTransform.childCount; _index++)
+            {
+                var _camera = cameraAnchor.transform.GetChild(_index);
+                Debug.Log(_camera.name);
+                var _renderer = _camera.GetComponent<CameraRenderer>();
+                if(_renderer != null)
+                {
+                    cameras.Add(_renderer);
+                    _renderer.SetCameraNumber(_index);
+                }
+            }
+            
+            
+
+            rigScaleCalculator.ValidateSetup(cameras);
+            Debug.Log("Cameras validated: " + cameras.Count);
+
+            //If we're doing manual placement we should do an additional validation on the cameras to make sure they're also correctly setup according to the rig type
+            //TODO
+        }
 
         #endregion
 
         #region Private Methods
 
-        internal void AddCamera(GameObject addedCamera)
+        public void AddCamera(GameObject aAddedCamera)
         {
-            cameras.Add(addedCamera);
-        
-            CameraScaleCalculator _scaleCalculator = addedCamera.GetComponent<CameraScaleCalculator>();
-
-            if(_scaleCalculator == null)
+            var _renderer = aAddedCamera.GetComponent<CameraRenderer>();
+            if (_renderer == null)
             {
-                //Some weird setup error has happened
-                Debug.LogWarning("Camera successfully added but missing a scale calculator. Something is probably wrong with the prefab");
-                return;
+                //TODO Show warning message
             }
-
+            cameras.Add(_renderer);
+            CameraScaleCalculator _scaleCalculator = aAddedCamera.GetComponent<CameraScaleCalculator>();
             rigScaleCalculator.AddCameraCalculator(_scaleCalculator);
+            ValidateCameraSetup();
+        }
+
+        public void RemoveCamera(CameraRenderer aRemovedCamera)
+        {
+            if (aRemovedCamera == null) return;
+            CameraScaleCalculator _scaleCalculator = aRemovedCamera.GetComponent<CameraScaleCalculator>();
+            rigScaleCalculator.RemoveCameraCalculator(_scaleCalculator);
+            if (cameras.Contains(aRemovedCamera))
+            {
+                cameras.Remove(aRemovedCamera);
+            }
+            DestroyImmediate(aRemovedCamera.gameObject);
+            ValidateCameraSetup();
         }
 
         #endregion
-
     }
 }

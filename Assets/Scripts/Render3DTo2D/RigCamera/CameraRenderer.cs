@@ -20,6 +20,12 @@ namespace Render3DTo2D.RigCamera
         [SerializeField, HideInInspector] 
         private Camera renderCamera;
 
+        [SerializeField, HideInInspector] private string defaultName = "";
+        
+        [SerializeField, HideInInspector] private int setCameraNumber;
+        [SerializeField, HideInInspector] private string lastSetName = "";
+        [SerializeField, HideInInspector] private bool deletionSafetyToggle = false;
+
         private Renderer optionalRenderer = null;
 
         #endregion
@@ -215,6 +221,20 @@ namespace Render3DTo2D.RigCamera
             //Get the optional renderer from the overseer
             optionalRenderer = Overseer.Instance.OptionalRenderer;
         }
+
+        #endregion
+
+        #region Internal Methods
+
+        internal void SetCameraNumber(int aCameraIndex)
+        {
+            if(string.IsNullOrWhiteSpace(defaultName))
+                defaultName = gameObject.name;
+            setCameraNumber = aCameraIndex;
+            lastSetName = defaultName + " " + setCameraNumber;
+            gameObject.name = lastSetName;
+        }
+        
 
         #endregion
 

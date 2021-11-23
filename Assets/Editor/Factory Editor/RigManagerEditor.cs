@@ -36,58 +36,59 @@ namespace Factory_Editor
 
             for (var _index = 0; _index < rigs.arraySize; _index++)
             {
-                var _toggleAbleRig = rigs.GetArrayElementAtIndex(_index);
-                SerializedProperty _currentRigName = _toggleAbleRig.FindPropertyRelative("rigName");
-                SerializedProperty _currentToggleProp = _toggleAbleRig.FindPropertyRelative("toggled");
-                SerializedProperty _deletionToggle = _toggleAbleRig.FindPropertyRelative("deletionSafetyToggle");
-            
-                Color _varTitleColor = _index % 2 == 0 ?  EditorColors.HeaderAlt1 : EditorColors.HeaderAlt2;
-                Color _varContentColor = _index % 2 == 0 ?  EditorColors.BodyAlt1 : EditorColors.BodyAlt2;
-            
-                GUILayout.Space(3);
-                InspectorUtility.BeginSubBoxGroup(_currentRigName.stringValue, _varTitleColor, _varContentColor);
-
-                GUI.backgroundColor = _currentToggleProp.boolValue ? EditorColors.ToggleOn : EditorColors.ToggleOff;
-                string _toggleButtonText = _currentToggleProp.boolValue ? "Render" : "Don't Render";
-            
-                GUILayout.Space(3);
-                if(GUILayout.Button(_toggleButtonText))
-                {
-                    _target.ToggleRig(_index);
-                }
-
-                GUI.backgroundColor = _defaultColor;
-            
-                GUILayout.Space(3);
-
-                EditorGUILayout.BeginHorizontal();
-
-                
-                InspectorUtility.DrawToggleProperty(_deletionToggle, new GUIContent("Deletion Safety Toggle"), true);
-               // _deletionToggle.boolValue = GUILayout.Toggle(_deletionToggle.boolValue, "Deletion Safety Toggle");
-
-                GUI.enabled = _deletionToggle.boolValue;
-                GUI.backgroundColor = EditorColors.ButtonAction;
-                if(InspectorUtility.DrawButton(new GUIContent("Delete Rig"), EditorColors.ButtonAction))
-                {
-                    _target.RemoveRig(_index);
-                }
-
-                GUI.backgroundColor = _defaultColor;
-                GUI.enabled = true;
-                EditorGUILayout.EndHorizontal();
-            
-            
-
-        
-                InspectorUtility.EndSubBoxGroup();
-
+                DrawRig(_index, _target, _defaultColor);
             }
+            
             InspectorUtility.EndBoxGroup();
             EditorColors.ResetTextColor();
             serializedObject.ApplyModifiedProperties();
         }
-    
-   
+
+        private void DrawRig(int _index, RigManager _target, Color _defaultColor)
+        {
+            var _toggleAbleRig = rigs.GetArrayElementAtIndex(_index);
+            Debug.Log(_toggleAbleRig);
+            SerializedProperty _currentRigName = _toggleAbleRig.FindPropertyRelative("rigName");
+            SerializedProperty _currentToggleProp = _toggleAbleRig.FindPropertyRelative("toggled");
+            SerializedProperty _deletionToggle = _toggleAbleRig.FindPropertyRelative("deletionSafetyToggle");
+
+            Color _titleColor = _index % 2 == 0 ? EditorColors.HeaderAlt1 : EditorColors.HeaderAlt2;
+            Color _contentColor = _index % 2 == 0 ? EditorColors.BodyAlt1 : EditorColors.BodyAlt2;
+
+            GUILayout.Space(3);
+            InspectorUtility.BeginSubBoxGroup(_currentRigName.stringValue, _titleColor, _contentColor);
+
+            GUI.backgroundColor = _currentToggleProp.boolValue ? EditorColors.ToggleOn : EditorColors.ToggleOff;
+            string _toggleButtonText = _currentToggleProp.boolValue ? "Render" : "Don't Render";
+
+            GUILayout.Space(3);
+            if (GUILayout.Button(_toggleButtonText))
+            {
+                _target.ToggleRig(_index);
+            }
+
+            GUI.backgroundColor = _defaultColor;
+
+            GUILayout.Space(3);
+
+            EditorGUILayout.BeginHorizontal();
+
+
+            InspectorUtility.DrawToggleProperty(_deletionToggle, new GUIContent("Deletion Safety Toggle"), true);
+            // _deletionToggle.boolValue = GUILayout.Toggle(_deletionToggle.boolValue, "Deletion Safety Toggle");
+
+            GUI.enabled = _deletionToggle.boolValue;
+            if (InspectorUtility.DrawButton(new GUIContent("Delete Rig"), EditorColors.ButtonAction))
+            {
+                _target.RemoveRig(_index);
+            }
+
+            GUI.backgroundColor = _defaultColor;
+            GUI.enabled = true;
+            EditorGUILayout.EndHorizontal();
+
+
+            InspectorUtility.EndSubBoxGroup();
+        }
     }
 }

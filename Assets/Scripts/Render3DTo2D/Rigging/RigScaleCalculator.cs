@@ -58,13 +58,50 @@ namespace Render3DTo2D.Rigging
 
         public void AddCameraCalculator(CameraScaleCalculator aCameraCalculator)
         {
-            if (cameraScaleCalculators == null) cameraScaleCalculators = new List<CameraScaleCalculator>();
+            cameraScaleCalculators ??= new List<CameraScaleCalculator>();
+            cameraEdgeReCalculators ??= new List<CameraEdgeReCalculator>();
+
+            //Warn if we have a broken prefab
+            if (aCameraCalculator == null)
+            {
+                FLogger.LogMessage(this, FLogger.Severity.LinkageError, $"Couldn't find a {nameof(CameraScaleCalculator)} on added camera. This will most likely cause issues on run. Check if the camera prefab is correctly setup.");
+            }
 
             if (cameraScaleCalculators.Contains(aCameraCalculator) == false)
             {
                 cameraScaleCalculators.Add(aCameraCalculator);
-                //Slightly clunky way of getting it but it's on the prefab so w/e
-                cameraEdgeReCalculators.Add(aCameraCalculator.GetComponent<CameraEdgeReCalculator>());
+                //Guard against future prefab changes
+                var _edgeCalc = aCameraCalculator.GetComponent<CameraEdgeReCalculator>();
+                if(_edgeCalc != null)
+                    cameraEdgeReCalculators.Add(_edgeCalc);
+            }
+        }
+
+        internal void RemoveCameraCalculator(CameraScaleCalculator aCameraCalculator)
+        {
+            if (aCameraCalculator == null)
+                return;
+
+            cameraScaleCalculators.Remove(aCameraCalculator);
+            var _edgeCalc = aCameraCalculator.GetComponent<CameraEdgeReCalculator>();
+            if (_edgeCalc != null)
+                cameraEdgeReCalculators.Remove(_edgeCalc);
+        }
+
+        internal void ValidateSetup(IEnumerable<CameraRenderer> aCameras)
+        {
+            cameraScaleCalculators = new List<CameraScaleCalculator>();
+            cameraEdgeReCalculators = new List<CameraEdgeReCalculator>();
+            
+            //Reload lists based on the provided collection
+            foreach (var _camera in aCameras)
+            {
+                var _scaleCalculator = _camera.GetComponent<CameraScaleCalculator>();
+                var _edgeCalc = _camera.GetComponent<CameraEdgeReCalculator>();
+                if(_scaleCalculator != null)
+                    cameraScaleCalculators.Add(_scaleCalculator);
+                if(_edgeCalc != null)
+                    cameraEdgeReCalculators.Add(_edgeCalc);
             }
         }
         

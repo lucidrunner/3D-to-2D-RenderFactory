@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Rigging;
 using Render3DTo2D.SMAnimator;
@@ -22,7 +23,7 @@ namespace Render3DTo2D.Isometric
             //Do nothing when saving frames either
         }
 
-        public override IEnumerator CalculateFrame(int aCurrentAnimation, int aCurrentFrame)
+        public override IEnumerator CalculateFrame(int aCurrentAnimation, int aCurrentFrame, Action aFinishedCallback = null)
         {
             //Do nothing for calculation either
             yield return null;

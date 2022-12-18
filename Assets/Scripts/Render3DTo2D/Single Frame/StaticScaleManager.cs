@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Edelweiss.Coroutine;
 using Render3DTo2D.Factory_Core;
 using Render3DTo2D.Rigging;
 using Render3DTo2D.Utility;
-using Render3DTo2D.Utility.Inspector;
 using UnityEngine;
 
 namespace Render3DTo2D.Single_Frame
@@ -18,22 +19,22 @@ namespace Render3DTo2D.Single_Frame
         public bool RunCalculator => runCalculator;
 
         
-        public override IEnumerator<int> CalculateScales(bool aRecalculateValid = false)
+        public override IEnumerator CalculateScales(Action<int> aCalculatorCallback ,bool aRecalculateValid = false)
         {
-            yield return CoroutineResultCodes.Working;
+            yield return CalculatorState(aCalculatorCallback);
             List<RigScaleCalculator> _activeCalculators = GetCalculatorsForScaling(true);
 
             //If we have nothing to recalculate, check if it's because of setup or not and end the iteration
             if(_activeCalculators.Count == 0)
             {
                 
-                yield return scaleCalculators.Count > 0 ? CoroutineResultCodes.Bypassed : CoroutineResultCodes.Failed;
+                yield return CalculatorState(aCalculatorCallback, scaleCalculators.Count > 0 ? CoroutineResultCodes.Bypassed : CoroutineResultCodes.Failed);
                 yield break;
             }
             
             if (!runCalculator)
             {
-                yield return CoroutineResultCodes.Passed;
+                yield return CalculatorState(aCalculatorCallback, CoroutineResultCodes.Passed);
                 yield break;
             }
 
@@ -42,7 +43,7 @@ namespace Render3DTo2D.Single_Frame
             SafeCoroutine _routine = this.StartSafeCoroutine(renderManager.GoToFrame());
             do
             {
-                yield return CoroutineResultCodes.Working;
+                yield return CalculatorState(aCalculatorCallback);
             } while (!_routine.HasFinished);
             
             RenderFactoryEvents.InvokePreFrameCalculator(transform, null);
@@ -60,7 +61,7 @@ namespace Render3DTo2D.Single_Frame
                     SafeCoroutine _calculatorRoutine =
                         this.StartSafeCoroutine(_rigScaleCalculator.CalculateFrame(-1, -1));
                     while (!_calculatorRoutine.HasFinished)
-                        yield return CoroutineResultCodes.Working;
+                        yield return CalculatorState(aCalculatorCallback);
                 }
                 else
                 {
@@ -71,12 +72,12 @@ namespace Render3DTo2D.Single_Frame
                 while(!_calculatorRoutines.TrueForAll(routine => routine.HasFinished))
                 {
                     Debug.Log("Entered the 'Wait for Scale Calculators' thing that we should never enter. Has the implementation changed?");
-                    yield return CoroutineResultCodes.Working;
+                    yield return CalculatorState(aCalculatorCallback);
                 }
             }
 
             //We're not doing any exporting so just tell the factory to start rendering our frame
-            yield return CoroutineResultCodes.Passed;
+            yield return CalculatorState(aCalculatorCallback,  CoroutineResultCodes.Passed);
         }
 
         internal override void Startup(bool aRecalculateAll)

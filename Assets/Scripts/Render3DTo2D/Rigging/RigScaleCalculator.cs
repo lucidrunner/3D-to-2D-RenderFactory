@@ -10,7 +10,6 @@ using Render3DTo2D.Model_Settings;
 using Render3DTo2D.RigCamera;
 using Render3DTo2D.Root_Movement;
 using Render3DTo2D.SMAnimator;
-using Render3DTo2D.Utility;
 using Render3DTo2D.Utility.IO;
 using RootChecker;
 using UnityEngine;
@@ -204,7 +203,7 @@ namespace Render3DTo2D.Rigging
                 _cameraScaleCalculator.Startup(aBoundsCalculator);
         }
 
-        public virtual IEnumerator CalculateFrame(int aCurrentAnimation, int aCurrentFrame)
+        public virtual IEnumerator CalculateFrame(int aCurrentAnimation, int aCurrentFrame, Action aFinishedCallback = null)
         {
             FLogger.LogMessage(this, FLogger.Severity.Status, $"Calculating frame for {aCurrentAnimation}:{aCurrentFrame}", "Rig Scale Calculator");
             for (int _index = 0; _index < cameraScaleCalculators.Count; _index++)
@@ -241,6 +240,8 @@ namespace Render3DTo2D.Rigging
 
                 SaveToScalePackage(aCurrentAnimation, aCurrentFrame, _index, _scale);
             }
+
+            aFinishedCallback?.Invoke();
         }
 
         private void SaveToScalePackage(int aCurrentAnimation, int aFrameIndex, int aCameraIndex, float aScale)

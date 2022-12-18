@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Edelweiss.Coroutine;
 using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
@@ -22,7 +22,7 @@ namespace Render3DTo2D.Rigging
         protected Dictionary<int, int> RenderAnimationLengths = new Dictionary<int, int>();
         public Dictionary<int, int> LatestAnimationLengths => RenderAnimationLengths;        
 
-        public IEnumerator RenderStep(CameraFrameRenderInfo.Builder aRenderInfoBuilder)
+        public IEnumerator RenderStep(CameraFrameRenderInfo.Builder aRenderInfoBuilder, Action aFinishedCallback)
         {
 
             //Start the rendering routines
@@ -36,6 +36,7 @@ namespace Render3DTo2D.Rigging
             
 
             EndRenderStep();
+            aFinishedCallback();
         }
 
         private List<SafeCoroutine> StartRenderStep(CameraFrameRenderInfo.Builder aRenderInfoBuilder)

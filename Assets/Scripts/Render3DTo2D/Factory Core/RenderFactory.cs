@@ -1,5 +1,4 @@
 ﻿using System;
-using Edelweiss.Coroutine;
 using Render3DTo2D.Logging;
 using Render3DTo2D.Rigging;
 using Render3DTo2D.Root_Movement;
@@ -33,8 +32,8 @@ namespace Render3DTo2D.Factory_Core
         #endregion
         
         #region Private Fields
-        private SafeCoroutine<int> calculatorRoutine;
-        private SafeCoroutine renderingRoutine;
+        private Coroutine calculatorCoroutine;
+        private Coroutine renderingCoroutine;
         private DateTimeOffset renderTimeStamp;
         [SerializeField, HideInInspector] private bool busy = false;
 
@@ -90,53 +89,80 @@ namespace Render3DTo2D.Factory_Core
         
         public void RunRecalculation(Animator aAnimator, bool aRecalculateAll)
         {
-        Busy = true;
-        CreateFolders = false;
-        Startup(aAnimator, true, aRecalculateAll);
-        FLogger.LogMessage(this, FLogger.Severity.Priority, "Calculator starting.", RootFinder.FindHighestRoot(transform).gameObject.name);
-        calculatorRoutine = this.StartSafeCoroutine<int>(factoryScaleManager.CalculateScales(true));
-        calculatorRoutine.StateChangeNotifier.Subscribe(OnCalculationFinished);
+            //Lock down the interface
+            Busy = true;
+            
+            //Make sure we don't attempt to create render folders during this force-rerender
+            CreateFolders = false;
+            //Depending on our settings we want to force recalculate all or only the currently toggled active rigs
+            Startup(aAnimator, true, aRecalculateAll);
+            
+            FLogger.LogMessage(this, FLogger.Severity.Priority, "Calculator starting.", RootFinder.FindHighestRoot(transform).gameObject.name);
+            calculatorCoroutine = this.StartCoroutine(factoryScaleManager.CalculateScales(RecalculationCallback, true));
+            
+            //Local method for post-calculation cleanup
+            void RecalculationCallback(int aState)
+            {
+                if (aState == CoroutineResultCodes.Working)
+                {
+                    return;
+                }
+        
+                //Report finished & reset the factory
+                FLogger.LogMessage(this, FLogger.Severity.Priority, "Calculator finished", RootFinder.FindHighestRoot(transform).gameObject.name);
+                Busy = false;
+                calculatorCoroutine = null;
+            }
+
         }
-
-
+        
         public void RunFactory(Animator aAnimator)
         {
+            //Pre-render startup settings
             Busy = true;
             CreateFolders = true;
             Startup(aAnimator);
-            //Run the calculator without recalculating if we successfully load a rig from file
+            
+            //We run the calculator here, but it won't recalculate by default if all of our current rigs have valid data set
             FLogger.LogMessage(this, FLogger.Severity.Priority, "Calculator starting.", RootFinder.FindHighestRoot(transform).gameObject.name);
-            calculatorRoutine = this.StartSafeCoroutine<int>(factoryScaleManager.CalculateScales());
-            //Use a lambda to listen for the finished state and start the rendering routine
-            calculatorRoutine.StateChangeNotifier.Subscribe(aState =>
+            calculatorCoroutine = StartCoroutine(factoryScaleManager.CalculateScales(CalculatorCallback));
+            
+            //Setup so we can run the rendering via callback after the calculator finishes
+            void CalculatorCallback(int aState)
+            {
+                FLogger.LogMessage(this, FLogger.Severity.Debug, "Entered our callback with state " + aState);
+                //Wait for the calculation to actually finish before proceeding
+                if (aState == CoroutineResultCodes.Working)
                 {
-                    //We're only interested in the finished state so no need to nest
-                    if (aState != SafeCoroutineState.Finished) return;
-                    int _finishState = calculatorRoutine.Result;
-                    switch (_finishState)
-                    {
-                        case CoroutineResultCodes.Passed:
-                            FLogger.LogMessage(this, FLogger.Severity.Status, "Calculator finished with creating new frames.", RootFinder.FindHighestRoot(transform).gameObject.name);
-                            break;
-                        case CoroutineResultCodes.Bypassed:
-                            FLogger.LogMessage(this, FLogger.Severity.Status, "Calculator bypassed - Frames were either found & loaded or all toggled rigs are isometric.", RootFinder.FindHighestRoot(transform).gameObject.name);
-                            break;
-                        case CoroutineResultCodes.Failed:
-                            FLogger.LogMessage(this, FLogger.Severity.FatalError, "No existing scales or scale calculators for rigs found so rendering can't be run. Is the setup prefab broken?", RootFinder.FindHighestRoot(transform).gameObject.name);
-                            return;
-                    }
-                    
-                    FLogger.LogMessage(this, FLogger.Severity.Priority, "Rendering starting.", "Factory" );
-
-                    RenderStartup();
-
-                    //Start the rendering routine and another listener so we get a callback for when rendering is done
-                    renderingRoutine = this.StartSafeCoroutine(factoryRenderManager.RenderAllActiveRigs());
-                    renderingRoutine.StateChangeNotifier.Subscribe(OnRenderingFinished);
-                    //Clear the routine for future use
-                    calculatorRoutine = null;
+                    return;
                 }
-            );
+
+                FLogger.LogMessage(this, FLogger.Severity.Debug, "Passed working check callback");
+                //Based on the finished working state, log & continue or abort
+                switch (aState)
+                {
+                    case CoroutineResultCodes.Passed:
+                        FLogger.LogMessage(this, FLogger.Severity.Status, "Calculator finished with creating new frames.", RootFinder.FindHighestRoot(transform).gameObject.name);
+                        break;
+                    case CoroutineResultCodes.Bypassed:
+                        FLogger.LogMessage(this, FLogger.Severity.Status, "Calculator bypassed - Frames were either found & loaded or all toggled rigs are isometric.", RootFinder.FindHighestRoot(transform).gameObject.name);
+                        break;
+                    case CoroutineResultCodes.Failed:
+                        FLogger.LogMessage(this, FLogger.Severity.FatalError, "No existing scales or scale calculators for rigs found so rendering can't be run. Is the setup prefab broken?", RootFinder.FindHighestRoot(transform).gameObject.name);
+                        return;
+                }
+                
+                FLogger.LogMessage(this, FLogger.Severity.Priority, "Rendering starting.", "Factory" );
+
+                RenderStartup();
+
+                //Start the rendering routine and another listener so we get a callback for when rendering is done
+                renderingCoroutine = StartCoroutine(factoryRenderManager.RenderAllActiveRigs(OnRenderingFinished));
+                
+                //Clear the routine for future use
+                calculatorCoroutine = null;
+            }
+
         }
 
     public string GetRenderTimestamp(bool aFormat = true)
@@ -168,8 +194,8 @@ namespace Render3DTo2D.Factory_Core
     private void Startup(Animator aAnimator, bool aForceRecalculate = false, bool aRecalculateAll = false)
         {
             //Reset our routines
-            calculatorRoutine = null;
-            renderingRoutine = null;
+            calculatorCoroutine = null;
+            renderingCoroutine = null;
 
             //Get our internal references if needed
             GetReferencedComponents();
@@ -191,68 +217,57 @@ namespace Render3DTo2D.Factory_Core
         factoryRigManager.RenderStartup(stopMotionAnimator);
     }
 
-    private void OnCalculationFinished(SafeCoroutineState aState)
+
+    private void OnRenderingFinished()
     {
-        if (aState != SafeCoroutineState.Finished) return;
+        //If we aren't rendering and have entered this somehow, return
+        if (renderingCoroutine == null) return;
         
-        //Report finished & reset the factory
-        FLogger.LogMessage(this, FLogger.Severity.Priority, "Calculator finished", RootFinder.FindHighestRoot(transform).gameObject.name);
+        //Report finished an reset the factory
+        FLogger.LogMessage(this, FLogger.Severity.Priority, $"Rendering Finished", RootFinder.FindHighestRoot(transform).gameObject.name);
+            
+        bool? _applyRootMotion = RootMotionSettings.GetFor(transform)?.EnableRootMotionExport;
+        string _rootMotionFilePath = null;
+        if (_applyRootMotion.HasValue && _applyRootMotion.Value == true)
+        {
+            //Export the Root Data to an XML file
+            string _outputPath = FactoryFolderCreator.CreateTransformExportFolderForFactory(transform);
+            var _exportArgs = new RenderFactoryEvents.ExportTransformArgs(_outputPath, renderTimeStamp);
+            RenderFactoryEvents.InvokeExportTransform(transform, _exportArgs);
+            _rootMotionFilePath = _exportArgs.FullFilePath;
+        }
+            
         Busy = false;
-        calculatorRoutine.StateChangeNotifier.Unsubscribe(OnCalculationFinished);
-        calculatorRoutine = null;
+        renderingCoroutine = null;
+
+        //Export the animation data to XML if we're a non-static factory
+        if (GetComponent<StaticRenderManager>() == null)
+            factoryRigManager.ExportToXML(stopMotionAnimator, _rootMotionFilePath);
+        else
+            factoryRigManager.ExportToXML(_rootMotionFilePath);
+
+        //Finally, reset the camera sizes 
+        factoryScaleManager.ResetCameraSizes();
     }
 
-        private void OnRenderingFinished(SafeCoroutineState aState)
-        {
-            //If we haven't finished or aren't rendering and have entered this somehow, return
-            if (aState != SafeCoroutineState.Finished || renderingRoutine == null) return;
-            
-            //Report finished an reset the factory
-            FLogger.LogMessage(this, FLogger.Severity.Priority, $"Rendering Finished", RootFinder.FindHighestRoot(transform).gameObject.name);
-                
-            bool? _applyRootMotion = RootMotionSettings.GetFor(transform)?.EnableRootMotionExport;
-            string _rootMotionFilePath = null;
-            if (_applyRootMotion.HasValue && _applyRootMotion.Value == true)
-            {
-                //Export the Root Data to an XML file
-                string _outputPath = FactoryFolderCreator.CreateTransformExportFolderForFactory(transform);
-                var _exportArgs = new RenderFactoryEvents.ExportTransformArgs(_outputPath, renderTimeStamp);
-                RenderFactoryEvents.InvokeExportTransform(transform, _exportArgs);
-                _rootMotionFilePath = _exportArgs.FullFilePath;
-            }
-                
-            Busy = false;
-            renderingRoutine.StateChangeNotifier.Unsubscribe(OnRenderingFinished);
-            renderingRoutine = null;
+    private void GetReferencedComponents()
+    {
+        if(factoryScaleManager == null)
+            factoryScaleManager = GetComponent<ScaleManager>();
+        if(factoryRigManager == null)
+            factoryRigManager = GetComponent<RigManager>();
+        if(factoryRenderManager == null)
+            factoryRenderManager = GetComponent<RenderManager>();
+        if(stopMotionAnimator == null)
+            stopMotionAnimator = GetComponent<StopMotionAnimator>();
+    }
 
-            //Export the animation data to XML if we're a non-static factory
-            if (GetComponent<StaticRenderManager>() == null)
-                factoryRigManager.ExportToXML(stopMotionAnimator, _rootMotionFilePath);
-            else
-                factoryRigManager.ExportToXML(_rootMotionFilePath);
+    private void Reset()
+    {
+        GetReferencedComponents();
+    }
 
-            //Finally, reset the camera sizes 
-            factoryScaleManager.ResetCameraSizes();
-        }
-
-        private void GetReferencedComponents()
-        {
-            if(factoryScaleManager == null)
-                factoryScaleManager = GetComponent<ScaleManager>();
-            if(factoryRigManager == null)
-                factoryRigManager = GetComponent<RigManager>();
-            if(factoryRenderManager == null)
-                factoryRenderManager = GetComponent<RenderManager>();
-            if(stopMotionAnimator == null)
-                stopMotionAnimator = GetComponent<StopMotionAnimator>();
-        }
-
-        private void Reset()
-        {
-            GetReferencedComponents();
-        }
-
-        #endregion
+    #endregion
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,66 +74,86 @@ namespace Render3DTo2D.Factory_Core
             }
         }
 
-        public virtual IEnumerator<int> CalculateScales(bool aRecalculateValid = false)
+        protected virtual IEnumerator CalculatorState(Action<int> aCallback, int aCode = CoroutineResultCodes.Working)
         {
+            aCallback(aCode);
             yield return CoroutineResultCodes.Working;
-            List<RigScaleCalculator> _activeCalculators = GetCalculatorsForScaling(aRecalculateValid);
+        }
 
+        
+        
+        public virtual IEnumerator CalculateScales(Action<int> aCalculatorCallback, bool aRecalculateValid = false)
+        {
+            
+            yield return CalculatorState(aCalculatorCallback);
+            //Get our toggled / all calculators based on our current settings
+            List<RigScaleCalculator> _activeCalculators = GetCalculatorsForScaling(aRecalculateValid);
+            
+            
             //If we have nothing to recalculate, check if it's because of setup or not and end the iteration
             if(_activeCalculators.Count == 0)
             {
-                yield return scaleCalculators.Count > 0 ? CoroutineResultCodes.Bypassed : CoroutineResultCodes.Failed;
+                yield return CalculatorState(aCalculatorCallback, scaleCalculators.Count > 0 ? CoroutineResultCodes.Bypassed : CoroutineResultCodes.Failed);
                 yield break;
             }
             
+            //Log our start message
             PrintStartMessage(_activeCalculators);
-
+            
             //Setup our animation runner that will step through all the frames of all animations on the smAnimator
             SMAnimatorRunner _animatorRunner = new SMAnimatorRunner(smAnimator);
             _animatorRunner.Start();
-
+            
             //For each frame, let each rig calculate its own scale
             do
             {
-                yield return CoroutineResultCodes.Working;
+                yield return CalculatorState(aCalculatorCallback);
+                
                 RenderFactoryEvents.InvokePreFrameCalculator(transform, _animatorRunner.CurrentFrameInfo);
                 
+                //If our animation is setup in the substep mode, ignore the current frame for calculation
+                //Subsets are only used for more precise positional data and will not be included in render & calculations
                 if(_animatorRunner.OnSubStep)
                     continue;
 
-                List<SafeCoroutine> _routines = new List<SafeCoroutine>();
+                Dictionary<RigScaleCalculator, bool> _routineStates = new Dictionary<RigScaleCalculator, bool>();
+                
                 foreach(RigScaleCalculator _rigCalculator in _activeCalculators)
                 {
                     if (Settings.UseEdgeCalculator)
                     {
-                        SafeCoroutine _routine = this.StartSafeCoroutine(_rigCalculator.CalculateFrame(_animatorRunner.CurrentAnimationIndex, _animatorRunner.CurrentFrame));
+                        bool _hasFinished = false;
+                        StartCoroutine(_rigCalculator.CalculateFrame(_animatorRunner.CurrentAnimationIndex, _animatorRunner.CurrentFrame, () => _hasFinished = true));
+                        
                         //Wait for the bounds + edge calculations to finish
-                        while (!_routine.HasFinished)
-                            yield return CoroutineResultCodes.Working;
+                        while (!_hasFinished)
+                            yield return CalculatorState(aCalculatorCallback);
                     }
                     else
                     {
-                        _routines.Add(this.StartSafeCoroutine(_rigCalculator.CalculateFrame(_animatorRunner.CurrentAnimationIndex, _animatorRunner.CurrentFrame)));
+                        _routineStates[_rigCalculator] = false;
+                        StartCoroutine(_rigCalculator.CalculateFrame(_animatorRunner.CurrentAnimationIndex, _animatorRunner.CurrentFrame, () => _routineStates[_rigCalculator] = true));
                     }
                 }
                 
                 //If we don't run edge recalculations we simply need to wait for all the rigs to finish their much shorter bounds calculation
                 //However, since they rely on frame lagging the project (by holding the update hostage until they finish) this is never actually reached
                 //I'll still keep it though so I get a warning if we're starting to get overflows rather than lag
-                while (!_routines.TrueForAll(routine => routine.HasFinished))
+                while (!_routineStates.Values.All(aState => true))
                 {
                     FLogger.LogMessage(this, FLogger.Severity.LinkageError, "Entered the 'Wait for Scale Calculators' thing that we should never enter. Has the implementation changed?", RootFinder.FindHighestRoot(transform).name);
-                    yield return CoroutineResultCodes.Working;
+                    yield return CalculatorState(aCalculatorCallback);
                 }
             } while(_animatorRunner.Step(true));
-
+            
+            
             //Then export & save the results
             ExportCalculators(aRecalculateValid);
             var _renderingSettings = RenderingSettings.GetFor(transform);
             if(!_renderingSettings.BypassBoundsCalculator)
                 ResetCameraSizes();
 
-            yield return CoroutineResultCodes.Passed;
+            aCalculatorCallback(CoroutineResultCodes.Passed);
         }
 
         public void ResetCameraSizes()
@@ -220,6 +241,7 @@ namespace Render3DTo2D.Factory_Core
                 _stringBuilder.Append(scaleCalculator.gameObject.name + ", ");
             }
 
+            //Remove the last ", " and log our full message
             _stringBuilder.Remove(_stringBuilder.Length - 2, 2);
             FLogger.LogMessage(this, FLogger.Severity.Status, _stringBuilder.ToString(), RootFinder.FindHighestRoot(transform).gameObject.name);
         }

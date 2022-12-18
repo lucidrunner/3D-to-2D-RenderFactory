@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Edelweiss.Coroutine;
 using Render3DTo2D.Factory_Core;
@@ -122,7 +123,7 @@ namespace Render3DTo2D.Single_Frame
             yield return null;
         }
 
-        internal override IEnumerator RenderAllActiveRigs()
+        internal override IEnumerator RenderAllActiveRigs(Action aFinishedCallback)
         {
             RenderingSettings _renderingSettings = RenderingSettings.GetFor(transform);
             FolderSettings _folderSettings = FolderSettings.GetFor(transform);
@@ -172,13 +173,15 @@ namespace Render3DTo2D.Single_Frame
             //Start each RigRenderer rendering routine in turn
             foreach (RigRenderer _rigRenderer in ActiveRigRenderers)
             {
-                SafeCoroutine _routine = this.StartSafeCoroutine(_rigRenderer.RenderStep(_renderInfoBuilder));
-
-                while (!_routine.HasFinished)
+                bool _finished = false;
+                StartCoroutine(_rigRenderer.RenderStep(_renderInfoBuilder, () => _finished = true));
+                while (!_finished)
                 {
                     yield return null;
                 }
             }
+
+            aFinishedCallback();
         } 
 
         #endregion

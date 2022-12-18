@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f15d915753d12740b95652d3cea5779, type: 3}
   m_Name: FactorySettings
   m_EditorClassIdentifier: 
-  editorPalette: 0
-  buttonPalette: 0
+  editorPalette: 1
+  buttonPalette: 1
   overseerPrefab: {fileID: 0}
   centerCameraOnRenderStartup: 1
   followCameraOnRender: 0

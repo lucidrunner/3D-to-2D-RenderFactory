@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Edelweiss.Coroutine;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.RigCamera;
 using Render3DTo2D.Rigging;
@@ -11,8 +10,6 @@ using RootChecker;
 using UnityEngine;
 using Render3DTo2D.Logging;
 using Render3DTo2D.Root_Movement;
-using Render3DTo2D.Setup;
-using Render3DTo2D.Utility;
 using Shared_Scripts;
 
 namespace Render3DTo2D.Factory_Core
@@ -44,7 +41,7 @@ namespace Render3DTo2D.Factory_Core
             }
         }
 
-        internal virtual IEnumerator RenderAllActiveRigs()
+        internal virtual IEnumerator RenderAllActiveRigs(Action aFinishedCallback)
         {
             RenderingSettings _renderingSettings = RenderingSettings.GetFor(transform);
             FolderSettings _folderSettings = FolderSettings.GetFor(transform);
@@ -94,15 +91,16 @@ namespace Render3DTo2D.Factory_Core
                 //Start each RigRenderer rendering routine in turn
                 foreach (RigRenderer _rigRenderer in ActiveRigRenderers)
                 {
-                    SafeCoroutine _routine = this.StartSafeCoroutine(_rigRenderer.RenderStep(_renderInfoBuilder));
-
-                    while (!_routine.HasFinished)
+                    bool _finished = false;
+                    StartCoroutine(_rigRenderer.RenderStep(_renderInfoBuilder, () => _finished = true));
+                    while (!_finished)
                     {
                         yield return null;
                     }
                 }
             } while (_smAnimatorRunner.Step(_useSubSteps)); //For ease of access we're only setting the step mode to use substeps, if they're actually applied is down to the settings the runner reads
-            
+
+            aFinishedCallback();
         }
 
         protected void PrintStartMessage()

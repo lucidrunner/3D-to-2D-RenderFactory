@@ -1,6 +1,5 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
 using Render3DTo2D.Factory_Core;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.RigCamera;

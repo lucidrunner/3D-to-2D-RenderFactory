@@ -1,4 +1,4 @@
-﻿using Edelweiss.Coroutine;
+﻿
 using Render3DTo2D.RigCamera;
 using Render3DTo2D.Rigging;
 
@@ -8,9 +8,10 @@ namespace Render3DTo2D.Isometric
     {
         //There's not a lot we need to do in here, just two steps of matching y & scale that we don't want to do on an isometric render
         
-        protected override SafeCoroutine StartRenderingRoutine(CameraRenderer aCameraRenderer, CameraFrameRenderInfo aCameraFrameRenderInfo)
+        protected override void StartRenderingRoutine(CameraRenderer aCameraRenderer, CameraFrameRenderInfo aCameraFrameRenderInfo)
         {
-            return this.StartSafeCoroutine(aCameraRenderer.RunRenderer(aCameraFrameRenderInfo));
+            currentRenderStepState[aCameraRenderer] = false;
+            StartCoroutine(aCameraRenderer.RunRenderer(aCameraFrameRenderInfo, () => currentRenderStepState[aCameraRenderer] = true));
         }
 
 

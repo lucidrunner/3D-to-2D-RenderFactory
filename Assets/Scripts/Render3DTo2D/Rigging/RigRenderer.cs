@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Edelweiss.Coroutine;
+using System.Linq;
 using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.RigCamera;
@@ -17,6 +17,7 @@ namespace Render3DTo2D.Rigging
     {
         private RigScaleCalculator scaleCalculator;
         private List<CameraRenderer> cameraRenderers = new List<CameraRenderer>();
+        protected Dictionary<CameraRenderer, bool> currentRenderStepState = new Dictionary<CameraRenderer, bool>();
         private string renderTag = "";
 
         protected Dictionary<int, int> RenderAnimationLengths = new Dictionary<int, int>();
@@ -24,24 +25,22 @@ namespace Render3DTo2D.Rigging
 
         public IEnumerator RenderStep(CameraFrameRenderInfo.Builder aRenderInfoBuilder, Action aFinishedCallback)
         {
-
             //Start the rendering routines
-            List<SafeCoroutine> _routines = StartRenderStep(aRenderInfoBuilder);
+            StartRenderStep(aRenderInfoBuilder);
 
             //Wait for the routines to finish
-            while (!_routines.TrueForAll(aRoutine => aRoutine.HasFinished))
+            while (currentRenderStepState.Values.Contains(false))
             {
                 yield return null;
             }
             
-
             EndRenderStep();
             aFinishedCallback();
         }
 
-        private List<SafeCoroutine> StartRenderStep(CameraFrameRenderInfo.Builder aRenderInfoBuilder)
+        private void StartRenderStep(CameraFrameRenderInfo.Builder aRenderInfoBuilder)
         {
-            List<SafeCoroutine> _routines = new List<SafeCoroutine>();
+            currentRenderStepState = new Dictionary<CameraRenderer, bool>();
             //Do a partial build of the rendering info to access frame & animation index for the scale deviation process as well as the current partial path
             CameraFrameRenderInfo _cameraFrameRenderInfo = aRenderInfoBuilder.Build();
             RenderingSettings _settings = RenderingSettings.GetFor(transform);
@@ -91,10 +90,9 @@ namespace Render3DTo2D.Rigging
                 //At this point the aRenderInfoBuilder can be safely used by the next rig
                 _cameraFrameRenderInfo = aRenderInfoBuilder.Build();
 
-                //Start and save a reference to the routine
-                _routines.Add(StartRenderingRoutine(cameraRenderers[_index], _cameraFrameRenderInfo));
+                //Start and the routine for the current renderer
+                StartRenderingRoutine(cameraRenderers[_index], _cameraFrameRenderInfo);
             }
-            return _routines;
         }
 
         protected virtual void IncrementAnimationFramesCounter(CameraFrameRenderInfo aCameraFrameRenderInfo)
@@ -112,13 +110,16 @@ namespace Render3DTo2D.Rigging
             {
                 _cameraRenderer.ResetScaleAndTransform();
             }
+            currentRenderStepState.Clear();
         }
 
-        protected virtual SafeCoroutine StartRenderingRoutine(CameraRenderer aCameraRenderer, CameraFrameRenderInfo aCameraFrameRenderInfo)
+        protected virtual void StartRenderingRoutine(CameraRenderer aCameraRenderer, CameraFrameRenderInfo aCameraFrameRenderInfo)
         {
-            //If we're static this would have already been matched methinks?
+            //If we're static this would have already been matched?
             aCameraRenderer.SetScaleAndTransform(aCameraFrameRenderInfo.FrameScale);
-            return this.StartSafeCoroutine(aCameraRenderer.RunRenderer(aCameraFrameRenderInfo));
+            
+            currentRenderStepState[aCameraRenderer] = false;
+            StartCoroutine(aCameraRenderer.RunRenderer(aCameraFrameRenderInfo, () => currentRenderStepState[aCameraRenderer] = true));
         }
 
 

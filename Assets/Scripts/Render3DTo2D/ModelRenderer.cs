@@ -9,7 +9,6 @@ using Render3DTo2D.Single_Frame;
 using Render3DTo2D.Utility;
 using RootChecker;
 using Shared_Scripts;
-using UnityEditor;
 
 namespace Render3DTo2D
 {

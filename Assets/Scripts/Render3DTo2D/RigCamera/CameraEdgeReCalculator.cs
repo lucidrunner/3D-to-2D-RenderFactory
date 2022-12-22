@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using Render3DTo2D.Model_Settings;
 using UnityEngine;
 
@@ -16,7 +16,7 @@ namespace Render3DTo2D.RigCamera
 
         #region Public Methods
 
-        public IEnumerator<float> PerformEdgeCalculation()
+        public IEnumerator PerformEdgeCalculation(Action<float> aScaleCallback, Action aFinishCallback)
         {
             //If we're not running the edge calculations standard + inverse this needs to be run directly after the bounds calculations
             
@@ -42,7 +42,8 @@ namespace Render3DTo2D.RigCamera
                 int _deviatedSize = (int) (_renderingSettings.BaseTextureSize * (_currentSize / _renderingSettings.BaselineScale));
                 rtCreator.CreateAndRenderNewRt(_deviatedSize);
                 //Wait for render
-                yield return -1f;
+                aScaleCallback(-1f);
+                yield return null;
                 //Create a new render texture based on the current size
                 RenderTexture _rt = rtCreator.WorkedRenderTexture;
                 //Setup our texture based on the selected format and size of the render texture
@@ -55,7 +56,8 @@ namespace Render3DTo2D.RigCamera
                 _texture.Apply(false);
                 
                 //Wait for GPU & CPU sync - we return current if we're edge calculating upwards and last if we're counting down (since current can be clipping)
-                yield return _isRunningInverse ? _lastSize : _currentSize;
+                aScaleCallback(_isRunningInverse ? _lastSize : _currentSize);
+                yield return null;
                 
                 //Check if we're currently clipping the model with our render
                 bool _clips = EdgeAlphaClipping(_texture);
@@ -113,6 +115,7 @@ namespace Render3DTo2D.RigCamera
             //Reset the camera colour
             ortoCam.backgroundColor = _renderingSettings.RenderBackgroundColor;;
             ortoCam.enabled = false;
+            aFinishCallback();
         }
 
         private static bool ExitCheck(bool aClips, bool aIsRunningInverse)

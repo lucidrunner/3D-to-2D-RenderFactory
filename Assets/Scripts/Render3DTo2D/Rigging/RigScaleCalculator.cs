@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Edelweiss.Coroutine;
 using JetBrains.Annotations;
 using Render3DTo2D.Factory_Core;
 using Render3DTo2D.Logging;
@@ -229,13 +228,14 @@ namespace Render3DTo2D.Rigging
                 //If we should use the edge re-calculator, then run it and wait for it to finish
                 if (settings.UseEdgeCalculator)
                 {
-                    var _routine =
-                        this.StartSafeCoroutine<float>(cameraEdgeReCalculators[_index].PerformEdgeCalculation());
+                    float _retVal = -1f;
+                    bool _finished = false;
+                    StartCoroutine(cameraEdgeReCalculators[_index].PerformEdgeCalculation((aScale) => _retVal = aScale, () => _finished = true));
 
-                    while (!_routine.HasFinished)
+                    while (!_finished)
                         yield return null;
 
-                    _scale = _routine.Result;
+                    _scale = _retVal;
                 }
 
                 SaveToScalePackage(aCurrentAnimation, aCurrentFrame, _index, _scale);

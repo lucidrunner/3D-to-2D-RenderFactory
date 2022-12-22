@@ -47,7 +47,6 @@ namespace Factory_Editor
         private void DrawRig(int _index, RigManager _target, Color _defaultColor)
         {
             var _toggleAbleRig = rigs.GetArrayElementAtIndex(_index);
-            Debug.Log(_toggleAbleRig);
             SerializedProperty _currentRigName = _toggleAbleRig.FindPropertyRelative("rigName");
             SerializedProperty _currentToggleProp = _toggleAbleRig.FindPropertyRelative("toggled");
             SerializedProperty _deletionToggle = _toggleAbleRig.FindPropertyRelative("deletionSafetyToggle");

@@ -3,16 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Edelweiss.Coroutine;
 using Render3DTo2D.Isometric;
 using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Rigging;
-using Render3DTo2D.Setup;
 using Render3DTo2D.SMAnimator;
 using Render3DTo2D.Utility;
 using RootChecker;
-using Unity.Collections;
 using UnityEngine;
 
 namespace Render3DTo2D.Factory_Core
@@ -139,7 +136,7 @@ namespace Render3DTo2D.Factory_Core
                 //If we don't run edge recalculations we simply need to wait for all the rigs to finish their much shorter bounds calculation
                 //However, since they rely on frame lagging the project (by holding the update hostage until they finish) this is never actually reached
                 //I'll still keep it though so I get a warning if we're starting to get overflows rather than lag
-                while (!_routineStates.Values.All(aState => true))
+                while (_routineStates.Values.Contains(false))
                 {
                     FLogger.LogMessage(this, FLogger.Severity.LinkageError, "Entered the 'Wait for Scale Calculators' thing that we should never enter. Has the implementation changed?", RootFinder.FindHighestRoot(transform).name);
                     yield return CalculatorState(aCalculatorCallback);

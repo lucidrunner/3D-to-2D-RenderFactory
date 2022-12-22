@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Edelweiss.Coroutine;
+using System.Linq;
 using Render3DTo2D.Factory_Core;
 using Render3DTo2D.Rigging;
 using Render3DTo2D.Utility;
@@ -40,17 +40,18 @@ namespace Render3DTo2D.Single_Frame
 
             
             //Go to our selected frame if necessary
-            SafeCoroutine _routine = this.StartSafeCoroutine(renderManager.GoToFrame());
+            bool _finished = false;
+            StartCoroutine(renderManager.GoToFrame(() => _finished = true));
             do
             {
                 yield return CalculatorState(aCalculatorCallback);
-            } while (!_routine.HasFinished);
+            } while (!_finished);
             
             RenderFactoryEvents.InvokePreFrameCalculator(transform, null);
             
             //Then, run all the calculators
             yield return CoroutineResultCodes.Working;
-            List<SafeCoroutine> _calculatorRoutines = new List<SafeCoroutine>();
+            Dictionary<RigScaleCalculator, bool> _routineStates = new Dictionary<RigScaleCalculator, bool>();
             foreach (RigScaleCalculator _rigScaleCalculator in _activeCalculators)
             {
                 if (Settings.UseEdgeCalculator)
@@ -58,18 +59,19 @@ namespace Render3DTo2D.Single_Frame
                     //Whilst we could piggyback onto the whole animated system with saved frame scale data this comes with its own sets of risks (since we're using different rigs & factories which might lead to incorrect syncing)
                     //Instead we're simply gonna force a recalculation for each camera and use the resulting camera size instantly to render
                     //This means a larger static setup can / will always take a bit longer to render than a single animated frame
-                    SafeCoroutine _calculatorRoutine =
-                        this.StartSafeCoroutine(_rigScaleCalculator.CalculateFrame(-1, -1));
-                    while (!_calculatorRoutine.HasFinished)
+                    bool _finishedEdgeCalc = false;
+                    StartCoroutine(_rigScaleCalculator.CalculateFrame(-1, -1, () => _finishedEdgeCalc = true));
+                    while (!_finishedEdgeCalc)
                         yield return CalculatorState(aCalculatorCallback);
                 }
                 else
                 {
-                    _calculatorRoutines.Add(this.StartSafeCoroutine(_rigScaleCalculator.CalculateFrame(-1,-1)));
+                    _routineStates[_rigScaleCalculator] = false;
+                    StartCoroutine(_rigScaleCalculator.CalculateFrame(-1,-1, () => _routineStates[_rigScaleCalculator] = true));
                 }
 
                 //As in the normal scale manager, have this failsafe to show somethings wrong if we're not using the edge calculator and getting routines over several frames
-                while(!_calculatorRoutines.TrueForAll(routine => routine.HasFinished))
+                while (_routineStates.Values.Contains(false))
                 {
                     Debug.Log("Entered the 'Wait for Scale Calculators' thing that we should never enter. Has the implementation changed?");
                     yield return CalculatorState(aCalculatorCallback);

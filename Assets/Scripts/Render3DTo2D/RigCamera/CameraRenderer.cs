@@ -164,7 +164,7 @@ namespace Render3DTo2D.RigCamera
         }
         
         
-        public IEnumerator RunRenderer(CameraFrameRenderInfo aCameraFrameRenderInfo)
+        public IEnumerator RunRenderer(CameraFrameRenderInfo aCameraFrameRenderInfo, Action aFinishedCallback)
         {
             
             //Start our camera and give it a second to boot
@@ -185,6 +185,7 @@ namespace Render3DTo2D.RigCamera
             }
 
             renderCamera.enabled = false;
+            aFinishedCallback();
         }
 
         public void Startup()

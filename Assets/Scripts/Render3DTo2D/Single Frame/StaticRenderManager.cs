@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Edelweiss.Coroutine;
 using Render3DTo2D.Factory_Core;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.RigCamera;
@@ -107,11 +106,12 @@ namespace Render3DTo2D.Single_Frame
 
         #region Public Functions
 
-        public IEnumerator GoToFrame()
+        public IEnumerator GoToFrame(Action aFinishCallback)
         {
             if (GetModelInfo == null || !GetModelInfo.CanAnimate || string.IsNullOrEmpty(SelectedAnimation))
             {
                 yield return null;
+                aFinishCallback();
                 yield break;
             }
             
@@ -119,7 +119,7 @@ namespace Render3DTo2D.Single_Frame
 
             smAnimator.SetAnimation(SelectedAnimation);
             smAnimator.PlayAtTime(aNormalizedTime: (1f / _settings.AnimationFPS) * frame);
-            
+            aFinishCallback();
             yield return null;
         }
 
@@ -145,12 +145,13 @@ namespace Render3DTo2D.Single_Frame
                 //If we didn't run the calculator we'll need to go to the correct static frame now
                 if (!GetComponent<StaticScaleManager>().RunCalculator)
                 {
+                    bool _finished = false;
                     //Go to the frame if necessary
-                    SafeCoroutine _routine = this.StartSafeCoroutine(GoToFrame());
+                    StartCoroutine(GoToFrame(() => _finished = true));
                     do
                     {
                         yield return null;
-                    } while (!_routine.HasFinished);
+                    } while (!_finished);
                 }
             }
             else

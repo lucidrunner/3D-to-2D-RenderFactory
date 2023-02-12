@@ -7,6 +7,9 @@
         public static string NAME_FORMAT = "NameFormat";
         public static string RIGTAG = "RigTag";
         public static string TIMESTAMP = "StartTimestamp";
+        public static string CAMERA_SETUP = "CameraSetupData";
+        public static string CAMERA_COUNT = "CameraCount";
+        public static string CAMERA_ANGLES = "CameraAngles";
         public static string ANIMATION_SETUP = "AnimationData";
         public static string ANIMATION_LIST = "Animations";
         public static string ANIMATION = "Animation";

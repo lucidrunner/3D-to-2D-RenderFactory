@@ -24,11 +24,16 @@ namespace Render3DTo2D.Setup
         private GameObject cameraRigPrefab = null;
         [SerializeField] 
         private GameObject isometricCameraRigPrefab = null;
-        //The prefab for the OrtoRotational Render Camera (Used for standard 1-X sided rotational rendering)
+        //The prefab for the side facing Render Camera (Used for standard 1-X sided rotational rendering)
         [SerializeField]
         private GameObject sideViewCameraPrefab = null;
+        //The prefab for the isometric camera - as of 2023-02-12 this is actually identical to the one above since their actual base settings are the same
+        //In the future this might change though so better to separate them now
         [SerializeField]
         private GameObject isometricViewCameraPrefab = null;
+        //The prefab for the top-down camera
+        [SerializeField] 
+        private GameObject topViewCameraPrefab = null;
         //The prefab for the parent object we put the model renderer on
         [SerializeField] 
         private GameObject renderParentObjectPrefab = null;
@@ -99,6 +104,8 @@ namespace Render3DTo2D.Setup
                     return sideViewCameraPrefab;
                 case CameraRigger.SetupInfo.RigType.Isometric:
                     return isometricViewCameraPrefab;
+                case CameraRigger.SetupInfo.RigType.TopView:
+                    return topViewCameraPrefab;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(aRenderCameraType), aRenderCameraType, null);
             }

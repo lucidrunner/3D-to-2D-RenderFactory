@@ -31,11 +31,14 @@ namespace Render3DTo2D.XML_Render_Info_Export
          *     Default Texture Size
          *     Isometric Angle (Iso)
          *     Use Sub Folder
-         *Animation Setup Node (Non-static)
+         * Camera Setup Node (Non-static)
+         *     Number of Cameras
+         *     Y-Rotations: [x, x, x, etc times Number of Cameras]
+         * Animation Setup Node (Non-static)
          *     Name Format: Attributes Include Prefix, Use Animation Name  
          *     FPS
          *     Animation Count
-         *Animations Node (Non-static)
+         * Animations Node (Non-static)
          *    X# of Animation Nodes
          *      Attributes: Animation Length, Clamped, (Iso) Isometric Y-offset
          *      Element: Animation Name
@@ -62,6 +65,8 @@ namespace Render3DTo2D.XML_Render_Info_Export
                 
                 //Write meta data
                 WriteMetadata(aExportArgs, _xmlWriter);
+                
+                WriteCameraInfo(aExportArgs.CameraRig, _xmlWriter);
                 
                 //Write the animation lists if we're not in a static write
                 if(aExportArgs.SmAnimatorInfo != null)
@@ -158,6 +163,24 @@ namespace Render3DTo2D.XML_Render_Info_Export
             
             aXmlWriter.WriteEndElement();
 
+        }
+
+        private static void WriteCameraInfo(CameraRig aCameraRig, XmlWriter aXmlWriter)
+        {
+            //Get the camera transforms from the rig
+            List<Transform> _cameraTransforms = new List<Transform>();
+            for (int _index = 0; _index < aCameraRig.CameraAnchor.transform.childCount; _index++)
+            {
+                _cameraTransforms.Add(aCameraRig.CameraAnchor.transform.GetChild(_index).transform);
+            }
+            
+            //Write the camera info header
+            aXmlWriter.WriteStartElement(XmlTags.CAMERA_SETUP);
+            //Write our camera count
+            XmlMethods.WriteStringElement(aXmlWriter, XmlTags.CAMERA_COUNT, _cameraTransforms.Count.ToString(CultureInfo.InvariantCulture));
+            //And write our angles as a comma separated list
+            XmlMethods.WriteStringElement(aXmlWriter, XmlTags.CAMERA_ANGLES, string.Join(",", _cameraTransforms.Select(t => t.localEulerAngles.y.ToString(CultureInfo.InvariantCulture))));
+            aXmlWriter.WriteEndElement();
         }
 
         private static void WriteAnimations(CameraRig aCameraRig, StopMotionAnimatorInfo aSmAnimatorInfo, XmlWriter aXMLWriter)

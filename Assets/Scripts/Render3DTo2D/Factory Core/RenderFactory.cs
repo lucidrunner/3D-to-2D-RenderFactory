@@ -130,14 +130,13 @@ namespace Render3DTo2D.Factory_Core
             //Setup so we can run the rendering via callback after the calculator finishes
             void CalculatorCallback(int aState)
             {
-                FLogger.LogMessage(this, FLogger.Severity.Debug, "Entered our callback with state " + aState);
+                FLogger.LogMessage(this, FLogger.Severity.Debug, "Entered calculator callback with state " + CoroutineResultCodes.AsString(aState));
                 //Wait for the calculation to actually finish before proceeding
                 if (aState == CoroutineResultCodes.Working)
                 {
                     return;
                 }
 
-                FLogger.LogMessage(this, FLogger.Severity.Debug, "Passed working check callback");
                 //Based on the finished working state, log & continue or abort
                 switch (aState)
                 {

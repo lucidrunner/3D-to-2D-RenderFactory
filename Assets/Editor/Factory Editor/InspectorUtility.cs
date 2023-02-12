@@ -5,12 +5,16 @@ using Shared_Scripts;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
 namespace Factory_Editor
 {
     public static class InspectorUtility
     {
+        private static GUIStyle ButtonStyle;
+        
+        
         #region Foldout
 
         public static bool BeginFoldoutGroup(string aFoldoutLabel, ref bool aFoldoutTarget, ref AnimBool aCurrentFoldoutState, Color? aHeaderHighlight = null, Color? aGroupHighlight = null)
@@ -283,6 +287,10 @@ namespace Factory_Editor
         //Full call
         public static bool DrawButton(GUIContent aGUIContent, Color aColor, ButtonSize aButtonSize, bool aOverrideColors = true, params GUILayoutOption[] aOptions)
         {
+            if (ButtonStyle == null)
+            {
+                // InitStyle();
+            }
             
             var _prevColor = GUI.backgroundColor;
             if(aOverrideColors)
@@ -303,17 +311,16 @@ namespace Factory_Editor
 
             var _options = new List<GUILayoutOption>() {GUILayout.Height(_height)};
             _options.AddRange(aOptions);
-            
-            
+
+
             bool _result = false;
             GUI.backgroundColor = aColor;
-            
             if (GUILayout.Button(aGUIContent, _options.ToArray()))
             {
                 GUI.backgroundColor = _prevColor;
                 _result = true;
             }
-            
+
             
             GUI.backgroundColor = _prevColor;
             if(aOverrideColors)
@@ -322,6 +329,42 @@ namespace Factory_Editor
             
 
             return _result;
+        }
+
+        private static void InitStyle()
+        {
+            ButtonStyle = new GUIStyle("button");
+            
+             ButtonStyle.border = GUI.skin.button.border;
+             // Debug.Log(ButtonStyle.border);
+             // ButtonStyle.normal.background = MakeTexture(2, 2, new Color(0.95f, 0.95f, 0.95f, 1f));
+             // ButtonStyle.onNormal.background = MakeTexture(2, 2, new Color(0.95f, 0.95f, 0.95f, 1f));
+             //
+             // ButtonStyle.onFocused.background = MakeTexture(2, 2, new Color(0.98f, 0.98f, 0.98f, 1f));
+             // ButtonStyle.onHover.background = MakeTexture(2, 2, new Color(0.98f, 0.98f, 0.98f, 1f));
+             // ButtonStyle.onActive.background = MakeTexture(2, 2, new Color(1f, 1f, 1f, 1f));
+             // var width = ButtonStyle.normal.background.width;
+             // var height = ButtonStyle.normal.background.height;
+             // for (int i = 0; i < width; i++)
+             // {
+             //     for (int y = 0; y < height; y++)
+             //     {
+             //         Debug.Log(ButtonStyle.normal.background.GetPixel(i, y));
+             //     }
+             // }
+        }
+
+        private static Texture2D MakeTexture(int aWidth, int aHeight, Color col)
+        {
+            Color[] pix = new Color[aWidth * aHeight];
+            for( int i = 0; i < pix.Length; ++i )
+            {
+                pix[ i ] = col;
+            }
+            Texture2D result = new Texture2D( aWidth, aHeight );
+            result.SetPixels( pix );
+            result.Apply();
+            return result;
         }
 
         public enum ButtonSize

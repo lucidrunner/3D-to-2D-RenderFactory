@@ -6,7 +6,7 @@ using Render3DTo2D.Factory_Core;
 using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Utility;
-using Render3DTo2D.XML_Render_Info_Export;
+using Render3DTo2D.Render_Info_Export;
 using RootChecker;
 using UnityEngine;
 

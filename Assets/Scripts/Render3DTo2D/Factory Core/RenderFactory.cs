@@ -130,7 +130,7 @@ namespace Render3DTo2D.Factory_Core
             //Setup so we can run the rendering via callback after the calculator finishes
             void CalculatorCallback(int aState)
             {
-                FLogger.LogMessage(this, FLogger.Severity.Debug, "Entered calculator callback with state " + CoroutineResultCodes.AsString(aState));
+                // FLogger.LogMessage(this, FLogger.Severity.Debug, "Entered calculator callback with state " + CoroutineResultCodes.AsString(aState));
                 //Wait for the calculation to actually finish before proceeding
                 if (aState == CoroutineResultCodes.Working)
                 {
@@ -239,6 +239,7 @@ namespace Render3DTo2D.Factory_Core
         Busy = false;
         renderingCoroutine = null;
 
+        //TODO Add the XML / JSON check here
         //Export the animation data to XML if we're a non-static factory
         if (GetComponent<StaticRenderManager>() == null)
             factoryRigManager.ExportToXML(stopMotionAnimator, _rootMotionFilePath);

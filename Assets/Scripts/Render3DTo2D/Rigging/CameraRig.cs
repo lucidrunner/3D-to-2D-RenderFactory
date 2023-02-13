@@ -5,7 +5,7 @@ using Render3DTo2D.Model_Settings;
 using Render3DTo2D.RigCamera;
 using Render3DTo2D.SMAnimator;
 using Render3DTo2D.Utility.IO;
-using Render3DTo2D.XML_Render_Info_Export;
+using Render3DTo2D.Render_Info_Export;
 using UnityEngine;
 
 namespace Render3DTo2D.Rigging
@@ -139,7 +139,10 @@ namespace Render3DTo2D.Rigging
         
         public void ExportAnimationData(StopMotionAnimatorInfo aSmAnimatorInfo, string aRootMotionFilePath = null)
         {
-            RigDataXmlExporter.Export(new RigDataXmlExporter.RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
+            //Actually This is where we should export the data methinks?
+            
+            RigDataJsonExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
+            RigDataXmlExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
         }
         
         //TODO This needs to be called at the end of normal rigging too

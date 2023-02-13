@@ -188,6 +188,10 @@ namespace Render3DTo2D.Isometric
 
         #endregion
 
+        //TODO Either remove these methods or implement the PerAnimationSettings in here
+        //Implementation could be a "Use Per Animation Size" which when clicked loads all animations the same way our override does and have a settable float for size on that animation
+        //Note that this might break the current baseReferenceOffset which is used by the data exporters at the moment
+            
         /// <summary>
         /// Gets the Y-value offset between the base of the model and the bottom of the rendered frame
         /// </summary>
@@ -195,6 +199,7 @@ namespace Render3DTo2D.Isometric
         /// <returns>The Y-offset between the bottom of the frame and the model feet</returns>
         public float GetOffsetForAnimation(int aAnimationNumber)
         {
+            //TODO This only returns -1 atm
             if (!perAnimationScales.TryGetValue(aAnimationNumber, out float _toReturn))
                 _toReturn = -1f;
             return _toReturn;
@@ -206,9 +211,12 @@ namespace Render3DTo2D.Isometric
         /// <param name="aAnimationNumber">The index of the new animation</param>
         public void OnNewAnimationRendering(int aAnimationNumber)
         {
+            FLogger.LogMessage(this, FLogger.Severity.Debug, "Entering OnNewAnimationRendering for the ModelBaseManager");
+            //TODO This is seemingly never run
             if (perAnimationScales == null)
             {
                 perAnimationScales = new Dictionary<int, float>();
+                //TODO This shouldn't be set I think
                 baseReferenceOffset = latestReferenceY;
             }
 
@@ -218,6 +226,7 @@ namespace Render3DTo2D.Isometric
                 Debug.Log("OnNewAnimationRendering called for ModelBaseManager with an already existing number. Have you changed the animation setup in any weird way?");
                 return;
             }
+            
             
             //TODO Check the PerAnimationSettings here
             //This whole deal might be deprecated?
@@ -231,6 +240,10 @@ namespace Render3DTo2D.Isometric
                 
                 //Save the latest aligned value to the dictionary
                 perAnimationScales[aAnimationNumber] = latestReferenceY;
+            }
+            else
+            {
+                FLogger.LogMessage(this, FLogger.Severity.Debug, $"Did not enter the approx check, the values were ${referencePlateScale}, {modelBase.transform.localScale.x}");
             }
             
         }

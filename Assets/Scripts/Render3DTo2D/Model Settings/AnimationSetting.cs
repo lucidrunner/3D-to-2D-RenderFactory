@@ -76,7 +76,8 @@ namespace Render3DTo2D.Model_Settings
 
         public bool IsLooping => isLooping;
         [SerializeField] protected bool isLooping;
-        
+
+        public bool IgnoreLastFrame => ignoreLastFrame;
         [SerializeField] protected bool ignoreLastFrame = true;
         
             

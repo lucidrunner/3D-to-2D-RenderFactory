@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,7 +15,8 @@ using RootChecker;
 using Shared_Scripts;
 using UnityEngine;
 
-namespace Render3DTo2D.XML_Render_Info_Export
+
+namespace Render3DTo2D.Render_Info_Export
 {
     
     public static class RigDataXmlExporter
@@ -27,11 +27,12 @@ namespace Render3DTo2D.XML_Render_Info_Export
          *     Model Name
          *     Rig Tag
          * MetaData Node
+         *     TimeStamp
          *     Baseline Scale
          *     Default Texture Size
          *     Isometric Angle (Iso)
          *     Use Sub Folder
-         * Camera Setup Node (Non-static)
+         * Camera Setup Node
          *     Number of Cameras
          *     Y-Rotations: [x, x, x, etc times Number of Cameras]
          * Animation Setup Node (Non-static)
@@ -48,7 +49,7 @@ namespace Render3DTo2D.XML_Render_Info_Export
         #region Folder Name
 
         private const string RigDataFolderName = "Data";
-        private const string FileName = "RenderInfo";
+        private const string FileName = "RenderInfo.xml";
 
         #endregion
         
@@ -57,11 +58,10 @@ namespace Render3DTo2D.XML_Render_Info_Export
         public static void Export(RigRenderExportArgs aExportArgs)
         {
             //Side view / isometric write differences are handled by the different subfunctions
-            using (XmlWriter _xmlWriter = WriteDocumentStart(aExportArgs.CameraRig, aExportArgs.LastOutputPath))
+            using (XmlWriter _xmlWriter = WriteDocumentStart(aExportArgs))
             {
                 //Report that we're exporting
                 FLogger.LogMessage(null, FLogger.Severity.Priority, $"Writing Rig Rendering Data at {aExportArgs.LastOutputPath}", nameof(RigDataXmlExporter));
-                
                 
                 //Write meta data
                 WriteMetadata(aExportArgs, _xmlWriter);
@@ -83,19 +83,18 @@ namespace Render3DTo2D.XML_Render_Info_Export
         
         #region Private Methods
 
-        private static XmlWriter WriteDocumentStart(CameraRig aCameraRig,
-                string aLastOutputPath)
+        private static XmlWriter WriteDocumentStart(RigRenderExportArgs aExportArgs)
             {
                 //Create a subfolder for the animation data
-                FolderCreator.CreateFolder(aLastOutputPath, RigDataFolderName);
+                FolderCreator.CreateFolder(aExportArgs.LastOutputPath, RigDataFolderName);
 
                 //Get all the attributes we're interested in writing
-                string _modelName = RootFinder.FindHighestRoot(aCameraRig.transform).name;
-                string _rigTag = aCameraRig.RigTag;
+                string _modelName = aExportArgs.CameraRig.GetModelName();
+                string _rigTag = aExportArgs.CameraRig.RigTag;
                 
                 //Get the file name, path and start the writer
-                string _fileName = $"{_modelName}_{_rigTag}_{FileName}.xml";
-                string _path = Path.Combine(aLastOutputPath, RigDataFolderName, _fileName);
+                (string _path, _) = ExportHelperMethods.GetFilePathInfo(aExportArgs, RigDataFolderName, FileName);
+
                 XmlWriterSettings _settings = new XmlWriterSettings();
                 _settings.Indent = true;
                 _settings.IndentChars = "\t";
@@ -193,6 +192,7 @@ namespace Render3DTo2D.XML_Render_Info_Export
             
             //Write the animation meta data
             aXMLWriter.WriteStartElement(XmlTags.ANIMATION_SETUP);
+            
             //Write the render name format
             var _namingSettings = NamingSettings.GetOrCreateSettings();
             StringBuilder _format = new StringBuilder();
@@ -270,24 +270,7 @@ namespace Render3DTo2D.XML_Render_Info_Export
         #region Args
 
         //Creating these as event args so we can do this as an event in the future
-        public class RigRenderExportArgs : EventArgs
-        {
-            public CameraRig CameraRig { get; }
-            public string LastOutputPath { get; }
-            public StopMotionAnimatorInfo SmAnimatorInfo { get; }
-            public string TimeStamp { get; }
-            public string RootMotionFilePath { get; }
 
-            public RigRenderExportArgs(CameraRig aCameraRig, string aLastOutputPath, string aTimeStamp, StopMotionAnimatorInfo aSmAnimatorInfo = null, string aRootMotionFilePath = null)
-            {
-                CameraRig = aCameraRig;
-                LastOutputPath = aLastOutputPath;
-                SmAnimatorInfo = aSmAnimatorInfo;
-                TimeStamp = aTimeStamp;
-                RootMotionFilePath = aRootMotionFilePath;
-            }
-        }
-        
         #endregion
     }
 }

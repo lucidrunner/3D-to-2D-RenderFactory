@@ -2,7 +2,7 @@
 using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Rigging;
-using Render3DTo2D.XML_Render_Info_Export;
+using Render3DTo2D.Render_Info_Export;
 using RootChecker;
 using UnityEngine;
 

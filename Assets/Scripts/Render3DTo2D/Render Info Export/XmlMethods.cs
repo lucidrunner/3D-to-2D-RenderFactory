@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
-namespace Render3DTo2D.XML_Render_Info_Export
+namespace Render3DTo2D.Render_Info_Export
 {
     public static class XmlMethods
     {

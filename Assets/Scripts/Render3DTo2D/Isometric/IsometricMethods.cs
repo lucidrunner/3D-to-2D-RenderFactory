@@ -13,7 +13,6 @@ public static class IsometricMethods
         //Matching width is easy
         Vector3 _localScale = aModelBase.transform.localScale;
         aOrthographicCamera.orthographicSize = _localScale.x / Mathf.Sqrt(2);
-        
     }
     
     

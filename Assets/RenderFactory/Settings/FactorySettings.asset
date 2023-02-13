@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editorPalette: 1
   buttonPalette: 1
-  overseerPrefab: {fileID: 0}
+  overseerPrefab: {fileID: 722932076010524099, guid: 7d4058f0a37f04f49a7da7c247bb0d9c,
+    type: 3}
   centerCameraOnRenderStartup: 1
   followCameraOnRender: 0

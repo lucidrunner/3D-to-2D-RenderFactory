@@ -60,7 +60,7 @@ namespace Shared_Scripts
             Dark
         }
 
-        private static EditorPalette CurrentPalette => FactorySettings.GetOrCreateSettings().EditorPalette;
+        private static EditorPalette CurrentPalette => ColorSettings.GetOrCreateSettings().EditorPalette;
 
         /// <summary>
         /// In Order:
@@ -178,7 +178,7 @@ namespace Shared_Scripts
             Dark
         }
 
-        private static ButtonPalette CurrentButtonPalette => FactorySettings.GetOrCreateSettings().ButtonPalette;
+        private static ButtonPalette CurrentButtonPalette => ColorSettings.GetOrCreateSettings().ButtonPalette;
 
         /// <summary>
         /// In Order:

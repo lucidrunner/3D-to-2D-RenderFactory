@@ -20,18 +20,14 @@ namespace Factory_Editor
         {
             var _provider = new SettingsProvider("Preferences/RenderFactory", SettingsScope.User)
             {
-                label = "Render Factory",
+                label = "Factory Settings",
                 guiHandler = (searchContext) =>
                 {
                     var _settings = FactorySettings.GetSerializedSettings();
                     _settings.UpdateIfRequiredOrScript();
-                    
-                    //COLORS
-                    DrawHeader("Factory Colors");
-                    EditorGUI.BeginChangeCheck();
-                    EditorGUILayout.PropertyField(_settings.FindProperty("editorPalette"), Styles.editorPalette);
-                    EditorGUILayout.PropertyField(_settings.FindProperty("buttonPalette"), Styles.buttonPalette);
-                    var _changed = EditorGUI.EndChangeCheck();
+
+                    var _colorSettings = ColorSettings.GetSerializedSettings();
+                    _colorSettings.UpdateIfRequiredOrScript();
                     
                     //PREFABS
                     DrawHeader("Prefabs");
@@ -41,8 +37,15 @@ namespace Factory_Editor
                     DrawHeader("Camera Follow Settings");
                     InspectorUtility.DrawToggleProperty(_settings.FindProperty("followCameraOnRender"), aOverrideColors: false);
                     InspectorUtility.DrawToggleProperty(_settings.FindProperty("centerCameraOnRenderStartup"), aOverrideColors: false);
+                    
+                    //COLORS
+                    DrawHeader("Factory Colors");
+                    EditorGUI.BeginChangeCheck();
+                    EditorGUILayout.PropertyField(_colorSettings.FindProperty("editorPalette"), Styles.editorPalette);
+                    EditorGUILayout.PropertyField(_colorSettings.FindProperty("buttonPalette"), Styles.buttonPalette);
+                    var _changed = EditorGUI.EndChangeCheck();
 
-
+                    _colorSettings.ApplyModifiedProperties();
                     _settings.ApplyModifiedProperties();
                     InspectorUtility.RepaintAll();
                 },

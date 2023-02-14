@@ -8,11 +8,8 @@ namespace Shared_Scripts
     {
         public const string SettingsPath = SettingsBasePath +  "FactorySettings.asset";
 
-        [SerializeField] private EditorColors.EditorPalette editorPalette;
-        [SerializeField] private EditorColors.ButtonPalette buttonPalette;
         [SerializeField] private GameObject overseerPrefab;
 
-        
         [SerializeField, Tooltip(InspectorTooltips.FocusModelOnStartup)]
         private bool centerCameraOnRenderStartup = true;
 
@@ -25,9 +22,6 @@ namespace Shared_Scripts
 
         public GameObject OverseerPrefab => overseerPrefab;
 
-        public EditorColors.ButtonPalette ButtonPalette => buttonPalette;
-
-        public EditorColors.EditorPalette EditorPalette => editorPalette;
 
         public static FactorySettings GetOrCreateSettings()
         {
@@ -35,8 +29,7 @@ namespace Shared_Scripts
             if (_settings != null) return _settings;
 
             _settings = ScriptableObject.CreateInstance<FactorySettings>();
-            _settings.editorPalette = EditorColors.EditorPalette.BubbleGum;
-            _settings.buttonPalette = EditorColors.ButtonPalette.Default;
+            
             var _prefabGUIDs = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/RenderFactory/Prefabs" });
             GameObject _prefab = null;
             foreach (string _prefabGUID in _prefabGUIDs)

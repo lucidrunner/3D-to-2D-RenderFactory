@@ -24,7 +24,10 @@ namespace Render3DTo2D.RigCamera
         
         [SerializeField, HideInInspector] private int setCameraNumber;
         [SerializeField, HideInInspector] private string lastSetName = "";
+        
+        #pragma warning disable CS0414 //Suppress warning about non-used local variable, this is used by the UI but by necessity must live in the component
         [SerializeField, HideInInspector] private bool deletionSafetyToggle = false;
+        #pragma warning restore CS0414
 
         private Renderer optionalRenderer = null;
 

@@ -77,7 +77,7 @@ namespace Render3DTo2D.Rigging
 
             
             
-            if (aSetupInfo.SetPlacementType == SetupInfo.PlacementType.Manual)
+            if (aSetupInfo.SetRotationMode == SetupInfo.RotationMode.Manual)
                 _cameraStepSize = (float)aSetupInfo.GetData(aSetupInfo.ManualAngle);
             else if (aSetupInfo.GetData<bool>(aSetupInfo.HalfWrap) && _numberOfCameras > 1)
                 _cameraStepSize = 180f / (_numberOfCameras -1); // -1 because we want to go the full 180%
@@ -175,7 +175,7 @@ namespace Render3DTo2D.Rigging
             }
 
             //Whether or not the cameras should be placed with an automatically 360 / cameras wrap or via a manual offset + desired angle between each camera
-            public enum PlacementType
+            public enum RotationMode
             {
                 AutoWrap,
                 Manual
@@ -192,10 +192,10 @@ namespace Render3DTo2D.Rigging
             public readonly string HalfWrap = "halfWrap";
             public readonly string Prefab = "prefab";
             
-            public SetupInfo(RigType aRigType, PlacementMode aPlacementMode, PlacementType aSetPlacementTypeType)
+            public SetupInfo(RigType aRigType, PlacementMode aPlacementMode, RotationMode aSetRotationModeType)
             {
                 Rig = aRigType;
-                SetPlacementType = aSetPlacementTypeType;
+                SetRotationMode = aSetRotationModeType;
                 SetPlacementMode = aPlacementMode;
             }
 
@@ -223,7 +223,7 @@ namespace Render3DTo2D.Rigging
 
             public RigType Rig { get; }
             
-            public PlacementType SetPlacementType { get; }
+            public RotationMode SetRotationMode { get; }
             
             public PlacementMode SetPlacementMode { get; }
 

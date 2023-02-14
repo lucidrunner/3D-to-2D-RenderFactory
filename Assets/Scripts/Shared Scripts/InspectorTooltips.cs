@@ -16,10 +16,16 @@ namespace Render3DTo2D.Model_Settings
         
         #region Model Renderer
 
+        public const string SetupFactoryType = "The type of factory we're currently working with. The main animated factory allows for frame-by-frame exports of animated models. The static factory allows for snapshots of selected single frames from an animation.";
         #region Rig Setup
 
-        
-
+        public const string CameraRig = "The Type of Camera Rig to use.";
+        public const string PlacementMode = "The placement mode for the rig cameras. Defaults to Generated, which provides options for automatic setup of a set number of cameras. In contrast Manual will only add a rig of a set type, cameras must then be added via the Camera Rig component on the rig itself.";
+        public const string NumberOfCameras = "The number of cameras that will be added to the rig.";
+        public const string InitialCameraOffset = "The y-rotation offset that the camera placement will start at. Defaults to -90, which in general provides a side view of the model.";
+        public const string InvertCameraRotation = "If checked, cameras will be added by a negative angle compared to the camera before resulting in a ";
+        public const string RotationMode = "The way the cameras will be generated around the model. In Auto Wrap the cameras will be evenly placed around the model, in Manual they will follow the set angle.";
+        public const string HalfWrap = "If checked, the cameras will be evenly placed according to 180 / number of cameras instead of 360. This can be used to later mirror sprites rather than having unique sides. If checked the Initial Camera Offset should be configured so the cameras are placed front to back rather than starting from the side.";
         #endregion
 
         #region Options
@@ -98,7 +104,8 @@ namespace Render3DTo2D.Model_Settings
 
         public const string BaselineTooltip =
             "The base orthographic scale we calculate our final texture sizes from. A Texture size of 512, " +
-            "frame scale of 1 and base scale set to 0.5f will lead to generated images of 1024px.";
+            "camera scale of 1, and base scale set to 0.5f will lead to generated images of 1024px. " +
+            "The closer our camera scale or isometric base plate size is to the base scale, the closer the output will be to the set Texture Size.";
 
         public const string BaselinePopup =
             "Since models from different sources can have varying sizes, setting this to an approximation of what a standard sized model is in relation to " +
@@ -156,7 +163,7 @@ namespace Render3DTo2D.Model_Settings
 
         public const string IsometricBaseline =
             "The initially set size of the model reference plate." +
-            "See the Baseline popup for more info on texture deviation.";
+            "See the Render Output Settings / Baseline Reference Scale popup for more info on baselines and texture size deviation.";
 
 
         public const string IsometricDefaultAngle =

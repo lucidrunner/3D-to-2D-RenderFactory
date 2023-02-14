@@ -1,6 +1,9 @@
 ﻿
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Render3DTo2D.Factory_Core;
+using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.RigCamera;
 using Render3DTo2D.SMAnimator;
@@ -145,7 +148,6 @@ namespace Render3DTo2D.Rigging
             RigDataXmlExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
         }
         
-        //TODO This needs to be called at the end of normal rigging too
         public void ValidateCameraSetup()
         {
             //If we're not doing manual placement this is just a reload of the camera lists in this / the calculator class
@@ -154,22 +156,47 @@ namespace Render3DTo2D.Rigging
             for (var _index = 0; _index < _anchorTransform.childCount; _index++)
             {
                 var _camera = cameraAnchor.transform.GetChild(_index);
-                Debug.Log(_camera.name);
                 var _renderer = _camera.GetComponent<CameraRenderer>();
-                if(_renderer != null)
-                {
-                    cameras.Add(_renderer);
-                    _renderer.SetCameraNumber(_index);
-                }
+                if (_renderer == null) continue;
+                cameras.Add(_renderer);
+                _renderer.SetCameraNumber(_index);
             }
             
             
 
             rigScaleCalculator.ValidateSetup(cameras);
-            Debug.Log("Cameras validated: " + cameras.Count);
+            FLogger.LogMessage(this, FLogger.Severity.Debug, $"Validated {cameras.Count} cameras.");
+
+            if (!manualPlacementMode)
+                return;
 
             //If we're doing manual placement we should do an additional validation on the cameras to make sure they're also correctly setup according to the rig type
-            //TODO
+            //Failing to pass this should provide a warning and we should also have the ability to suppress that error on the component if we ever wanna do something funky
+            bool _setupValid = true;
+            string _errorMessage = "";
+            switch (rigType)
+            {
+                case CameraRigger.SetupInfo.RigType.SideView:
+                    //If we're in side view, check that all cameras are set to X / Z rotation 0
+                    _setupValid = cameras.Select(t => t.transform).All(aTransform => Mathf.Approximately(0, aTransform.localEulerAngles.x) && Mathf.Approximately(0, aTransform.localEulerAngles.z));
+                    _errorMessage = "One or more Cameras in setup is not in a side view (X/Z-angles = 0), this might cause odd effects during calculations.";
+                    break;
+                case CameraRigger.SetupInfo.RigType.Isometric:
+                    //If we're in isometric, we want our x to be in the 0 < x < 90 range
+                    _setupValid = cameras.Select(t => t.transform).All(aTransform => aTransform.localEulerAngles.x > 0 && aTransform.localEulerAngles.x < 90  && Mathf.Approximately(0, aTransform.localEulerAngles.z));
+                    _errorMessage = "One or more Cameras in setup is not in an isometric view (0 < x-angle < 90, z-angle = 0), this might cause odd effects during rendering.";
+                    break;
+                case CameraRigger.SetupInfo.RigType.TopView:
+                    //If we're in isometric, we want our x to be in the 0 < x < 90 range
+                    _setupValid = cameras.Select(t => t.transform).All(aTransform => Mathf.Approximately(90, aTransform.localEulerAngles.x) && Mathf.Approximately(0, aTransform.localEulerAngles.z));
+                    _errorMessage = "One or more Cameras in setup is not in a topdown view (x-angle = 90, z-angle = 0), this might cause off effects during calculations.";
+                    break;
+            }
+
+            if (!_setupValid)
+            {
+                FLogger.LogMessage(this, FLogger.Severity.Priority, _errorMessage);
+            }
         }
 
         #endregion
@@ -181,7 +208,7 @@ namespace Render3DTo2D.Rigging
             var _renderer = aAddedCamera.GetComponent<CameraRenderer>();
             if (_renderer == null)
             {
-                //TODO Show warning message
+                FLogger.LogMessage(this, FLogger.Severity.LinkageError, $"{nameof(CameraRenderer)} missing on added camera. Is there something wrong with the prefab?");
             }
             cameras.Add(_renderer);
             CameraScaleCalculator _scaleCalculator = aAddedCamera.GetComponent<CameraScaleCalculator>();

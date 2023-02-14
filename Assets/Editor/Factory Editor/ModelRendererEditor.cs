@@ -1,4 +1,5 @@
 ﻿using Render3DTo2D;
+using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Rigging;
 using Render3DTo2D.Utility.Inspector;
 using Shared_Scripts;
@@ -20,7 +21,7 @@ namespace Factory_Editor
         private SerializedProperty numberOfCamerasProp;
         private SerializedProperty initialCameraOffsetProp;
         private SerializedProperty invertCameraRotationProp;
-        private SerializedProperty placementTypeProp;
+        private SerializedProperty rotationModeProp;
         private SerializedProperty manualAngleProp;
         private SerializedProperty halfWrapProp;
         private SerializedProperty prefabProp;
@@ -47,7 +48,7 @@ namespace Factory_Editor
             numberOfCamerasProp = serializedObject.FindProperty("numberOfCameras");
             initialCameraOffsetProp = serializedObject.FindProperty("initialCameraOffset");
             invertCameraRotationProp = serializedObject.FindProperty("invertCameraRotation");
-            placementTypeProp = serializedObject.FindProperty("placementType");
+            rotationModeProp = serializedObject.FindProperty("rotationMode");
             manualAngleProp = serializedObject.FindProperty("manualAngle");
             halfWrapProp = serializedObject.FindProperty("halfWrap");
             prefabProp = serializedObject.FindProperty("prefabRig");
@@ -94,7 +95,7 @@ namespace Factory_Editor
             
             if (_showFoldout)
             {
-                InspectorUtility.DrawProperty(setupFactoryTypeProp);
+                InspectorUtility.DrawProperty(setupFactoryTypeProp, new GUIContent(setupFactoryTypeProp.displayName, InspectorTooltips.SetupFactoryType));
                 if (!Mathf.Approximately(showRigAdd.faded, 0f))
                 {
                     DrawRigSetup(aTarget);
@@ -190,8 +191,7 @@ namespace Factory_Editor
             {
                 InspectorUtility.BeginSubBoxGroup("Rig Setup", EditorColors.Header, EditorColors.Body);
                 InspectorUtility.BeginSubBoxGroup("Type", EditorColors.HeaderAlt1, EditorColors.BodyAlt1);
-                InspectorUtility.DrawProperty(cameraRigProp);
-                
+                InspectorUtility.DrawProperty(cameraRigProp, new GUIContent(cameraRigProp.displayName, InspectorTooltips.CameraRig));
                 if (ShowPrefab)
                 {
                     prefabProp.objectReferenceValue = InspectorUtility.DrawObjectPicker(new GUIContent(prefabProp.displayName), prefabProp.objectReferenceValue, typeof(CameraRig));
@@ -200,21 +200,21 @@ namespace Factory_Editor
                 if (!ShowPrefab)
                 {
                     InspectorUtility.BeginSubBoxGroup("Placement", EditorColors.HeaderAlt2, EditorColors.BodyAlt2);
-                    InspectorUtility.DrawProperty(placementModeProp);
+                    InspectorUtility.DrawProperty(placementModeProp, new GUIContent(placementModeProp.displayName, InspectorTooltips.PlacementMode));
                     if (ShowPlacementOptions)
                     {
-                        InspectorUtility.DrawProperty(numberOfCamerasProp);
-                        InspectorUtility.DrawProperty(initialCameraOffsetProp);
-                        InspectorUtility.DrawProperty(invertCameraRotationProp);
-                        InspectorUtility.DrawProperty(placementTypeProp);
-                        if (placementTypeProp.enumValueIndex == (int) CameraRigger.SetupInfo.PlacementType.AutoWrap)
-                            InspectorUtility.DrawProperty(halfWrapProp, new GUIContent("Mirrored Half Wrap"));
-                        else if (placementTypeProp.enumValueIndex == (int) CameraRigger.SetupInfo.PlacementType.Manual)
+                        InspectorUtility.DrawProperty(numberOfCamerasProp, new GUIContent(numberOfCamerasProp.displayName, InspectorTooltips.NumberOfCameras));
+                        InspectorUtility.DrawProperty(initialCameraOffsetProp, new GUIContent(initialCameraOffsetProp.displayName, InspectorTooltips.InitialCameraOffset));
+                        InspectorUtility.DrawProperty(invertCameraRotationProp, new GUIContent(invertCameraRotationProp.displayName, InspectorTooltips.InvertCameraRotation));
+                        InspectorUtility.DrawProperty(rotationModeProp, new GUIContent(rotationModeProp.displayName, InspectorTooltips.RotationMode));
+                        if (rotationModeProp.enumValueIndex == (int) CameraRigger.SetupInfo.RotationMode.AutoWrap)
+                            InspectorUtility.DrawProperty(halfWrapProp, new GUIContent("Mirrored Half Wrap", InspectorTooltips.HalfWrap));
+                        else if (rotationModeProp.enumValueIndex == (int) CameraRigger.SetupInfo.RotationMode.Manual)
                             InspectorUtility.DrawProperty(manualAngleProp, new GUIContent("Angle Between Cameras"));
                         if (ShowIsometric)
                         {
-                            InspectorUtility.DrawProperty(isometricAngleProp);
-                            InspectorUtility.DrawProperty(isometricBaseSizeProp);
+                            InspectorUtility.DrawProperty(isometricAngleProp, new GUIContent(isometricAngleProp.displayName, InspectorTooltips.IsometricAngle));
+                            InspectorUtility.DrawProperty(isometricBaseSizeProp, new GUIContent(isometricBaseSizeProp.displayName, InspectorTooltips.IsometricBaseline));
                         }
                     }
                     InspectorUtility.EndSubBoxGroup();

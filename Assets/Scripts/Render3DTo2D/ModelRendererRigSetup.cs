@@ -3,6 +3,7 @@ using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Rigging;
 using Render3DTo2D.Setup;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Render3DTo2D
 {
@@ -29,7 +30,7 @@ namespace Render3DTo2D
         
         [SerializeField] private bool invertCameraRotation = false;
         
-        [SerializeField] private CameraRigger.SetupInfo.PlacementType placementType = CameraRigger.SetupInfo.PlacementType.AutoWrap;
+        [FormerlySerializedAs("placementType")] [SerializeField] private CameraRigger.SetupInfo.RotationMode rotationMode = CameraRigger.SetupInfo.RotationMode.AutoWrap;
 
         [SerializeField, Range(1, 360)]
         private float manualAngle = 30;
@@ -43,7 +44,7 @@ namespace Render3DTo2D
         public void AddCameraRigToFactory()
         {
             //Android style packaging for setup info cause I did a bunch of mobile work right before factory 2.0
-            CameraRigger.SetupInfo _setupInfo = new CameraRigger.SetupInfo(cameraRig, placementMode, placementType);
+            CameraRigger.SetupInfo _setupInfo = new CameraRigger.SetupInfo(cameraRig, placementMode, rotationMode);
             
             //The always include settings
             _setupInfo.AddSetupFlag(_setupInfo.NumberOfCamerasInt, numberOfCameras);
@@ -55,9 +56,9 @@ namespace Render3DTo2D
                 _setupInfo.AddIsometricInfo(isometricAngle, isometricBaseSize);
 
             //If needed - manual placement settings
-            if(placementType == CameraRigger.SetupInfo.PlacementType.Manual)
+            if(rotationMode == CameraRigger.SetupInfo.RotationMode.Manual)
                 _setupInfo.AddSetupFlag(_setupInfo.ManualAngle, manualAngle);
-            else if(placementType == CameraRigger.SetupInfo.PlacementType.AutoWrap)
+            else if(rotationMode == CameraRigger.SetupInfo.RotationMode.AutoWrap)
                 _setupInfo.AddSetupFlag(_setupInfo.HalfWrap, halfWrap);
             
             //If we're doing a prefab rig, add that

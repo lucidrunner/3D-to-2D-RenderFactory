@@ -139,15 +139,25 @@ namespace Render3DTo2D.Rigging
         {
             rigType = aRigType;
         }
-        
+
         public void ExportAnimationData(StopMotionAnimatorInfo aSmAnimatorInfo, string aRootMotionFilePath = null)
         {
-            //Actually This is where we should export the data methinks?
-            
-            RigDataJsonExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
-            RigDataXmlExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
+            switch (RenderingSettings.GetFor(transform).DataFileType)
+            {
+                default:
+                case RenderingSettings.DataExportFileType.Json:
+                    RigDataJsonExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
+                    break;
+                case RenderingSettings.DataExportFileType.XML:
+                    RigDataXmlExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
+                    break;
+                case RenderingSettings.DataExportFileType.Both:
+                    RigDataJsonExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
+                    RigDataXmlExporter.Export(new RigRenderExportArgs(this, lastOutputPath, GetComponentInParent<RenderFactory>().GetRenderTimestamp(false), aSmAnimatorInfo, aRootMotionFilePath));
+                    break;
+            }
         }
-        
+
         public void ValidateCameraSetup()
         {
             //If we're not doing manual placement this is just a reload of the camera lists in this / the calculator class

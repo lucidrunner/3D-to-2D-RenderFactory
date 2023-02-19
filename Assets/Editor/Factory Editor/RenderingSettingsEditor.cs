@@ -1,4 +1,5 @@
-﻿using Render3DTo2D.Model_Settings;
+﻿using System;
+using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Utility.Inspector;
 using Shared_Scripts;
 using UnityEditor;
@@ -16,6 +17,7 @@ namespace Factory_Editor
         //General
         private SerializedProperty fpsProp;
         private SerializedProperty centerModelProp;
+        private SerializedProperty dataTypeProp;
  
         //Calculator
         private SerializedProperty boundsCalcEnabledProp;
@@ -73,11 +75,13 @@ namespace Factory_Editor
             //General
             fpsProp = serializedObject.FindProperty("animationFramesPerSecond");
             centerModelProp = serializedObject.FindProperty("centerModelOnRenderStartup");
+            dataTypeProp = serializedObject.FindProperty("dataFileType");
 
             //Calculator
             boundsCalcEnabledProp = serializedObject.FindProperty("enableBoundsCalculator");
             automaticDepthCalculationProp = serializedObject.FindProperty("automaticDepthCalculation");
          
+            
             //Bounds Calculator
             boundsCalcOverdrawProp = serializedObject.FindProperty("boundsCalculatorSizeModifier");
             boundsCalcStepPercentageProp = serializedObject.FindProperty("scaleCalculatorStepPercentage");
@@ -198,6 +202,7 @@ namespace Factory_Editor
             {
                 InspectorUtility.DrawProperty(fpsProp, new GUIContent(fpsProp.displayName, InspectorTooltips.FPS));
                 InspectorUtility.DrawToggleProperty(centerModelProp, new GUIContent(centerModelProp.displayName, InspectorTooltips.MoveModelOnStartup));
+                InspectorUtility.DrawProperty(dataTypeProp, new GUIContent(dataTypeProp.displayName, InspectorTooltips.DataType));
             }
             InspectorUtility.EndFoldoutGroup(_showGeneral);
         }

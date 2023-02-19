@@ -48,7 +48,8 @@ namespace Render3DTo2D.Model_Settings
         #region General
 
         public const string FPS = "Default: 16";
-
+        public const string DataType = "The file type(s) that the meta data file for a render will be exported as.";
+        
         #endregion
 
        
@@ -260,5 +261,6 @@ namespace Render3DTo2D.Model_Settings
         public const string MoveModelOnStartup = "Moves the model to 0,0 on render startup.";
         public const string FocusModelOnStartup = "Centers the scene camera on the model when starting a new render run.";
         public const string FollowModelOnRender = "Centers the camera on the model on each render step.";
+        
     }
 }

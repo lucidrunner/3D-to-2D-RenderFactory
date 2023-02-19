@@ -19,6 +19,11 @@ namespace Render3DTo2D.Model_Settings
             Standard, Advanced
         }
 
+        public enum DataExportFileType
+        {
+            Json, XML, Both
+        }
+
 
         #endregion
         
@@ -37,9 +42,11 @@ namespace Render3DTo2D.Model_Settings
         [SerializeField, Tooltip(InspectorTooltips.MoveModelOnStartup)]
         private bool centerModelOnRenderStartup = true;
         public bool CenterModelOnRenderStartup => centerModelOnRenderStartup;
-        
-        
-        
+
+        [SerializeField]
+        private DataExportFileType dataFileType = DataExportFileType.Json;
+        public DataExportFileType DataFileType => dataFileType;
+
         #endregion
 
         #region Calculator

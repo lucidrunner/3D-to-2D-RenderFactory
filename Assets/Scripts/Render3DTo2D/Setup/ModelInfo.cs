@@ -3,6 +3,7 @@ using System.Linq;
 using Render3DTo2D.Factory_Core;
 using Render3DTo2D.Logging;
 using Render3DTo2D.Model_Settings;
+using Render3DTo2D.Utility.Extensions;
 using RootChecker;
 using UnityEngine;
 
@@ -14,8 +15,7 @@ namespace Render3DTo2D.Setup
 
         [SerializeField, HideInInspector] private string modelName;
 
-        //TODO Make sure this also includes a check if we have 0 clips in the animator
-        public bool CanAnimate => GetComponent<Animator>() != null;
+        public bool CanAnimate => GetComponent<Animator>() != null && GetComponent<Animator>().GetClips().Any();
 
         public Animator Animator => GetComponent<Animator>();
 

@@ -63,15 +63,11 @@ namespace Render3DTo2D.Utility
             int width = aDestinationMatrix.GetLength(0);
             int height = aDestinationMatrix.GetLength(1);
 
-            //TODO Test that this works for matrixes of the same size
-
             if(width > aOriginMatrix.GetLength(0) || height > aOriginMatrix.GetLength(1))
             {
                 Debug.Log("Couldn't copy because destination matrix was larger than origin.");
                 return;
             }
-
-
 
             for(int lineIndex = 0; lineIndex < height; lineIndex++)
             {

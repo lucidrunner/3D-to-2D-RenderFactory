@@ -24,6 +24,10 @@ namespace Render3DTo2D.Root_Movement
         [SerializeField]
         private bool toggleOverride;
 
+        
+        private (Vector3 position, Vector3 scale, Vector3 eulerAngles) intialModelTransform;
+        private (Vector3 position, Vector3 scale, Vector3 eulerAngles) initialTransform;
+        
         #region Inspector
 
         public void SetupFollowList()
@@ -67,6 +71,9 @@ namespace Render3DTo2D.Root_Movement
 
             //Set the targeted transform
             modelTransform = AnimationUtilities.GetAnimatorTransform(transform);
+            intialModelTransform = (modelTransform.localPosition, modelTransform.localScale, modelTransform.localEulerAngles);
+            initialTransform = (transform.localPosition, transform.localScale, transform.localEulerAngles);
+
             
             //Reset the rig if it's our factory that's animating
             RenderFactoryEvents.PreAnimationChanged += RenderFactoryEventsOnPreAnimationChanged;
@@ -95,15 +102,15 @@ namespace Render3DTo2D.Root_Movement
         {
             //TODO Use initial values for these instead
             //Reset the transform of the model
-            modelTransform.localPosition = Vector3.zero;
-            modelTransform.localScale = Vector3.one;
-            modelTransform.localEulerAngles = Vector3.zero;
+            modelTransform.localPosition = intialModelTransform.position;
+            modelTransform.localScale = intialModelTransform.scale;
+            modelTransform.localEulerAngles = intialModelTransform.eulerAngles;
             
             //Reset the transform of the rig
             var _transform = transform;
-            _transform.localPosition = Vector3.zero;
-            _transform.localScale = Vector3.one;
-            _transform.localEulerAngles = Vector3.zero;
+            _transform.localPosition = initialTransform.position;
+            _transform.localScale = initialTransform.scale;
+            _transform.localEulerAngles = initialTransform.eulerAngles;
             
         }
 

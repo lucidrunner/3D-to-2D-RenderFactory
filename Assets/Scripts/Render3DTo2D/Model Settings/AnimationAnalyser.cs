@@ -62,7 +62,6 @@ namespace Render3DTo2D.Model_Settings
             return _stepDeviation;
         }
 
-        //TODO Break this out into usable methods so we don't do these calculations both here and in the clamping class
         public static string GetStretchMessage(AnimationClip aAnimationClip, int aRenderingFPS, int aSmoothStartFrameIndex)
         {
             //Calculate the max possible frame index

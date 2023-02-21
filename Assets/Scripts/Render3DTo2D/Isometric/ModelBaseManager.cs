@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Render3DTo2D.Isometric
 {
-    //TODO LAST ONE FOR UI
+    //TODO ADD UI FOR INDIVIDUAL ANIMATION OVERRIDE ON ISOMETRIC
     public class ModelBaseManager : MonoBehaviour
     {
         #region Private Fields

@@ -98,7 +98,7 @@ namespace Render3DTo2D.Factory_Core
         /// Export only the non-animated info of the last render
         /// </summary>
         /// <param name="aRootMotionFilePath">The optional file path to the accompanying root motion file</param>
-        public void ExportToXML(string aRootMotionFilePath = null)
+        public void ExportDataForRigs(string aRootMotionFilePath = null)
         {
             foreach (CameraRig _cameraRig in CurrentRunRigs)
             {
@@ -111,7 +111,7 @@ namespace Render3DTo2D.Factory_Core
         /// </summary>
         /// <param name="aStopMotionAnimator">The stop motion animator used during the render</param>
         /// <param name="aRootMotionFilePath">The optional file path to the accompanying root motion file</param>
-        public void ExportToXML(StopMotionAnimator aStopMotionAnimator, string aRootMotionFilePath = null)
+        public void ExportDataForRigs(StopMotionAnimator aStopMotionAnimator, string aRootMotionFilePath = null)
         {
             foreach (CameraRig _cameraRig in CurrentRunRigs)
             {

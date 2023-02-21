@@ -41,7 +41,6 @@ namespace Render3DTo2D.Root_Movement
                 }
                 else
                 {
-                    //TODO Actually I'm not sure we're only interested in scale changes after the first frame but w/e
                     //We're only interested in scale changes after the first frame 
                     _deltaTransform.Scale -= Vector3.one;
                 }

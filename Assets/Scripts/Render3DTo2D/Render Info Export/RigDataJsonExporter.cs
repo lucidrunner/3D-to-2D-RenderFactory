@@ -22,29 +22,6 @@ namespace Render3DTo2D.Render_Info_Export
 {
     public static class RigDataJsonExporter
     {
-        
-        /* Write Order
-         * TODO Update this
-         * Document Start / Root Node
-         *     Model Name
-         *     Rig Tag
-         * MetaData Node
-         *     Baseline Scale
-         *     Default Texture Size
-         *     Isometric Angle (Iso)
-         *     Use Sub Folder
-         * Camera Setup Node
-         *     Number of Cameras
-         *     Y-Rotations: [x, x, x, etc times Number of Cameras]
-         * Animation Setup Node (Non-static)
-         *     Name Format: Attributes Include Prefix, Use Animation Name  
-         *     FPS
-         *     Animation Count
-         * Animations Node (Non-static)
-         *    X# of Animation Nodes
-         *      Attributes: Animation Length, Clamped, (Iso) Isometric Y-offset
-         *      Element: Animation Name
-         */
         #region Folder Name
 
         private const string RigDataFolderName = "Data";
@@ -72,7 +49,6 @@ namespace Render3DTo2D.Render_Info_Export
         private static Output BuildOutput(RigRenderExportArgs aExportArgs)
         {
             CameraRig _cameraRig = aExportArgs.CameraRig;
-
             var _output = new Output()
             {
                 ModelName = _cameraRig.GetModelName(),

@@ -22,30 +22,6 @@ namespace Render3DTo2D.Render_Info_Export
     public static class RigDataXmlExporter
     {
         private static ModelBaseManager _baseManager;
-        /* Write Order
-         * Document Start / Root Node
-         *     Model Name
-         *     Rig Tag
-         * MetaData Node
-         *     TimeStamp
-         *     Baseline Scale
-         *     Default Texture Size
-         *     Isometric Angle (Iso)
-         *     Use Sub Folder
-         * Camera Setup Node
-         *     Number of Cameras
-         *     Y-Rotations: [x, x, x, etc times Number of Cameras]
-         * Animation Setup Node (Non-static)
-         *     Name Format: Attributes Include Prefix, Use Animation Name  
-         *     FPS
-         *     Animation Count
-         * Animations Node (Non-static)
-         *    X# of Animation Nodes
-         *      Attributes: Animation Length, Clamped, (Iso) Isometric Y-offset
-         *      Element: Animation Name
-         */
-        
-
         #region Folder Name
 
         private const string RigDataFolderName = "Data";

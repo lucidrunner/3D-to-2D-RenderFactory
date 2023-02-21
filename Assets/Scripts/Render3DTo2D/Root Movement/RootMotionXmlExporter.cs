@@ -23,7 +23,6 @@ namespace Render3DTo2D.Root_Movement
         {
             FLogger.LogMessage(null, FLogger.Severity.Debug, "Entering Root Motion export write now.", nameof(RootMotionXmlExporter));
             
-            //TODO Path is wrong here?
             //The passed transform is already root by default but this is just some future proofing if we ever change that by accident
             string _modelName = RootFinder.FindHighestRoot(aFactoryTransform).name;
             string _fileName = $"{_modelName} - Root Motion Recording.xml";

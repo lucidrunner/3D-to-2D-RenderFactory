@@ -207,8 +207,9 @@ namespace Render3DTo2D.Factory_Core
                 stopMotionAnimator.Startup(aAnimator);
             factoryRenderManager.Startup(aRecalculateAll);
             factoryRigManager.Startup(stopMotionAnimator, aForceRecalculate, aRecalculateAll);
-            //TODO Fix this startup sequence since this must be run after the rig manager to avoid possible bad data
+            //Note - This must be run last to avoid some possible bad data
             factoryScaleManager.Startup(aRecalculateAll);
+            
         }
 
     private void RenderStartup()
@@ -239,12 +240,11 @@ namespace Render3DTo2D.Factory_Core
         Busy = false;
         renderingCoroutine = null;
 
-        //TODO Add the XML / JSON check here
         //Export the animation data to XML if we're a non-static factory
         if (GetComponent<StaticRenderManager>() == null)
-            factoryRigManager.ExportToXML(stopMotionAnimator, _rootMotionFilePath);
+            factoryRigManager.ExportDataForRigs(stopMotionAnimator, _rootMotionFilePath);
         else
-            factoryRigManager.ExportToXML(_rootMotionFilePath);
+            factoryRigManager.ExportDataForRigs(_rootMotionFilePath);
 
         //Finally, reset the camera sizes 
         factoryScaleManager.ResetCameraSizes();

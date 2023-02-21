@@ -15,8 +15,6 @@ using UnityEngine;
 
 namespace Render3DTo2D.Rigging
 {
-    //TODO BIG - Move from the Matrix to a List[AnimationIndex]Dictionary[CameraID, List of Frames]. We're never going to have jagged frames anyway.
-    
     public class RigScaleCalculator : MonoBehaviour
     {
         #region Properties

@@ -160,17 +160,12 @@ namespace Render3DTo2D.Model_Settings
         [SerializeField] protected List<Transform> renderIgnoreList = new List<Transform>();
         
         
-        
-        //TODO MOVE TO SEPARATE FACTORY SETTINGS
-        #region Naming
-
-
         private void Reset()
         {
             renderingLayer = GlobalRenderingSettings.Instance.renderingLayer;
         }
-
-        #endregion
+        
+        
         #endregion
         
         #region Isometric

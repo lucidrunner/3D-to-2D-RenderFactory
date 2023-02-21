@@ -100,7 +100,6 @@ namespace Render3DTo2D.Root_Movement
 
         private void RenderFactoryEventsOnPreAnimationChanged(object aSender, RenderFactoryEvents.AnimationChangedArgs aArgs)
         {
-            //TODO Use initial values for these instead
             //Reset the transform of the model
             modelTransform.localPosition = intialModelTransform.position;
             modelTransform.localScale = intialModelTransform.scale;

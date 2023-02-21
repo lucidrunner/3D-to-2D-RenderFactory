@@ -1,24 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RootChecker;
 using UnityEngine;
 
-namespace Render3DTo2D.Utility
+namespace Render3DTo2D.Utility.Extensions
 {
-    //TODO Make these into extensions instead
-    public static class AnimatorHelperMethods
+    public static class AnimatorExtensions
     {
-        public static IEnumerable<string> GetAnimationNames(Animator aAnimator)
+        public static IEnumerable<string> GetAnimationNames(this Animator aAnimator)
         {
             return aAnimator.runtimeAnimatorController.animationClips.Select(aClip => aClip.name).ToArray();
         }
-
-        public static IEnumerable<AnimationClip> GetClips(Animator aAnimator)
+        
+        public static IEnumerable<AnimationClip> GetClips(this Animator aAnimator)
         {
             return aAnimator.runtimeAnimatorController.animationClips;
         }
 
-        public static IEnumerable<float> GetAnimationLengths(Animator aAnimator)
+        public static IEnumerable<float> GetAnimationLengths(this Animator aAnimator)
         {
             return aAnimator.runtimeAnimatorController.animationClips.Select(aClip => aClip.length).ToArray();
         }

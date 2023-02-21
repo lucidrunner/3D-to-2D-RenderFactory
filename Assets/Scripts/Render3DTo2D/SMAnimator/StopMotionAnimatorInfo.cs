@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Render3DTo2D.Model_Settings;
 using Render3DTo2D.Setup;
-using Render3DTo2D.Utility;
+using Render3DTo2D.Utility.Extensions;
 using UnityEngine;
 
 namespace Render3DTo2D.SMAnimator
@@ -66,7 +66,7 @@ namespace Render3DTo2D.SMAnimator
             ClampedAnimations = _advancedAnimationSettings != null ? _advancedAnimationSettings.GetClampedAnimations() : new List<ClampedAnimation>();
             
 
-            Clips = new List<AnimationClip>(AnimatorHelperMethods.GetClips(aAnimator));
+            Clips = new List<AnimationClip>(aAnimator.GetClips());
         }
 
         /// <summary>

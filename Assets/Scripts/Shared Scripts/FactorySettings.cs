@@ -1,4 +1,5 @@
 using Render3DTo2D.Model_Settings;
+using Shared_Scripts.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,31 +26,13 @@ namespace Shared_Scripts
 
         public static FactorySettings GetOrCreateSettings()
         {
+            //Get
             var _settings = AssetDatabase.LoadAssetAtPath<FactorySettings>(SettingsPath);
             if (_settings != null) return _settings;
-
-            _settings = ScriptableObject.CreateInstance<FactorySettings>();
             
-            var _prefabGUIDs = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/RenderFactory/Prefabs" });
-            GameObject _prefab = null;
-            foreach (string _prefabGUID in _prefabGUIDs)
-            {
-                var _path = AssetDatabase.GUIDToAssetPath(_prefabGUID);
-                var _checkedObjects = AssetDatabase.LoadAllAssetsAtPath(_path);
-                foreach (var _object in _checkedObjects)
-                {
-                    var _gameObject = _object as GameObject;
-                    if (_gameObject == null) continue;
-                    //TODO Not magic string here
-                    if (_gameObject.CompareTag("Overseer")) continue;
-                    _prefab = _gameObject;
-                    break;
-                }
-
-                if (_prefab != null)
-                    break;
-            }
-
+            //Create if get fails
+            _settings = ScriptableObject.CreateInstance<FactorySettings>();
+            var _prefab = PrefabHelper.FindPrefabWithTag("Overseer");
             _settings.overseerPrefab = _prefab;
             AssetDatabase.CreateAsset(_settings, SettingsPath);
             AssetDatabase.SaveAssets();

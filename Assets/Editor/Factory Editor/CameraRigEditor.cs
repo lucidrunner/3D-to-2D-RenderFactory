@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Render3DTo2D.Logging;
 using Render3DTo2D.RigCamera;
 using Render3DTo2D.Rigging;
 using Render3DTo2D.Setup;
@@ -96,10 +97,10 @@ namespace Factory_Editor
                 var _anchor = aRig.GetComponentInChildren<CameraAnchor>();
                 if (_anchor == null)
                 {
-                    //TODO Error message
+                    FLogger.LogMessage(this, FLogger.Severity.LinkageError, "No Camera anchor found on rig, aborting camera setup. Is the preset broken?");
                     return;
                 }
-                //TODO Convert this to a CameraRigger call with some added info depending on the rig type
+                
                 GameObject _addedCamera = SetupResources.Instance.AddRenderCameraToAnchor(SetupResources.Instance.GetRenderCameraPrefab((CameraRigger.SetupInfo.RigType)rigTypeProp.enumValueIndex), _anchor.gameObject);
                 aRig.AddCamera(_addedCamera);
             }

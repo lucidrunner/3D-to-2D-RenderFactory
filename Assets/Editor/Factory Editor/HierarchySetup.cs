@@ -16,7 +16,7 @@ namespace Factory_Editor
     public class HierarchySetup
     {
     
-        [MenuItem("RenderFactory/Setup Rendering Hierarchy",false, 30)]
+        [MenuItem("RenderFactory/Scaffold Rendering Hierarchy On Model",false, 30)]
         public static void SetupModelHierarchy()
         {
             //Begin by spawning the overseer if we've not already done so
@@ -42,7 +42,7 @@ namespace Factory_Editor
             }
         }
         
-        [MenuItem("RenderFactory/Setup Rendering Hierarchy",true)]
+        [MenuItem("RenderFactory/Scaffold Rendering Hierarchy On Model",true)]
         public static bool IsSetupObject()
         {
             var _object = Selection.activeGameObject;

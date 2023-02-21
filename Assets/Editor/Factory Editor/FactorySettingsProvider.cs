@@ -49,8 +49,7 @@ namespace Factory_Editor
                     _settings.ApplyModifiedProperties();
                     InspectorUtility.RepaintAll();
                 },
-                keywords = new HashSet<string>(new[] {Styles.editorPalette.text, Styles.buttonPalette.text, Styles.overseerPrefab.text})
-                //TODO Add more keywords
+                keywords = new HashSet<string>(new[] {Styles.editorPalette.text, Styles.buttonPalette.text, Styles.overseerPrefab.text, "Factory"})
             };
             return _provider;
         }

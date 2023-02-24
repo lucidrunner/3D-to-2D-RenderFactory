@@ -3,7 +3,9 @@
 ## So, what is this?  
 A half-finished Unity Plugin for creating 2D sprites from 3D animated models, currently available as a downloadable scene instead. Originally developed as a way to both learn Unity and more properly pick up C# back in 2018.X. Tested and working up to Unity 2020.3.15f2, there were some odd issues with at least 2019.4.18f1 where it would very occasionally softlock Unity on startup.
 
-The original goal of this whole project was to create Might and Magic 8-style spritesheets from animated 3D models. Over time it grew to also allow capturing of static images, as well as support for isometrical rendering (largely inspired by Grandia 1s 2D-in-a-3D-world style.)   
+The original goal of this whole project was to create Might and Magic 8-style spritesheets from animated 3D models. Over time it grew to also allow capturing of static images, as well as support for isometrical rendering (largely inspired by Grandia 1s 2D-in-a-3D-world style.)
+
+Timelapsed video version available at https://youtu.be/-fisF--7ibs (slightly outdated version though, also includes a currently non-public importer.) A more thorough (also slightly outdated) showcase available at https://youtu.be/pRMJ52EWjUg
 
 Currently busy with IRL-stuff but aiming to have an "official" release of this by mid-march.
 

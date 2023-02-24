@@ -23,5 +23,3 @@ It should be noted that the factory was originally slanted towards Adobe Mixamo 
 The current goal is to create proper documentation, debug different model sources, as well as implementing the current batch of worked on features by mid-March 2023. After that the idea is to release this in a more easily installabe form rather than just having it as a unity scene.
   
 I've also written a private importer that takes the output from this, creates sprites and then rebakes them with the movement into unity animations. I'm currently in the process of moving that away from some paid plugins so I can make it public too.
-
-  
